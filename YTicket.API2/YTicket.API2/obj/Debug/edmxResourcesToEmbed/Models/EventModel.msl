@@ -21,6 +21,7 @@
           <ScalarProperty Name="RequireAttendance" ColumnName="RequireAttendance" />
           <ScalarProperty Name="Vote" ColumnName="Vote" />
           <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Image" ColumnName="Image" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -47,6 +48,7 @@
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Information" ColumnName="Information" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="New" ColumnName="New" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -66,10 +68,10 @@
         <MappingFragment StoreEntitySet="User">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Username" ColumnName="Username" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="Address" ColumnName="Address" />
           <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Image" ColumnName="Image" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -89,6 +91,17 @@
         <ScalarProperty Name="ID" ColumnName="UserID" />
       </EndProperty>
     </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="EventPaging" FunctionName="EventModel.Store.EventPaging">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EventModel.EventPaging_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+          <ScalarProperty Name="Image" ColumnName="Image" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="EventModel.Store.sp_alterdiagram" />
     <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="EventModel.Store.sp_creatediagram" />
     <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="EventModel.Store.sp_dropdiagram" />
@@ -113,5 +126,14 @@
     </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="EventModel.Store.sp_renamediagram" />
     <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="EventModel.Store.sp_upgraddiagrams" />
+    <FunctionImportMapping FunctionImportName="UserPaging" FunctionName="EventModel.Store.UserPaging">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EventModel.UserPaging_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Image" ColumnName="Image" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

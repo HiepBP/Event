@@ -17,7 +17,7 @@
     <AssemblyName>YTicket.API2</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -34,6 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>App_Data/XmlDocument.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -245,11 +246,13 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
-    <Compile Include="Controllers\EventUserRolesController.cs" />
-    <Compile Include="Controllers\EventUsersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="DTO\CategoryDTO.cs" />
+    <Compile Include="DTO\EventDTO.cs" />
+    <Compile Include="DTO\NotificationDTO.cs" />
+    <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -276,6 +279,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EventModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\EventPaging_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\EventUser.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
@@ -283,6 +289,8 @@
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\IValidationDictionary.cs" />
+    <Compile Include="Models\ModelStateWrapper.cs" />
     <Compile Include="Models\Notification.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
@@ -298,10 +306,23 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserPaging_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Respositories\CategoryRespository.cs" />
+    <Compile Include="Respositories\EventRespository.cs" />
+    <Compile Include="Respositories\EventUserRespository.cs" />
+    <Compile Include="Respositories\EventUserRoleRespository.cs" />
+    <Compile Include="Respositories\GenericRespository.cs" />
+    <Compile Include="Respositories\UserRespository.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\EventService.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\PagedListExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -412,7 +433,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>46736</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:46736/</IISUrl>
+          <IISUrl>http://localhost/YTicket.API2</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

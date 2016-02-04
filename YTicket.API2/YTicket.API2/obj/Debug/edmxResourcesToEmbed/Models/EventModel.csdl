@@ -4,7 +4,7 @@
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <NavigationProperty Name="Events" Relationship="Self.EventCategory" FromRole="Category" ToRole="Event" />
     <NavigationProperty Name="Users" Relationship="Self.UserCategory" FromRole="Category" ToRole="User" />
@@ -15,13 +15,14 @@
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Info" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Info" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Place" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="MaxAttendance" Type="Int32" />
     <Property Name="RequireAttendance" Type="Int32" />
     <Property Name="Vote" Type="Int32" />
     <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
     <NavigationProperty Name="EventUsers" Relationship="Self.FK_EventUser_Event" FromRole="Event" ToRole="EventUser" />
     <NavigationProperty Name="Categories" Relationship="Self.EventCategory" FromRole="Event" ToRole="Category" />
   </EntityType>
@@ -52,6 +53,7 @@
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Information" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="New" Type="Boolean" Nullable="false" />
     <NavigationProperty Name="User" Relationship="Self.FK_Notification_User" FromRole="Notification" ToRole="User" />
   </EntityType>
   <EntityType Name="sysdiagram">
@@ -70,10 +72,10 @@
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
     <NavigationProperty Name="EventUsers" Relationship="Self.FK_EventUser_User" FromRole="User" ToRole="EventUser" />
     <NavigationProperty Name="Notifications" Relationship="Self.FK_Notification_User" FromRole="User" ToRole="Notification" />
     <NavigationProperty Name="Categories" Relationship="Self.UserCategory" FromRole="User" ToRole="Category" />
@@ -166,6 +168,10 @@
       <End Role="Category" EntitySet="Categories" />
       <End Role="User" EntitySet="Users" />
     </AssociationSet>
+    <FunctionImport Name="EventPaging" ReturnType="Collection(EventModel.EventPaging_Result)">
+      <Parameter Name="PageNumber" Mode="In" Type="Int32" />
+      <Parameter Name="RowspPage" Mode="In" Type="Int32" />
+    </FunctionImport>
     <FunctionImport Name="sp_alterdiagram">
       <Parameter Name="diagramname" Mode="In" Type="String" />
       <Parameter Name="owner_id" Mode="In" Type="Int32" />
@@ -196,7 +202,18 @@
       <Parameter Name="new_diagramname" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="sp_upgraddiagrams" />
+    <FunctionImport Name="UserPaging" ReturnType="Collection(EventModel.UserPaging_Result)">
+      <Parameter Name="PageNumber" Mode="In" Type="Int32" />
+      <Parameter Name="RowspPage" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
+  <ComplexType Name="EventPaging_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+    <Property Type="DateTime" Name="Time" Nullable="false" Precision="23" />
+    <Property Type="String" Name="Place" Nullable="false" MaxLength="50" />
+    <Property Type="Binary" Name="Image" Nullable="true" />
+  </ComplexType>
   <ComplexType Name="sp_helpdiagramdefinition_Result">
     <Property Type="Int32" Name="version" Nullable="true" />
     <Property Type="Binary" Name="definition" Nullable="true" />
@@ -207,5 +224,10 @@
     <Property Type="Int32" Name="ID" Nullable="false" />
     <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
     <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="UserPaging_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Username" Nullable="false" MaxLength="50" />
+    <Property Type="Binary" Name="Image" Nullable="true" />
   </ComplexType>
 </Schema>

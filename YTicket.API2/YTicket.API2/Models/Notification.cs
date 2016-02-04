@@ -17,6 +17,7 @@ namespace YTicket.API2.Models
         public int ID { get; set; }
         public string Information { get; set; }
         public int UserID { get; set; }
+        public bool New { get; set; }
     
         public virtual User User { get; set; }
     }

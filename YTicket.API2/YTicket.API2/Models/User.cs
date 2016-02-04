@@ -9,11 +9,9 @@
 
 namespace YTicket.API2.Models
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Runtime.Serialization;
+    
     public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -25,27 +23,16 @@ namespace YTicket.API2.Models
         }
     
         public int ID { get; set; }
-
-        [Required]
-        [MaxLength(50)]
         public string Username { get; set; }
-        public string Password { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
+        public byte[] Image { get; set; }
     
-        [JsonIgnore]
-        [IgnoreDataMember]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EventUser> EventUsers { get; set; }
-
-        [JsonIgnore]
-        [IgnoreDataMember]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Notification> Notifications { get; set; }
-
-        [JsonIgnore]
-        [IgnoreDataMember]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Category> Categories { get; set; }
     }

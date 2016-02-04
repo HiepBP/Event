@@ -4,7 +4,7 @@
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
   </EntityType>
   <EntityType Name="Event">
@@ -13,13 +13,14 @@
     </Key>
     <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-    <Property Name="Info" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Info" Type="varchar" MaxLength="150" Nullable="false" />
     <Property Name="Time" Type="datetime" Nullable="false" />
     <Property Name="Place" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="MaxAttendance" Type="int" />
     <Property Name="RequireAttendance" Type="int" />
     <Property Name="Vote" Type="int" />
     <Property Name="Price" Type="money" />
+    <Property Name="Image" Type="varbinary(max)" />
   </EntityType>
   <EntityType Name="EventCategory">
     <Key>
@@ -52,6 +53,7 @@
     <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Information" Type="varchar" MaxLength="150" Nullable="false" />
     <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="New" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="sysdiagrams">
     <Key>
@@ -69,10 +71,10 @@
     </Key>
     <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
-    <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="Address" Type="varchar" MaxLength="50" />
     <Property Name="Phone" Type="varchar" MaxLength="50" />
+    <Property Name="Image" Type="varbinary(max)" />
   </EntityType>
   <EntityType Name="UserCategory">
     <Key>
@@ -178,6 +180,10 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="EventPaging" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PageNumber" Type="int" Mode="In" />
+    <Parameter Name="RowspPage" Type="int" Mode="In" />
+  </Function>
   <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
   <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -209,6 +215,10 @@
     <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
   </Function>
   <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="UserPaging" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PageNumber" Type="int" Mode="In" />
+    <Parameter Name="RowspPage" Type="int" Mode="In" />
+  </Function>
   <EntityContainer Name="EventModelStoreContainer">
     <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />

@@ -1,33 +1,104 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.Routing;
 using YTicket.API2.Models;
+using YTicket.API2.Models.DTO;
+using YTicket.API2.Respositories;
+using YTicket.API2.Services;
 
 namespace YTicket.API2.Controllers
 {
+    [RoutePrefix("api/Users")]
     public class UsersController : ApiController
     {
         private EventEntities db = new EventEntities();
+        private IUserService _service;
 
-        // GET: api/Users
-        public IQueryable<User> GetUsers()
+        public UsersController()
         {
-            return db.Users;
+            _service = new UserService(new ModelStateWrapper(this.ModelState),
+                new UserRespository(), new CategoryRespository());
+        }
+        
+        public UsersController(IUserService service)
+        {
+            _service = service;
         }
 
-        // GET: api/Users/5
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> GetUser(int id)
+        [Route("GetAllPaging", Name = "GetAllUserPagingRoute")]
+        public IQueryable<UserDTO> GetAllPaging(int page, int pageSize)
         {
-            User user = await db.Users.FindAsync(id);
+            var list = _service.GetAllPaging(page, pageSize);
+
+            if (list != null)
+            {
+                var totalCount = _service.GetTotalResults();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+                var urlHelper = new UrlHelper(Request);
+                var prevLink = page > 1 ? urlHelper.Link("GetAllUserPagingRoute", new { page = page - 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetAllUserPagingRoute", new { page = page + 1, pageSize = pageSize }) : "";
+                var firstLink = page != 1 ? urlHelper.Link("GetAllUserPagingRoute", new { page = 1, pageSize = pageSize }) : "";
+                var lastLink = page != totalPages ? urlHelper.Link("GetAllUserPagingRoute", new { page = totalPages, pageSize = pageSize }) : "";
+
+                var paginationHeader = new
+                {
+                    TotalCount = totalCount,
+                    TotalPages = totalPages,
+                    PrevPageLink = prevLink,
+                    NextPageLink = nextLink,
+                    FirstPageLink = firstLink,
+                    LastPageLink = lastLink
+                };
+
+                System.Web.HttpContext.Current.Response.Headers.Add("X-Pagination",
+                    Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+            }
+
+            return Queryable.AsQueryable(list);
+        }
+
+        [Route("GetByNamePaging", Name = "GetUserByNamePagingRoute")]
+        public IQueryable<UserDTO> GetByNamePaging(string name, int page, int pageSize)
+        {
+            var list = _service.GetByNamePaging(name, page, pageSize);
+
+            if (list != null)
+            {
+                var totalCount = _service.GetTotalResults();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+                var urlHelper = new UrlHelper(Request);
+                var prevLink = page > 1 ? urlHelper.Link("GetUserByNamePagingRoute", new { name = name, page = page - 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetUserByNamePagingRoute", new { name = name, page = page + 1, pageSize = pageSize }) : "";
+                var firstLink = page != 1 ? urlHelper.Link("GetUserByNamePagingRoute", new { name = name, page = 1, pageSize = pageSize }) : "";
+                var lastLink = page != totalPages ? urlHelper.Link("GetUserByNamePagingRoute", new { name = name, page = totalPages, pageSize = pageSize }) : "";
+
+                var paginationHeader = new
+                {
+                    TotalCount = totalCount,
+                    TotalPages = totalPages,
+                    PrevPageLink = prevLink,
+                    NextPageLink = nextLink,
+                    FirstPageLink = firstLink,
+                    LastPageLink = lastLink
+                };
+
+                System.Web.HttpContext.Current.Response.Headers.Add("X-Pagination",
+                    Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+            }
+
+            return Queryable.AsQueryable(list);
+        }
+
+        [Route("GetUserDetail")]
+        public async Task<IHttpActionResult> GetUserDetail(int id)
+        {
+            var user = _service.GetUserDetail(id);
             if (user == null)
             {
                 return NotFound();
@@ -36,70 +107,23 @@ namespace YTicket.API2.Controllers
             return Ok(user);
         }
 
-        // PUT: api/Users/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutUser(int id, User user)
+        [Authorize]
+        [ResponseType(typeof(Event))]
+        [HttpPut]
+        [Route("UpdateUser", Name = "UpdateUserRoute")]
+        public async Task<IHttpActionResult> UpdateUser(int id, User user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != user.ID)
             {
                 return BadRequest();
             }
 
-            db.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Users
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> PostUser(User user)
-        {
-            if (!ModelState.IsValid)
+            if (!_service.UpdateUser(user, User.Identity.Name))
             {
                 return BadRequest(ModelState);
             }
 
-            db.Users.Add(user);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = user.ID }, user);
-        }
-
-        // DELETE: api/Users/5
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> DeleteUser(int id)
-        {
-            User user = await db.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            db.Users.Remove(user);
-            await db.SaveChangesAsync();
-
-            return Ok(user);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)

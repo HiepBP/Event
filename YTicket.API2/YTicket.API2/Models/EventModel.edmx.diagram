@@ -4,14 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="41e16022709245ebbaa8804c6ed04e21" Name="Diagram1">
+      <Diagram DiagramId="1fd112b2bbe94bfcad978399db99737d" Name="Diagram1">
         <EntityTypeShape EntityType="EventModel.Category" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="EventModel.Event" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="EventModel.EventUser" Width="1.5" PointX="5.25" PointY="2.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="EventModel.EventUserRole" Width="1.5" PointX="3" PointY="8.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="EventModel.Notification" Width="1.5" PointX="5.25" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventModel.EventUser" Width="1.5" PointX="5.25" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventModel.EventUserRole" Width="1.5" PointX="3" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventModel.Notification" Width="1.5" PointX="5.25" PointY="5.625" IsExpanded="true" />
         <EntityTypeShape EntityType="EventModel.sysdiagram" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EventModel.User" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventModel.User" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
         <AssociationConnector Association="EventModel.FK_EventUser_Event" ManuallyRouted="false" />
         <AssociationConnector Association="EventModel.FK_EventUser_EventUserRole" ManuallyRouted="false" />
         <AssociationConnector Association="EventModel.FK_EventUser_User" ManuallyRouted="false" />

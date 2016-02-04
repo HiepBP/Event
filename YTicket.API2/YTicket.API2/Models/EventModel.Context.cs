@@ -35,6 +35,19 @@ namespace YTicket.API2.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<User> Users { get; set; }
     
+        public virtual ObjectResult<EventPaging_Result> EventPaging(Nullable<int> pageNumber, Nullable<int> rowspPage)
+        {
+            var pageNumberParameter = pageNumber.HasValue ?
+                new ObjectParameter("PageNumber", pageNumber) :
+                new ObjectParameter("PageNumber", typeof(int));
+    
+            var rowspPageParameter = rowspPage.HasValue ?
+                new ObjectParameter("RowspPage", rowspPage) :
+                new ObjectParameter("RowspPage", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<EventPaging_Result>("EventPaging", pageNumberParameter, rowspPageParameter);
+        }
+    
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
             var diagramnameParameter = diagramname != null ?
@@ -136,6 +149,19 @@ namespace YTicket.API2.Models
         public virtual int sp_upgraddiagrams()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
+        }
+    
+        public virtual ObjectResult<UserPaging_Result> UserPaging(Nullable<int> pageNumber, Nullable<int> rowspPage)
+        {
+            var pageNumberParameter = pageNumber.HasValue ?
+                new ObjectParameter("PageNumber", pageNumber) :
+                new ObjectParameter("PageNumber", typeof(int));
+    
+            var rowspPageParameter = rowspPage.HasValue ?
+                new ObjectParameter("RowspPage", rowspPage) :
+                new ObjectParameter("RowspPage", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UserPaging_Result>("UserPaging", pageNumberParameter, rowspPageParameter);
         }
     }
 }

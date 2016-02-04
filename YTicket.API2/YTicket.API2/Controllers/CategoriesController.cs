@@ -9,112 +9,94 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.Routing;
+using YTicket.API2.DTO;
 using YTicket.API2.Models;
+using YTicket.API2.Respositories;
+using YTicket.API2.Services;
 
 namespace YTicket.API2.Controllers
 {
+    [RoutePrefix("api/Categories")]
     public class CategoriesController : ApiController
     {
         private EventEntities db = new EventEntities();
+        private ICategoryService _service;
 
-        // GET: api/Categories
-        public IQueryable<Category> GetCategories()
+        public CategoriesController()
         {
-            return db.Categories;
+            _service = new CategoryService(new CategoryRespository());
         }
 
-        // GET: api/Categories/5
-        [ResponseType(typeof(Category))]
-        public async Task<IHttpActionResult> GetCategory(int id)
+        public CategoriesController(ICategoryService service)
         {
-            Category category = await db.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(category);
+            _service = service;
         }
 
-        // PUT: api/Categories/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutCategory(int id, Category category)
+        [Route("GetAllPaging", Name = "GetAllCategoryPagingRoute")]
+        public IQueryable<CategoryDTO> GetAllPaging(int page, int pageSize)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var list = _service.GetAllPaging(page, pageSize);
 
-            if (id != category.ID)
+            if (list != null)
             {
-                return BadRequest();
-            }
+                var totalCount = _service.GetTotalResults();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-            db.Entry(category).State = EntityState.Modified;
+                var urlHelper = new UrlHelper(Request);
+                var prevLink = page > 1 ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = page - 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = page + 1, pageSize = pageSize }) : "";
+                var firstLink = page != 1 ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = 1, pageSize = pageSize }) : "";
+                var lastLink = page != totalPages ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = totalPages, pageSize = pageSize }) : "";
 
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
+                var paginationHeader = new
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                    TotalCount = totalCount,
+                    TotalPages = totalPages,
+                    PrevPageLink = prevLink,
+                    NextPageLink = nextLink,
+                    FirstPageLink = firstLink,
+                    LastPageLink = lastLink
+                };
+
+                System.Web.HttpContext.Current.Response.Headers.Add("X-Pagination",
+                    Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Queryable.AsQueryable(list);
         }
 
-        // POST: api/Categories
-        [ResponseType(typeof(Category))]
-        public async Task<IHttpActionResult> PostCategory(Category category)
+        [Route("GetByNamePaging", Name = "GetCategoryByNamePagingRoute")]
+        public IQueryable<CategoryDTO> GetByNamePaging(string name, int page, int pageSize)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var list = _service.GetByNamePaging(name, page, pageSize);
 
-            db.Categories.Add(category);
+            if (list != null)
+            {
+                var totalCount = _service.GetTotalResults();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (CategoryExists(category.ID))
+                var urlHelper = new UrlHelper(Request);
+                var prevLink = page > 1 ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = page - 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = page + 1, pageSize = pageSize }) : "";
+                var firstLink = page != 1 ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = 1, pageSize = pageSize }) : "";
+                var lastLink = page != totalPages ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = totalPages, pageSize = pageSize }) : "";
+
+                var paginationHeader = new
                 {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                    TotalCount = totalCount,
+                    TotalPages = totalPages,
+                    PrevPageLink = prevLink,
+                    NextPageLink = nextLink,
+                    FirstPageLink = firstLink,
+                    LastPageLink = lastLink
+                };
+
+                System.Web.HttpContext.Current.Response.Headers.Add("X-Pagination",
+                    Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = category.ID }, category);
-        }
-
-        // DELETE: api/Categories/5
-        [ResponseType(typeof(Category))]
-        public async Task<IHttpActionResult> DeleteCategory(int id)
-        {
-            Category category = await db.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            db.Categories.Remove(category);
-            await db.SaveChangesAsync();
-
-            return Ok(category);
+            return Queryable.AsQueryable(list);
         }
 
         protected override void Dispose(bool disposing)
