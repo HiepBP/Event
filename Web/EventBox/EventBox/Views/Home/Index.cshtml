@@ -142,12 +142,13 @@
                                 ConfirmPassword: $('#rConfirmPassword').val()
                             }
                             $.ajax({
-                                type: "POST",
-                                url: "http://localhost:46736/api/Account/Register",
-                                contentType: 'application/json; charset=utf-8',
-                                dataType: 'json',
+                                method: "POST",
+                                url: "http://localhost/YTicket.API2/api/Account/Register",
+                                beforeSend: function (req) {
+                                    req.setRequestHeader("Content-Type", "application/json");
+                                },
                                 data: JSON.stringify(source),
-                                success: function (result) {
+                                success: function () {
                                     alert('Success');
                                 },
                                 error: function () {
@@ -178,25 +179,27 @@
                         function login() {
                             var loginData = {
                                 grant_type: 'password',
-                                username: $('loginEmail').val(),
-                                password: $('loginPassword').val()
+                                username: $('#loginEmail').val(),
+                                password: $('#loginPassword').val()
                             };
 
                             $.ajax({
                                 method: 'POST',
-                                url: 'http://localhost:46736/Token',
+                                url: 'http://localhost/YTicket.API2/Token',
                                 beforeSend: function (req) {
                                     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                                     req.setRequestHeader("Accept", "application/json");
                                 },
                                 data: loginData,
                                 success: function (result) {
-                                    sessionStorage.setItem("token", result.access_token);
+                                    sessionStorage.setItem("token", "abc");
                                     sessionStorage.setItem("userName", result.userName);
-                                    System.Diagnostics.Debug.WriteLine("Success");
+                                    console.log(result.userName);
+                                    alert("success");
                                 },
                                 error: function () {
-                                    System.Diagnostics.Debug.WriteLine("Fail");
+                                    console.log($('#loginEmail').val());
+                                    alert("fail");
                                 }
                             });
                         }
