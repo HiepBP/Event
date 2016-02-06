@@ -22,7 +22,7 @@ namespace YTicket.API2.Respositories
                 Time = p.Time,
                 Image = p.Image
             })
-            .OrderBy(o => o.ID);
+            .OrderByDescending(o => o.ID);
 
             TotalResults = events.Count();
 
@@ -40,7 +40,7 @@ namespace YTicket.API2.Respositories
                     Time = p.Time,
                     Image = p.Image
                 })
-                .OrderBy(o => o.ID);
+                .OrderByDescending(o => o.ID);
 
             TotalResults = events.Count();
 
@@ -59,7 +59,7 @@ namespace YTicket.API2.Respositories
                     Time = p.Time,
                     Image = p.Image
                 })
-                .OrderBy(o => o.ID);
+                .OrderByDescending(o => o.ID);
 
             TotalResults = events.Count();
 
@@ -77,7 +77,7 @@ namespace YTicket.API2.Respositories
                     Place = p.Place,
                     Image = p.Image
                 })
-                .OrderBy(o => o.ID);
+                .OrderByDescending(o => o.ID);
 
             TotalResults = events.Count();
 
@@ -96,7 +96,7 @@ namespace YTicket.API2.Respositories
                    Time = p.Time,
                    Image = p.Image
                })
-               .OrderBy(o => o.ID);
+               .OrderByDescending(o => o.ID);
 
             TotalResults = events.Count();
 
