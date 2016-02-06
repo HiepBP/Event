@@ -1,7 +1,6 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +9,41 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <!--Check logged in-->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log("ready");
+            /*
+            userName = sessionStorage.getItem("userName");
+            if (!!userName) {
+                $('#btn_Reg').hide();
+                $('#btn_Login').hide();
+            }
+            else {
+                $('#btn_Reg').show();
+                $('#btn_Login').show();
+            }
+            */
+            $.ajax({
+                method: 'POST',
+                url: 'http://localhost/YTicket.API2/Token',
+                beforeSend: function (req) {
+                    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    req.setRequestHeader("Accept", "application/json");
+                },
+                data: loginData,
+                success: function (result) {
+                    sessionStorage.setItem("token", "abc");
+                    sessionStorage.setItem("userName", result.userName);
+                },
+                error: function () {
+                }
+            });
+        });
+    </script>
+
     <title>Home</title>
     <link rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css'>
 
@@ -66,58 +100,71 @@
     <!-- Carousel -->
     <!-- grid Image -->
     <div id="three-columns" class="grid-container" style="display: block;">
-        <ul class="rig columns-3">
-            <li>
+        @Model List<Event>
+            <ul class="rig columns-3">
+                @foreach (var item in Model)
+                {
+                    <li>
+                        <img src="~/Images/1.jpg" />
+                        <h3>@item.Name</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </li>
+                }
 
-                <img src="~/Images/1.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-            <li>
-                <img src="~/Images/4.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-            <li>
-                <img src="~/Images/4.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-            <li>
+                <!--
 
-                <img src="~/Images/5.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-            <li>
-                <img src="~/Images/3.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-            <li>
-                <img src="~/Images/5.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-            <li>
+                <li>
 
-                <img src="~/Images/1.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-            <li>
+                    <img src="~/Images/1.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                <li>
+                    <img src="~/Images/4.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                <li>
+                    <img src="~/Images/4.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                <li>
 
-                <img src="~/Images/2.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-            <li>
+                    <img src="~/Images/5.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                <li>
+                    <img src="~/Images/3.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                <li>
+                    <img src="~/Images/5.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                <li>
 
-                <img src="~/Images/3.jpg" />
-                <h3>Image Title</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </li>
-        </ul>
+                    <img src="~/Images/1.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                <li>
+
+                    <img src="~/Images/2.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                <li>
+
+                    <img src="~/Images/3.jpg" />
+                    <h3>Image Title</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </li>
+                    -->
+            </ul>
     </div>
     <!-- grid Image -->
     <!-- Modal DangKy -->
@@ -172,7 +219,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h1>Đăng nhập</h1><br>
                 <form data-bind="submit: login" method="post">
-                    <input type="text" id="loginEmail" name="user" placeholder="Email"">
+                    <input type="text" id="loginEmail" name="user" placeholder="Email" ">
                     <input type="password" id="loginPassword" name="pass" placeholder="Mật khẩu">
                     <input type="submit" class="login login-submit" value="Đăng Nhập" onclick="login();">
                     <script type="text/javascript">
@@ -194,12 +241,8 @@
                                 success: function (result) {
                                     sessionStorage.setItem("token", "abc");
                                     sessionStorage.setItem("userName", result.userName);
-                                    console.log(result.userName);
-                                    alert("success");
                                 },
                                 error: function () {
-                                    console.log($('#loginEmail').val());
-                                    alert("fail");
                                 }
                             });
                         }
@@ -214,19 +257,7 @@
     <!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            userName = sessionStorage.getItem(userName);
-            if (!!userName) {
-                $('btn_Reg').hide();
-                $('btn_Login').hide();
-            }
-            else {
-                $('btn_Reg').show();
-                $('btn_Login').show();
-            }
-        });
-    </script>
+
 
 
 </body>
