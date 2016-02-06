@@ -29,6 +29,13 @@ namespace YTicket.API2.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Returns all users with paging and newest first.
+        /// User Collection contains basic DTO: ID, Username, Image.
+        /// </summary>
+        /// <param name="page">page number</param>
+        /// <param name="pageSize">items per page</param>
+        /// <returns></returns>
         [Route("GetAllPaging", Name = "GetAllUserPagingRoute")]
         public IQueryable<UserDTO> GetAllPaging(int page, int pageSize)
         {
@@ -62,6 +69,13 @@ namespace YTicket.API2.Controllers
             return Queryable.AsQueryable(list);
         }
 
+        /// <summary>
+        /// Returns all users that match name keyword with paging and newest first.
+        /// User Collection contains basic DTO: ID, Username, Image.
+        /// </summary>
+        /// <param name="name">keyword user to search</param>
+        /// <param name="pageNumber">page number</param>
+        /// <param name="pageSize">items per page</param>
         [Route("GetByNamePaging", Name = "GetUserByNamePagingRoute")]
         public IQueryable<UserDTO> GetByNamePaging(string name, int page, int pageSize)
         {
@@ -95,6 +109,12 @@ namespace YTicket.API2.Controllers
             return Queryable.AsQueryable(list);
         }
 
+        /// <summary>
+        /// Returns individual User.
+        /// User contains detail DTO: ID, Username, Email, Address, Phone, Image, Categories.
+        /// </summary>
+        /// <param name="id">id of user</param>
+        /// <returns></returns>
         [Route("GetUserDetail")]
         public async Task<IHttpActionResult> GetUserDetail(int id)
         {
@@ -107,6 +127,14 @@ namespace YTicket.API2.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Authorize action, the request header need bearer authorization token.
+        /// Updates an individual User.
+        /// User contains detail DTO: ID, Username, Email, Address, Phone, Image, Categories.
+        /// </summary>
+        /// <param name="id">id of User</param>
+        /// <param name="user">the user object</param>
+        /// <returns></returns>
         [Authorize]
         [ResponseType(typeof(Event))]
         [HttpPut]

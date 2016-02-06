@@ -481,49 +481,183 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:YTicket.API2.Controllers.CategoriesController.GetAllPaging(System.Int32,System.Int32)">
+            <summary>
+            Returns all categories with paging and newest first.
+            Category Collection contains basic DTO: ID, Name.
+            </summary>
+            <param name="page">page number</param>
+            <param name="pageSize">items per page</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.CategoriesController.GetByNamePaging(System.String,System.Int32,System.Int32)">
+            <summary>
+            Returns all categories that match name keyword with paging and newest first.
+            Category Collection contains basic DTO: ID, Name.
+            </summary>
+            <param name="name">name keyword</param>
+            <param name="page">page number</param>
+            <param name="pageSize">items per page</param>
+            <returns></returns>
+        </member>
         <member name="M:YTicket.API2.Controllers.EventsController.GetAllPaging(System.Int32,System.Int32)">
             <summary>
-            Test something hear
+            Returns all events with paging and newest first.
+            Event Collection contains basic DTO: ID, Name, Time, Place, Image.
             </summary>
-            <param name="page">page something</param>
-            <param name="pageSize">size something</param>
+            <param name="page">page number</param>
+            <param name="pageSize">items per page</param>
             <returns></returns>
         </member>
         <member name="M:YTicket.API2.Controllers.EventsController.GetByNamePaging(System.String,System.Int32,System.Int32)">
             <summary>
-            
+            Returns all events that match name keyword with paging and newest first.
+            Event Collection contains basic DTO: ID, Name, Time, Place, Image.
             </summary>
-            <param name="name"></param>
-            <param name="pageNumber"></param>
-            <param name="pageSize"></param>
+            <param name="name">keyword user to search</param>
+            <param name="pageNumber">page number</param>
+            <param name="pageSize">items per page</param>
             <returns></returns>
         </member>
         <member name="M:YTicket.API2.Controllers.EventsController.GetByCategoryPaging(System.Int32,System.Int32,System.Int32)">
             <summary>
-            
+            Returns all events of the requited category with paging and newest first.
+            Event Collection contains basic DTO: ID, Name, Time, Place, Image.
             </summary>
-            <param name="categoryID"></param>
-            <param name="pageNumber"></param>
-            <param name="pageSize"></param>
+            <param name="categoryID">id of category</param>
+            <param name="pageNumber">page number</param>
+            <param name="pageSize">items per page</param>
             <returns></returns>
         </member>
         <member name="M:YTicket.API2.Controllers.EventsController.GetByUserPaging(System.Int32,System.Int32,System.Int32)">
             <summary>
-            
+            Returns all events created by the required user with paging and newest first.
+            Event Collection contains basic DTO: ID, Name, Time, Place, Image.
             </summary>
-            <param name="userID"></param>
-            <param name="pageNumber"></param>
-            <param name="pageSize"></param>
+            <param name="userID">id of user</param>
+            <param name="pageNumber">page number</param>
+            <param name="pageSize">items per page</param>
             <returns></returns>
         </member>
         <member name="M:YTicket.API2.Controllers.EventsController.GetByNameCategoryPaging(System.String,System.Int32,System.Int32,System.Int32)">
             <summary>
-            
+            Returns all events of the requited category that match name keyword 
+            with paging and newest first.
+            Event Collection contains basic DTO: ID, Name, Time, Place, Image.
             </summary>
-            <param name="name"></param>
-            <param name="categoryID"></param>
-            <param name="pageNumber"></param>
-            <param name="pageSize"></param>
+            <param name="name">name keyword</param>
+            <param name="categoryID">id of category</param>
+            <param name="pageNumber">page number</param>
+            <param name="pageSize">items per page</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.EventsController.GetJoinedUserPaging(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Returns all users that going to the required event.
+            User Collection contains basic DTO: ID, Username, Image.
+            </summary>
+            <param name="id">id of event</param>
+            <param name="page">page number</param>
+            <param name="pageSize">items per page</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.EventsController.GetEventUserStatus(System.Int32)">
+            <summary>
+            Authorize action, the request header need bearer authorization token.
+            Returns an object to show if the user joined the event or not.
+            The object contains: Status (true, false), Action (Leave event, Join event).
+            </summary>
+            <param name="id">id of event</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.EventsController.GetEventDetail(System.Int32)">
+            <summary>
+            Returns an individual Event.
+            Event contains detail DTO: ID, Name, Info, Time, Place, MaxAttendance, 
+            RequiredAttendance, Vote, Price, Image, Categories.
+            </summary>
+            <param name="id">id of event</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.EventsController.UpdateEvent(System.Int32,YTicket.API2.Models.Event)">
+            <summary>
+            Authorize action, the request header need bearer authorization token.
+            Updates an individual Event.
+            Event contains detail DTO: ID, Name, Info, Time, Place, MaxAttendance, 
+            RequiredAttendance, Vote, Price, Image, Categories.
+            </summary>
+            <param name="id">id of Event</param>
+            <param name="event">the event object</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.EventsController.CreateEvent(YTicket.API2.Models.Event)">
+            <summary>
+            Authorize action, the request header need bearer authorization token.
+            Create a new Event.
+            Event contains detail DTO: Name, Info, Time, Place, MaxAttendance, 
+            RequiredAttendance, Vote, Price, Image, Categories.
+            </summary>
+            <param name="event">the event object</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.EventsController.DeleteEvent(System.Int32)">
+            <summary>
+            Authorize action, the request header need bearer authorization token.
+            Deletes an individual Event.
+            </summary>
+            <param name="id">id of event</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.EventsController.JoinEvent(System.Int32)">
+            <summary>
+            Authorize action, the request header need bearer authorization token.
+            Adds current user to event.
+            </summary>
+            <param name="id">id of event</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.EventsController.LeaveEvent(System.Int32)">
+            <summary>
+            Authorize action, the request header need bearer authorization token.
+            Remove current user from event.
+            </summary>
+            <param name="id">id of event</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.UsersController.GetAllPaging(System.Int32,System.Int32)">
+            <summary>
+            Returns all users with paging and newest first.
+            User Collection contains basic DTO: ID, Username, Image.
+            </summary>
+            <param name="page">page number</param>
+            <param name="pageSize">items per page</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.UsersController.GetByNamePaging(System.String,System.Int32,System.Int32)">
+            <summary>
+            Returns all users that match name keyword with paging and newest first.
+            User Collection contains basic DTO: ID, Username, Image.
+            </summary>
+            <param name="name">keyword user to search</param>
+            <param name="pageNumber">page number</param>
+            <param name="pageSize">items per page</param>
+        </member>
+        <member name="M:YTicket.API2.Controllers.UsersController.GetUserDetail(System.Int32)">
+            <summary>
+            Returns individual User.
+            User contains detail DTO: ID, Username, Email, Address, Phone, Image, Categories.
+            </summary>
+            <param name="id">id of user</param>
+            <returns></returns>
+        </member>
+        <member name="M:YTicket.API2.Controllers.UsersController.UpdateUser(System.Int32,YTicket.API2.Models.User)">
+            <summary>
+            Authorize action, the request header need bearer authorization token.
+            Updates an individual User.
+            User contains detail DTO: ID, Username, Email, Address, Phone, Image, Categories.
+            </summary>
+            <param name="id">id of User</param>
+            <param name="user">the user object</param>
             <returns></returns>
         </member>
     </members>
