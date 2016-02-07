@@ -1,4 +1,5 @@
-﻿using EventBox.Models;
+﻿using AttributeRouting.Web.Mvc;
+using EventBox.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,6 +15,7 @@ namespace EventBox.Controllers
 {
     public class HomeController : Controller
     {
+        [Route("Index/Home")]
         public ViewResult Index()
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetAllPaging?page=1&pageSize=9");
@@ -35,7 +37,8 @@ namespace EventBox.Controllers
                 e = new Event(ID, Name, Time, Place);
                 events.Add(e);
             }
-            return View(events);
+            ViewData["Events"] = events;
+            return View();
         }
     }
 }

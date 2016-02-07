@@ -1,4 +1,10 @@
-﻿@{
+﻿@using EventBox.Models;
+
+@{
+    var events = (List<Event>)ViewData["Events"];
+}
+
+@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -15,7 +21,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             console.log("ready");
-            /*
             userName = sessionStorage.getItem("userName");
             if (!!userName) {
                 $('#btn_Reg').hide();
@@ -25,22 +30,6 @@
                 $('#btn_Reg').show();
                 $('#btn_Login').show();
             }
-            */
-            $.ajax({
-                method: 'POST',
-                url: 'http://localhost/YTicket.API2/Token',
-                beforeSend: function (req) {
-                    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    req.setRequestHeader("Accept", "application/json");
-                },
-                data: loginData,
-                success: function (result) {
-                    sessionStorage.setItem("token", "abc");
-                    sessionStorage.setItem("userName", result.userName);
-                },
-                error: function () {
-                }
-            });
         });
     </script>
 
@@ -100,71 +89,71 @@
     <!-- Carousel -->
     <!-- grid Image -->
     <div id="three-columns" class="grid-container" style="display: block;">
-        @Model List<Event>
-            <ul class="rig columns-3">
-                @foreach (var item in Model)
-                {
-                    <li>
-                        <img src="~/Images/1.jpg" />
-                        <h3>@item.Name</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    </li>
-                }
 
-                <!--
-
+        <ul class="rig columns-3">
+            @foreach (var item in events)
+            {
                 <li>
-
                     <img src="~/Images/1.jpg" />
-                    <h3>Image Title</h3>
+                    <h3>@item.Name</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </li>
-                <li>
-                    <img src="~/Images/4.jpg" />
-                    <h3>Image Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </li>
-                <li>
-                    <img src="~/Images/4.jpg" />
-                    <h3>Image Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </li>
-                <li>
+            }
 
-                    <img src="~/Images/5.jpg" />
-                    <h3>Image Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </li>
-                <li>
-                    <img src="~/Images/3.jpg" />
-                    <h3>Image Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </li>
-                <li>
-                    <img src="~/Images/5.jpg" />
-                    <h3>Image Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </li>
-                <li>
+            <!--
 
-                    <img src="~/Images/1.jpg" />
-                    <h3>Image Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </li>
-                <li>
+            <li>
 
-                    <img src="~/Images/2.jpg" />
-                    <h3>Image Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </li>
-                <li>
+                <img src="~/Images/1.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+            <li>
+                <img src="~/Images/4.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+            <li>
+                <img src="~/Images/4.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+            <li>
 
-                    <img src="~/Images/3.jpg" />
-                    <h3>Image Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </li>
-                    -->
-            </ul>
+                <img src="~/Images/5.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+            <li>
+                <img src="~/Images/3.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+            <li>
+                <img src="~/Images/5.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+            <li>
+
+                <img src="~/Images/1.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+            <li>
+
+                <img src="~/Images/2.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+            <li>
+
+                <img src="~/Images/3.jpg" />
+                <h3>Image Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </li>
+                -->
+        </ul>
     </div>
     <!-- grid Image -->
     <!-- Modal DangKy -->
@@ -176,35 +165,11 @@
             <div class="login-card">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h1>Đăng ký</h1><br>
-                <form data-bind="submit: register" method="post">
-                    <input type="text" id="rEmail" name="user" placeholder="Email">
-                    <input type="password" id="rPassword" name="pass" placeholder="Mật khẩu">
-                    <input type="password" id="rConfirmPassword" name="pass" placeholder="Nhập lại mật khẩu">
+                <form method="post" action="Users/Register">
+                    <input type="text" id="rEmail" name="email" placeholder="Email">
+                    <input type="password" id="rPassword" name="password" placeholder="Mật khẩu">
+                    <input type="password" id="rConfirmPassword" name="confirmpassword" placeholder="Nhập lại mật khẩu">
                     <input type="submit" id="register" class="login login-submit" value="Đăng ký" onclick="registerAcc();">
-                    <script type="text/javascript">
-                        function registerAcc() {
-                            var source = {
-                                Email: $('#rEmail').val(),
-                                Password: $('#rPassword').val(),
-                                ConfirmPassword: $('#rConfirmPassword').val()
-                            }
-                            $.ajax({
-                                method: "POST",
-                                url: "http://localhost/YTicket.API2/api/Account/Register",
-                                beforeSend: function (req) {
-                                    req.setRequestHeader("Content-Type", "application/json");
-                                },
-                                data: JSON.stringify(source),
-                                success: function () {
-                                    alert('Success');
-                                },
-                                error: function () {
-                                    alert('Failed');
-                                }
-                            });
-                        }
-
-                    </script>
                 </form>
             </div>
         </div>
@@ -218,36 +183,11 @@
             <div class="login-card">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h1>Đăng nhập</h1><br>
-                <form data-bind="submit: login" method="post">
-                    <input type="text" id="loginEmail" name="user" placeholder="Email" ">
-                    <input type="password" id="loginPassword" name="pass" placeholder="Mật khẩu">
+                <form method="post" action="Users/Login">
+                    <input type="text" id="loginEmail" name="email" placeholder="Email" ">
+                    <input type="password" id="loginPassword" name="password" placeholder="Mật khẩu">
                     <input type="submit" class="login login-submit" value="Đăng Nhập" onclick="login();">
-                    <script type="text/javascript">
-                        function login() {
-                            var loginData = {
-                                grant_type: 'password',
-                                username: $('#loginEmail').val(),
-                                password: $('#loginPassword').val()
-                            };
-
-                            $.ajax({
-                                method: 'POST',
-                                url: 'http://localhost/YTicket.API2/Token',
-                                beforeSend: function (req) {
-                                    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                                    req.setRequestHeader("Accept", "application/json");
-                                },
-                                data: loginData,
-                                success: function (result) {
-                                    sessionStorage.setItem("token", "abc");
-                                    sessionStorage.setItem("userName", result.userName);
-                                },
-                                error: function () {
-                                }
-                            });
-                        }
-
-                    </script>
+                    
                 </form>
             </div>
 

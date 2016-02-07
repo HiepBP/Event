@@ -44,7 +44,8 @@ namespace EventBox.Controllers
                 e = new Event(ID, Name, Time, Place);
                 events.Add(e);
             }
-            return View("Index",events);
+            ViewData["Events"] = events;
+            return View("Index");
         }
 
     }
