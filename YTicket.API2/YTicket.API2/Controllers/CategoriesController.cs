@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using System.Web.Http.Routing;
 using YTicket.API2.DTO;
 using YTicket.API2.Models;
@@ -33,6 +25,13 @@ namespace YTicket.API2.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Returns all categories with paging and newest first.
+        /// Category Collection contains basic DTO: ID, Name.
+        /// </summary>
+        /// <param name="page">page number</param>
+        /// <param name="pageSize">items per page</param>
+        /// <returns></returns>
         [Route("GetAllPaging", Name = "GetAllCategoryPagingRoute")]
         public IQueryable<CategoryDTO> GetAllPaging(int page, int pageSize)
         {
@@ -66,6 +65,14 @@ namespace YTicket.API2.Controllers
             return Queryable.AsQueryable(list);
         }
 
+        /// <summary>
+        /// Returns all categories that match name keyword with paging and newest first.
+        /// Category Collection contains basic DTO: ID, Name.
+        /// </summary>
+        /// <param name="name">name keyword</param>
+        /// <param name="page">page number</param>
+        /// <param name="pageSize">items per page</param>
+        /// <returns></returns>
         [Route("GetByNamePaging", Name = "GetCategoryByNamePagingRoute")]
         public IQueryable<CategoryDTO> GetByNamePaging(string name, int page, int pageSize)
         {

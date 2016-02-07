@@ -30,10 +30,11 @@ namespace YTicket.API2.Controllers
         }
 
         /// <summary>
-        /// Test something hear
+        /// Returns all events with paging and newest first.
+        /// Event Collection contains basic DTO: ID, Name, Time, Place, Image.
         /// </summary>
-        /// <param name="page">page something</param>
-        /// <param name="pageSize">size something</param>
+        /// <param name="page">page number</param>
+        /// <param name="pageSize">items per page</param>
         /// <returns></returns>
         [Route("GetAllPaging", Name = "GetAllPagingRoute")]
         public IQueryable<EventDTO> GetAllPaging(int page, int pageSize)
@@ -69,11 +70,12 @@ namespace YTicket.API2.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Returns all events that match name keyword with paging and newest first.
+        /// Event Collection contains basic DTO: ID, Name, Time, Place, Image.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="name">keyword user to search</param>
+        /// <param name="pageNumber">page number</param>
+        /// <param name="pageSize">items per page</param>
         /// <returns></returns>
         [Route("GetByNamePaging", Name = "GetByNamePagingRoute")]
         public IQueryable<EventDTO> GetByNamePaging(string name, int page, int pageSize)
@@ -109,11 +111,12 @@ namespace YTicket.API2.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Returns all events of the requited category with paging and newest first.
+        /// Event Collection contains basic DTO: ID, Name, Time, Place, Image.
         /// </summary>
-        /// <param name="categoryID"></param>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="categoryID">id of category</param>
+        /// <param name="pageNumber">page number</param>
+        /// <param name="pageSize">items per page</param>
         /// <returns></returns>
         [Route("GetByCategoryPaging", Name = "GetByCategoryPagingRoute")]
         public IQueryable<EventDTO> GetByCategoryPaging(int categoryID, int page, int pageSize)
@@ -149,11 +152,12 @@ namespace YTicket.API2.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Returns all events created by the required user with paging and newest first.
+        /// Event Collection contains basic DTO: ID, Name, Time, Place, Image.
         /// </summary>
-        /// <param name="userID"></param>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="userID">id of user</param>
+        /// <param name="pageNumber">page number</param>
+        /// <param name="pageSize">items per page</param>
         /// <returns></returns>
         [Route("GetByUserPaging", Name = "GetByUserPagingRoute")]
         public IQueryable<EventDTO> GetByUserPaging(int userID, int pageNumber, int pageSize)
@@ -163,12 +167,14 @@ namespace YTicket.API2.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Returns all events of the requited category that match name keyword 
+        /// with paging and newest first.
+        /// Event Collection contains basic DTO: ID, Name, Time, Place, Image.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="categoryID"></param>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="name">name keyword</param>
+        /// <param name="categoryID">id of category</param>
+        /// <param name="pageNumber">page number</param>
+        /// <param name="pageSize">items per page</param>
         /// <returns></returns>
         [Route("GetByNameCategoryPaging", Name = "GetByNameCategoryPagingRoute")]
         public IQueryable<EventDTO> GetByNameCategoryPaging(string name, int categoryID, int page, int pageSize)
@@ -203,6 +209,14 @@ namespace YTicket.API2.Controllers
             return Queryable.AsQueryable(list);
         }
 
+        /// <summary>
+        /// Returns all users that going to the required event.
+        /// User Collection contains basic DTO: ID, Username, Image.
+        /// </summary>
+        /// <param name="id">id of event</param>
+        /// <param name="page">page number</param>
+        /// <param name="pageSize">items per page</param>
+        /// <returns></returns>
         [Route("GetJoinedUserPaging", Name = "GetJoinedUserPagingRoute")]
         public IQueryable<UserDTO> GetJoinedUserPaging(int id, int page, int pageSize)
         {
@@ -236,6 +250,13 @@ namespace YTicket.API2.Controllers
             return Queryable.AsQueryable(list);
         }
 
+        /// <summary>
+        /// Authorize action, the request header need bearer authorization token.
+        /// Returns an object to show if the user joined the event or not.
+        /// The object contains: Status (true, false), Action (Leave event, Join event).
+        /// </summary>
+        /// <param name="id">id of event</param>
+        /// <returns></returns>
         [Authorize]
         [Route("GetEventUserStatus", Name = "GetEventUserStatusRoute")]
         public async Task<IHttpActionResult> GetEventUserStatus(int id)
@@ -244,14 +265,14 @@ namespace YTicket.API2.Controllers
             var model = new
             {
                 Status = false,
-                Link = ""
+                Action = ""
             };
             if (_service.GetEventUserStatus(id, User.Identity.Name))
             {
                 model = new
                 {
                     Status = true,
-                    Link = urlHelper.Link("LeaveEventRoute", new { id = id})
+                    Action = urlHelper.Link("LeaveEventRoute", new { id = id})
                 };
             }
             else
@@ -259,12 +280,19 @@ namespace YTicket.API2.Controllers
                 model = new
                 {
                     Status = false,
-                    Link = urlHelper.Link("JoinEventRoute", new { id = id })
+                    Action = urlHelper.Link("JoinEventRoute", new { id = id })
                 };
             }
             return Ok(model);
         }
 
+        /// <summary>
+        /// Returns an individual Event.
+        /// Event contains detail DTO: ID, Name, Info, Time, Place, MaxAttendance, 
+        /// RequiredAttendance, Vote, Price, Image, Categories.
+        /// </summary>
+        /// <param name="id">id of event</param>
+        /// <returns></returns>
         [Route("GetEventDetail")]
         public async Task<IHttpActionResult> GetEventDetail(int id)
         {
@@ -277,6 +305,15 @@ namespace YTicket.API2.Controllers
             return Ok(@event);
         }
 
+        /// <summary>
+        /// Authorize action, the request header need bearer authorization token.
+        /// Updates an individual Event.
+        /// Event contains detail DTO: ID, Name, Info, Time, Place, MaxAttendance, 
+        /// RequiredAttendance, Vote, Price, Image, Categories.
+        /// </summary>
+        /// <param name="id">id of Event</param>
+        /// <param name="event">the event object</param>
+        /// <returns></returns>
         [Authorize]
         [ResponseType(typeof(Event))]
         [HttpPut]
@@ -296,6 +333,14 @@ namespace YTicket.API2.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Authorize action, the request header need bearer authorization token.
+        /// Create a new Event.
+        /// Event contains detail DTO: Name, Info, Time, Place, MaxAttendance, 
+        /// RequiredAttendance, Vote, Price, Image, Categories.
+        /// </summary>
+        /// <param name="event">the event object</param>
+        /// <returns></returns>
         [Authorize]
         [ResponseType(typeof(Event))]
         [HttpPost]
@@ -309,6 +354,12 @@ namespace YTicket.API2.Controllers
             return CreatedAtRoute("CreateEventRoute", new { id = @event.ID }, @event);
         }
 
+        /// <summary>
+        /// Authorize action, the request header need bearer authorization token.
+        /// Deletes an individual Event.
+        /// </summary>
+        /// <param name="id">id of event</param>
+        /// <returns></returns>
         [Authorize]
         [HttpDelete]
         [Route("DeleteEvent", Name = "DeleteEventRoute")]
@@ -322,6 +373,12 @@ namespace YTicket.API2.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Authorize action, the request header need bearer authorization token.
+        /// Adds current user to event.
+        /// </summary>
+        /// <param name="id">id of event</param>
+        /// <returns></returns>
         [Authorize]
         [HttpPut]
         [Route("JoinEvent", Name = "JoinEventRoute")]
@@ -334,6 +391,12 @@ namespace YTicket.API2.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Authorize action, the request header need bearer authorization token.
+        /// Remove current user from event.
+        /// </summary>
+        /// <param name="id">id of event</param>
+        /// <returns></returns>
         [Authorize]
         [HttpPut]
         [Route("LeaveEvent", Name = "LeaveEventRoute")]
