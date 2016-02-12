@@ -1,0 +1,32 @@
+﻿@using EventBox.Models;
+
+@{
+    var events = (List<Event>)ViewData["Events"];
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<body>
+
+
+    <!-- Carousel -->
+    <!-- grid Image -->
+    <div id="three-columns" class="grid-container" style="display: block;">
+
+        <ul class="rig columns-3">
+            @foreach (var item in events)
+            {
+                <li>
+                    <img src="~/Images/1.jpg" />
+                    <h3>@item.Name</h3>
+                    <p>@item.Time</p>
+                </li>
+            }
+        </ul>
+    </div>
+    <!-- grid Image -->
+</body>
+</html>
