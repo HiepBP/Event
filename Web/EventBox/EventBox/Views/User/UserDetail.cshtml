@@ -1,0 +1,114 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="generator"
+          content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src=@Url.Content("~/Scripts/modernizr.js") type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/normalize.css") />
+    <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/styles.css") />
+    <title>User Details</title>
+</head>
+<body>
+    <!--navbar-->
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">EVENT BOX</a>
+            </div>
+            <div style="margin-left: 2em" class="nav navbar-nav">
+                <div class="search">
+                    <input type="text" class="form-control input-sm" maxlength="64" placeholder="Search" />
+                    <button type="submit" class="btn btn-primary btn-sm" id="btn_Search" name="btn_Search">Search</button>
+                </div>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-user" id="btn_Reg" name="btn_Reg"
+                            data-toggle="modal" data-target="#myModal">
+                        Đăng ký
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Login" name="btn_Login"
+                            data-toggle="modal" data-target="#ModalDangNhap">
+                        Đăng nhập
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--navbar-->
+    <div class="container">
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad">
+
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Huy ndp</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="https://s-media-cache-ak0.pinimg.com/236x/d3/56/04/d356041853238bfec5f5b1bb97392a8e.jpg" class="img-circle img-responsive"> </div>
+
+
+                            <div class=" col-md-9 col-lg-9 ">
+                                <table class="table table-user-information">
+                                    <tbody>
+
+                                        <tr>
+                                            <td>Họ tên:</td>
+                                            <td>Ndp Huy</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Năm sinh:</td>
+                                            <td>01/24/1988</td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td>Giới tính:</td>
+                                            <td>Nam</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Địa chỉ:</td>
+                                            <td>Metro Manila,Philippines</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Email</td>
+                                            <td><a href="mailto:huyndp@gmail">huyndp@gmail.com</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Số điện thoại:</td>
+                                            <td>0987654321(Mobile)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sở thích:</td>
+                                            <td>Phim, game</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+

@@ -23,9 +23,9 @@ namespace EventBox.Controllers
         /// <param name="name"></param>
         /// <returns></returns>
         [Route("SearchEvent")]
-        public ActionResult SearchEvent(string name)
+        public ActionResult SearchEvent(string searchValue)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetByNamePaging?name=" + name + "&page=1&pageSize=9");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetByNamePaging?name=" + searchValue + "&page=1&pageSize=9");
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -65,11 +65,31 @@ namespace EventBox.Controllers
             ed.Info = (string)eventDetail["Info"];
             ed.Time = (System.DateTime)eventDetail["Time"];
             ed.Place = (string)eventDetail["Place"];
-            ed.MaxAttendance = (int)eventDetail["MaxAttendance"];
-            ed.RequireAttendance = (int)eventDetail["RequireAttendance"];
-            ed.Vote = (int)eventDetail["Vote"];
-            ed.Price = (int)eventDetail["Price"];
-            ed.Categories = eventDetail["Categories"].ToObject<List<Category>>();
+            JToken token = eventDetail["MaxAttendance"];
+            if (token != null && token.Type != JTokenType.Null)
+            {
+                ed.MaxAttendance = (int)eventDetail["MaxAttendance"];
+            }
+            token = eventDetail["RequireAttendance"];
+            if (token != null && token.Type != JTokenType.Null)
+            {
+                ed.RequireAttendance = (int)eventDetail["RequireAttendance"];
+            }
+            token = eventDetail["Vote"];
+            if (token != null && token.Type != JTokenType.Null)
+            {
+                ed.Vote = (int)eventDetail["Vote"];
+            }
+            token = eventDetail["Price"];
+            if (token != null && token.Type != JTokenType.Null)
+            {
+                ed.Price = (int)eventDetail["Price"];
+            }
+            token = eventDetail["Categories"];
+            if (token != null && token.Type != JTokenType.Null)
+            {
+                ed.Categories = eventDetail["Categories"].ToObject<List<Category>>();
+            }
             ViewData["EventDetail"] = ed;
 
             httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetJoinedUserPaging?id=" + id + "&page=1&pageSize=10");
@@ -90,7 +110,7 @@ namespace EventBox.Controllers
             }
             ViewData["Users"] = users;
 
-            return View();
+            return View("EventDetail");
         }
 
         [Route("Update")]
