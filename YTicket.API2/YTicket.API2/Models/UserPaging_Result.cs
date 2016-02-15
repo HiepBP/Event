@@ -15,6 +15,6 @@ namespace YTicket.API2.Models
     {
         public int ID { get; set; }
         public string Username { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
     }
 }

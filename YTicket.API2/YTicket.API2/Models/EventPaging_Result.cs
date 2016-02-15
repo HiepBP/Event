@@ -17,6 +17,6 @@ namespace YTicket.API2.Models
         public string Name { get; set; }
         public System.DateTime Time { get; set; }
         public string Place { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
     }
 }

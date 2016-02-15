@@ -30,7 +30,7 @@ namespace YTicket.API2.Models
         public Nullable<int> RequireAttendance { get; set; }
         public Nullable<int> Vote { get; set; }
         public Nullable<decimal> Price { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EventUser> EventUsers { get; set; }
