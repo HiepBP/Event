@@ -7,8 +7,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-    <!--Check logged in-->
-
     <title>Home</title>
     <link rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css'>
 
@@ -29,13 +27,21 @@
                 </div>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li>
-
-                    <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-user" id="btn_Reg" name="btn_Reg" data-toggle="modal" data-target="#myModal"> Đăng ký</button>
-                </li>
-                <li>
-                    <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Login" name="btn_Login" data-toggle="modal" data-target="#ModalDangNhap"> Đăng nhập</button>
-                </li>
+                @if (Convert.ToString(Session["Username"]) != null || Convert.ToString(Session["Username"]) != string.Empty)
+                {
+                    <li>
+                        <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Logout" name="btn_Logout"> Thoat</button>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-user" id="btn_Reg" name="btn_Reg" data-toggle="modal" data-target="#myModal"> Đăng ký</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Login" name="btn_Login" data-toggle="modal" data-target="#ModalDangNhap"> Đăng nhập</button>
+                    </li>
+                }
             </ul>
         </div>
     </nav>
@@ -67,7 +73,6 @@
     <!-- Modal DangKy -->
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-            <!-- Modal content-->
 
 
             <div class="login-card">
@@ -98,7 +103,6 @@
 
                 </form>
             </div>
-
         </div>
     </div>
     <!-- Modal DangNhap-->

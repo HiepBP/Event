@@ -49,7 +49,7 @@ namespace EventBox.Controllers
             return View("Index");
         }
 
-        [Route("Detail")]
+        [Route("EventDetail")]
         public ActionResult Detail(int id)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetEventDetail?id=" + id);
