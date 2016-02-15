@@ -1,7 +1,7 @@
 USE [master]
 GO
 
-/****** Object:  Database [Event]    Script Date: 02/04/2016 17:41:29 ******/
+/****** Object:  Database [Event]    Script Date: 02/15/2016 18:56:44 ******/
 IF  EXISTS (SELECT name FROM sys.databases WHERE name = N'Event')
 DROP DATABASE [Event]
 GO
@@ -9,7 +9,7 @@ GO
 USE [master]
 GO
 
-/****** Object:  Database [Event]    Script Date: 02/04/2016 17:41:29 ******/
+/****** Object:  Database [Event]    Script Date: 02/15/2016 18:56:44 ******/
 CREATE DATABASE [Event] ON  PRIMARY 
 ( NAME = N'Event', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10.MSSQLSERVER\MSSQL\DATA\Event.mdf' , SIZE = 3072KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
  LOG ON 
@@ -109,35 +109,41 @@ GO
 ALTER DATABASE [Event] SET DB_CHAINING OFF 
 GO
 
+
 USE [Event]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 02/04/2016 17:42:58 ******/
+/****** Object:  Table [dbo].[User]    Script Date: 02/15/2016 18:58:11 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[User]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[User](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Username] [varchar](50) NOT NULL,
 	[Email] [varchar](50) NOT NULL,
 	[Address] [varchar](50) NULL,
 	[Phone] [varchar](50) NULL,
-	[Image] [varbinary](max) NULL,
+	[Image] [varchar](50) NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
 SET ANSI_PADDING OFF
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[User]') AND name = N'UQ_Email')
 CREATE UNIQUE NONCLUSTERED INDEX [UQ_Email] ON [dbo].[User] 
 (
 	[Email] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[User]') AND name = N'UQ_Username')
 CREATE UNIQUE NONCLUSTERED INDEX [UQ_Username] ON [dbo].[User] 
 (
 	[Username] ASC
@@ -149,13 +155,15 @@ INSERT [dbo].[User] ([ID], [Username], [Email], [Address], [Phone], [Image]) VAL
 INSERT [dbo].[User] ([ID], [Username], [Email], [Address], [Phone], [Image]) VALUES (3, N'linh@yahoo.com', N'linh@yahoo.com', NULL, NULL, NULL)
 INSERT [dbo].[User] ([ID], [Username], [Email], [Address], [Phone], [Image]) VALUES (4, N'trang@yahoo.com', N'trang@yahoo.com', NULL, NULL, NULL)
 SET IDENTITY_INSERT [dbo].[User] OFF
-/****** Object:  Table [dbo].[Event]    Script Date: 02/04/2016 17:42:58 ******/
+/****** Object:  Table [dbo].[Event]    Script Date: 02/15/2016 18:58:11 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Event]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[Event](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NOT NULL,
@@ -166,12 +174,13 @@ CREATE TABLE [dbo].[Event](
 	[RequireAttendance] [int] NULL,
 	[Vote] [int] NULL,
 	[Price] [money] NULL,
-	[Image] [varbinary](max) NULL,
+	[Image] [varchar](50) NULL,
  CONSTRAINT [PK_Event] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
 SET ANSI_PADDING OFF
 GO
@@ -378,27 +387,29 @@ INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [R
 INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (228, N'Suspendisse Corp.', N'magnis', CAST(0x0000A70B00000000 AS DateTime), N'Ap #346-1776 Integer Avenue', NULL, NULL, NULL, NULL, NULL)
 INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (229, N'Pharetra Quisque Corporation', N'Nunc', CAST(0x0000A57200000000 AS DateTime), N'Ap #558-7346 Sed, Street', NULL, NULL, NULL, NULL, NULL)
 INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (230, N'Massa Company', N'euismod ac,', CAST(0x0000A59A00000000 AS DateTime), N'452-7184 Sit Road', NULL, NULL, NULL, NULL, NULL)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (232, N'test', N'forfun', CAST(0x0000A5A00166B664 AS DateTime), N'sample string 5', 1, 1, 1, 1.0000, 0x4040)
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (232, N'test', N'forfun', CAST(0x0000A5A00166B664 AS DateTime), N'sample string 5', 1, 1, 1, 1.0000, N'@@')
 GO
 print 'Processed 200 total records'
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (233, N'test', N'forfun', CAST(0x0000A5A00166B664 AS DateTime), N'sample string 5', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (234, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (235, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (236, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (237, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (238, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (239, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (240, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (241, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
-INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (242, N'FFE', N'final fantasy explorers', CAST(0x0000A5A700000000 AS DateTime), N'home', 1, 1, 1, 1.0000, 0x4040)
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (233, N'test', N'forfun', CAST(0x0000A5A00166B664 AS DateTime), N'sample string 5', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (234, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (235, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (236, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (237, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (238, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (239, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (240, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (241, N'FFE', N'final fantasy explorers', CAST(0x0000A5A300000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
+INSERT [dbo].[Event] ([ID], [Name], [Info], [Time], [Place], [MaxAttendance], [RequireAttendance], [Vote], [Price], [Image]) VALUES (242, N'FFE', N'final fantasy explorers', CAST(0x0000A5A700000000 AS DateTime), N'home', 1, 1, 1, 1.0000, N'@@')
 SET IDENTITY_INSERT [dbo].[Event] OFF
-/****** Object:  Table [dbo].[Category]    Script Date: 02/04/2016 17:42:58 ******/
+/****** Object:  Table [dbo].[Category]    Script Date: 02/15/2016 18:58:11 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Category]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[Category](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NOT NULL,
@@ -407,6 +418,7 @@ CREATE TABLE [dbo].[Category](
 	[ID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
 SET ANSI_PADDING OFF
 GO
@@ -415,11 +427,13 @@ INSERT [dbo].[Category] ([ID], [Name]) VALUES (1, N'test')
 INSERT [dbo].[Category] ([ID], [Name]) VALUES (2, N'category2')
 INSERT [dbo].[Category] ([ID], [Name]) VALUES (3, N'category3')
 SET IDENTITY_INSERT [dbo].[Category] OFF
-/****** Object:  Table [dbo].[EventUserRole]    Script Date: 02/04/2016 17:42:58 ******/
+/****** Object:  Table [dbo].[EventUserRole]    Script Date: 02/15/2016 18:58:11 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EventUserRole]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[EventUserRole](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Role] [nvarchar](50) NOT NULL,
@@ -428,17 +442,20 @@ CREATE TABLE [dbo].[EventUserRole](
 	[ID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
 SET IDENTITY_INSERT [dbo].[EventUserRole] ON
 INSERT [dbo].[EventUserRole] ([ID], [Role]) VALUES (1, N'Master')
 INSERT [dbo].[EventUserRole] ([ID], [Role]) VALUES (2, N'Supporter')
 INSERT [dbo].[EventUserRole] ([ID], [Role]) VALUES (3, N'Member')
 SET IDENTITY_INSERT [dbo].[EventUserRole] OFF
-/****** Object:  Table [dbo].[AspNetRoles]    Script Date: 02/04/2016 17:42:58 ******/
+/****** Object:  Table [dbo].[AspNetRoles]    Script Date: 02/15/2016 18:58:11 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[AspNetRoles]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[AspNetRoles](
 	[Id] [nvarchar](128) NOT NULL,
 	[Name] [nvarchar](256) NOT NULL,
@@ -447,19 +464,23 @@ CREATE TABLE [dbo].[AspNetRoles](
 	[Id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[AspNetRoles]') AND name = N'RoleNameIndex')
 CREATE UNIQUE NONCLUSTERED INDEX [RoleNameIndex] ON [dbo].[AspNetRoles] 
 (
 	[Name] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[__MigrationHistory]    Script Date: 02/04/2016 17:42:58 ******/
+/****** Object:  Table [dbo].[__MigrationHistory]    Script Date: 02/15/2016 18:58:11 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[__MigrationHistory]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[__MigrationHistory](
 	[MigrationId] [nvarchar](150) NOT NULL,
 	[ContextKey] [nvarchar](300) NOT NULL,
@@ -471,17 +492,20 @@ CREATE TABLE [dbo].[__MigrationHistory](
 	[ContextKey] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
 SET ANSI_PADDING OFF
 GO
 INSERT [dbo].[__MigrationHistory] ([MigrationId], [ContextKey], [Model], [ProductVersion]) VALUES (N'201601261319341_InitialCreate', N'YTicket.API2.Models.ApplicationDbContext', 0x1F8B0800000000000400DD5C5B6FE3B6127E3FC0F90F829ECE3948AD5CBA8B6D60EF22759273826E2E58678B9EA7052DD10EB112A54A549AA0E82FEB437F52FF428712254BBCE8622BB6532CB088C8E137C3E1901C0E87FEF3F73FC61F9E02DF7AC47142423AB18F4687B685A91B7A842E2776CA16DFBCB33FBCFFE73FC6175EF064FD58D09D703A68499389FDC05874EA3889FB8003948C02E2C661122ED8C80D030779A1737C78F89D7374E46080B001CBB2C69F52CA4880B30FF89C86D4C5114B917F1D7AD84F4439D4CC3254EB06053889908B27F6FFEF89FB15B3D1D9DDD5F12827B7AD339F20106586FD856D214A438618087AFA39C133168774398BA000F9F7CF1106BA05F2132C3A70BA22EFDA97C363DE1767D5B08072D38485414FC0A313A11C476EBE968AED5279A0BE0B50337BE6BDCE5438B1AF3C9C157D0A7D5080CCF074EAC79C78625F972CCE92E806D45D341CE5909731C0FD12C65F4755C403AB73BB83D2988E4787FCDF81354D7D96C6784271CA62E41F5877E9DC27EE0FF8F93EFC8AE9E4E468BE3879F7E62DF24EDE7E8B4FDE547B0A7D05BA5A0114DDC5618463900D2FCAFEDB96536FE7C80DCB669536B956C096605ED8D6357AFA88E9923DC08C397E675B97E4097B458930AECF94C03482462C4EE1F326F57D34F77159EF34F2E4FF37703D7EF37610AE37E8912CB3A197F8C3C489615E7DC27E569B3C90289F5EB5F1FE22C82EE330E0DF75FBCA6BBFCCC2347679674223C93D8A9798D5A51B3B2BE3ED64D21C6A78B32E50F7DFB4B9A4AA796B497987D69909058B6DCF8642DE97E5DBD9E2CEA208062F332DAE912683D3EC5623A9F98155255A19CF5157E3A1D0A9BFF35A781120E20FB01876E0028EC882C4012E7BF97D08A687686F99EF5092C05AE0FD0F250F0DA2C39F03883EC36E1A8389CE180AA217E776F710527C9306736EF9DBE335D8D0DCFF125E229785F105E5AD36C6FB18BA5FC3945D50EF1C31FC99B90520FFBC2741778041C439735D9C249760CCD89B86E067178057949D1CF786E32BD4AE9D91A98F48A0F746A4B5F44B41BAF248F4148A576220D379264DA27E0C97847613B520358B9A53B48A2AC8FA8ACAC1BA492A28CD826604AD72E65483F97AD9080DEFEC65B0FBEFED6DB6799BD6828A1A67B042E2FF628A6358C6BC3BC4188EE96A04BAAC1BBB7016B2E1E34C5F7C6FCA38FD88FC7468566BCD866C11187E3664B0FB3F1B3231A1F89178DC2BE970042A8801BE13BDFE74D53EE724C9B63D1D6ADDDC36F3EDAC01A6E9729624A14BB259A0097E89D0455D7EF0E1ACF63846DE1B3916021D0343277CCB8312E89B2D1BD52D3DC73E66D83A73F3E0E014252EF254354287BC1E82153BAA46B0554CA42EDC7F149E60E938E68D103F042530530965EAB420D42511F25BB524B5ECB885F1BE973CE49A731C61CA19B66AA20B737D08840B50F29106A54D4363A76271CD8668F05A4D63DEE6C2AEC65D894C6CC5265B7C67835D0AFFED450CB359635B30CE66957411C018CEDB85818AB34A5703900F2EFB66A0D289C960A0C2A5DA8A81D635B60303ADABE4D519687E44ED3AFED27975DFCCB37E50DEFEB6DEA8AE1DD8664D1F7B669AB9EF096D18B4C0B16A9EE7735E899F98E67006728AF359225C5DD94438F80CB37AC866E5EF6AFD50A7194436A226C095A1B5808A8B40054899503D842B62798DD2092FA2076C11776B84156BBF045BB10115BB7A215A21345F9BCAC6D9E9F451F6ACB406C5C83B1D162A381A839017AF7AC73B28C514975515D3C517EEE30D573A2606A341412D9EAB4149456706D752619AED5AD239647D5CB28DB424B94F062D159D195C4BC246DB95A4710A7AB8051BA9A8BE850F34D98A4847B9DB947563274F94120563C7905135BE465144E8B29261254AAC599E5E35FD66D63FED28C8311C37D1641F95D2969C5818A325966A8135487A49E2849D2386E688C779A65EA09069F756C3F25FB0AC6E9FEA2016FB4041CDFFCE5BE8AEEF6B9BADEA8D08904BE862C05D9A2C8EAE31007D738BA7BC211FC59AD0FD34F4D3809A3D2C73EBFC02AFDA3E2F5111C68E24BFE24129EA52FCDCBAEE3B8D8C3A2B861AA5D283597FA4CC10267D17FE6755E3269FD48C5284A8AA28A6B0D5CE46CEE4CAF41B2DD94DEC3F58AD082F33B3446E4A154014F5C4A8A437286095BAEEA8F50C942A66BDA63BA29466528594AA7A48594D26A90959AD580BCFA0513D45770E6AFA48155DADED8EAC4924A9426BAAD7C0D6C82CD77547D5E49A548135D5DDB1578927F22ABAC77B97F1F0B2FEE6951F7037DBBD0C182FB3240EB3F955EEF1AB4095E29E58E2A65E0113E57B694EC653DEFAE6940736363327038679EDA95D81D7979EC67B7B3366ED5EBBB6BC37DDEB9BF1FA19ED8B9A8672CA93494AEEE5694F3AD58DC509ABFD318D72E4CA496CAB50236CEDCF09C3C188138C663FFB539F60BE901704D78892054E589ECB61C389F09DF41C677F9EC63849E2F99A13AAE97D4C7DCCB69096451F51EC3EA0584D92D8E0F9C80A54893F5F510F3F4DEC5FB356A7592883FF95151F5857C9674A7E4EA1E23E4EB1F59B9AF4394C3A7DF3396B4F1F3F74D7EAD54F5FF2A607D66D0C33E6D43A9474B9CE08D79F44F492266FBA81346B3F9478BD13AAF606418B2A4D88F59F1CCC091BE4B94121E5BF02F4F4EFBEA2699F146C84A879363014DE202A343D0B5807CBF824C0834F963D09E8D759FD13817544333E0F20B43F98FC38A0FB3254B4DCE156A339146D6349CAF4DC9A5CBD51A6E5AEF72625077BA389AEE659F780DB20977A0DCB786569C883ED8E9A2CE3C1B07769DA2F9E5ABC2FD9C4AB3C8FDD26116F336FB8E166E86F952EBC07096E9A849DDD27056FDBD64C81DC3DCFACEC97FABB67C626D2B8769FE0BB6D63338579F7DCD87AA5F1EE99ADED6AFFDCB1A575DE42779E94ABE617192E6474B1E0B6A4DB3C700E27FC790846907B94F95B497D965753866A0BC3158999A939BD4C66AC4C1C85AF42D1CCB65F5FC586DFD85941D3CCD69094D9C45BACFF8DBC054D336F43AAE32ED285B5C986BA14EE9675AC290FEA35A507D77AD2928DDEE6B336DEAEBFA66CE04194529B3D863BE2D793FC3B884A869C3A3D927DD5EB5ED83B2BBFB008FB7742962B08FE7B8B14BBB55DB3A4B9A28BB0D8BC25890A122942738D19F2604B3D8B1959209741358F31678FBDB3B81DBFE99863EF8ADEA62C4A1974190773BF16F0E24E4013FF2CA3B92EF3F836CA7EB764882E809884C7E66FE9F729F1BD52EE4B4D4CC800C1BD0B11D1E563C9786477F95C22DD84B42390505FE914DDE320F2012CB9A533F488D7910DCCEF235E22F77915013481B40F445DEDE3738296310A1281B16A0F9F60C35EF0F4FE2F47ADFBFE68540000, N'6.1.3-40302')
-/****** Object:  Table [dbo].[Notification]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Table [dbo].[Notification]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_PADDING ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Notification]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[Notification](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Information] [varchar](150) NOT NULL,
@@ -492,15 +516,18 @@ CREATE TABLE [dbo].[Notification](
 	[ID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  StoredProcedure [dbo].[UserPaging]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  StoredProcedure [dbo].[UserPaging]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- =============================================
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserPaging]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
@@ -522,12 +549,16 @@ BEGIN
 	WHERE NUMBER BETWEEN ((@PageNumber - 1) * @RowspPage + 1) AND (@PageNumber * @RowspPage)
 	ORDER BY NUMBER
 END
+' 
+END
 GO
-/****** Object:  Table [dbo].[UserCategory]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Table [dbo].[UserCategory]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserCategory]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[UserCategory](
 	[UserID] [int] NOT NULL,
 	[CategoryID] [int] NOT NULL,
@@ -537,12 +568,15 @@ CREATE TABLE [dbo].[UserCategory](
 	[CategoryID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
-/****** Object:  Table [dbo].[EventUser]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Table [dbo].[EventUser]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EventUser]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[EventUser](
 	[EventID] [int] NOT NULL,
 	[UserID] [int] NOT NULL,
@@ -553,6 +587,7 @@ CREATE TABLE [dbo].[EventUser](
 	[UserID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
 INSERT [dbo].[EventUser] ([EventID], [UserID], [RoleID]) VALUES (50, 1, 3)
 INSERT [dbo].[EventUser] ([EventID], [UserID], [RoleID]) VALUES (50, 2, 3)
@@ -561,12 +596,14 @@ INSERT [dbo].[EventUser] ([EventID], [UserID], [RoleID]) VALUES (60, 2, 1)
 INSERT [dbo].[EventUser] ([EventID], [UserID], [RoleID]) VALUES (61, 1, 1)
 INSERT [dbo].[EventUser] ([EventID], [UserID], [RoleID]) VALUES (70, 2, 2)
 INSERT [dbo].[EventUser] ([EventID], [UserID], [RoleID]) VALUES (98, 2, 3)
-/****** Object:  StoredProcedure [dbo].[EventPaging]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  StoredProcedure [dbo].[EventPaging]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- =============================================
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EventPaging]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
@@ -588,12 +625,16 @@ BEGIN
 	WHERE NUMBER BETWEEN ((@PageNumber - 1) * @RowspPage + 1) AND (@PageNumber * @RowspPage)
 	ORDER BY NUMBER
 END
+' 
+END
 GO
-/****** Object:  Table [dbo].[EventCategory]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Table [dbo].[EventCategory]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EventCategory]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[EventCategory](
 	[EventID] [int] NOT NULL,
 	[CategoryID] [int] NOT NULL,
@@ -603,6 +644,7 @@ CREATE TABLE [dbo].[EventCategory](
 	[CategoryID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
 INSERT [dbo].[EventCategory] ([EventID], [CategoryID]) VALUES (37, 1)
 INSERT [dbo].[EventCategory] ([EventID], [CategoryID]) VALUES (50, 3)
@@ -642,11 +684,13 @@ INSERT [dbo].[EventCategory] ([EventID], [CategoryID]) VALUES (241, 1)
 INSERT [dbo].[EventCategory] ([EventID], [CategoryID]) VALUES (241, 3)
 INSERT [dbo].[EventCategory] ([EventID], [CategoryID]) VALUES (242, 1)
 INSERT [dbo].[EventCategory] ([EventID], [CategoryID]) VALUES (242, 2)
-/****** Object:  Table [dbo].[AspNetUsers]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Table [dbo].[AspNetUsers]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUsers]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[AspNetUsers](
 	[Id] [nvarchar](128) NOT NULL,
 	[Email] [nvarchar](256) NULL,
@@ -665,7 +709,9 @@ CREATE TABLE [dbo].[AspNetUsers](
 	[Id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUsers]') AND name = N'UserNameIndex')
 CREATE UNIQUE NONCLUSTERED INDEX [UserNameIndex] ON [dbo].[AspNetUsers] 
 (
 	[UserName] ASC
@@ -675,12 +721,13 @@ INSERT [dbo].[AspNetUsers] ([Id], [Email], [EmailConfirmed], [PasswordHash], [Se
 INSERT [dbo].[AspNetUsers] ([Id], [Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName]) VALUES (N'538845bd-7408-4f3d-a2f7-b1b335ae4f6b', N'test@yahoo.com', 0, N'AEJM6H9Ml7ETVOqlRsupBbc2vPYd8dedc30Hy6sy0JrKKInqWKLCk5mTAbcxJpGBOA==', N'3b8dac6e-eea0-484b-979c-481b7b04807a', NULL, 0, 0, NULL, 0, 0, N'test@yahoo.com')
 INSERT [dbo].[AspNetUsers] ([Id], [Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName]) VALUES (N'8b276919-8431-42af-b7e2-8d77e67cc0ba', N'linh@yahoo.com', 0, N'AMdnkwjYuxxlddZYTazqWtqzLi6KGbaR3HRfuuklizGp1s0OureiHcAAUmjrc8CsbQ==', N'c00a20b4-65c1-4595-87f2-ca6dbf22e175', NULL, 0, 0, NULL, 0, 0, N'linh@yahoo.com')
 INSERT [dbo].[AspNetUsers] ([Id], [Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName]) VALUES (N'd25d9cdf-c40a-4f67-a678-e13aa5f4d0d9', N'trang@yahoo.com', 0, N'ABaZ/zTNBOeOvQ1r3qB4qE+F/JbG3qXl2MJjuUn0W5XNA03H4WdR+sflyXIx3gJYzA==', N'4f89c64b-5236-4eea-8820-13af84489874', NULL, 0, 0, NULL, 0, 0, N'trang@yahoo.com')
-/****** Object:  Trigger [OnInsertAspUser]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Trigger [OnInsertAspUser]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- =============================================
+IF NOT EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[OnInsertAspUser]'))
+EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
@@ -699,12 +746,15 @@ BEGIN
 	SELECT Email, Email
 	FROM inserted
 END
+'
 GO
-/****** Object:  Table [dbo].[AspNetUserRoles]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Table [dbo].[AspNetUserRoles]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUserRoles]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[AspNetUserRoles](
 	[UserId] [nvarchar](128) NOT NULL,
 	[RoleId] [nvarchar](128) NOT NULL,
@@ -714,22 +764,27 @@ CREATE TABLE [dbo].[AspNetUserRoles](
 	[RoleId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUserRoles]') AND name = N'IX_RoleId')
 CREATE NONCLUSTERED INDEX [IX_RoleId] ON [dbo].[AspNetUserRoles] 
 (
 	[RoleId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUserRoles]') AND name = N'IX_UserId')
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[AspNetUserRoles] 
 (
 	[UserId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AspNetUserLogins]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Table [dbo].[AspNetUserLogins]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUserLogins]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[AspNetUserLogins](
 	[LoginProvider] [nvarchar](128) NOT NULL,
 	[ProviderKey] [nvarchar](128) NOT NULL,
@@ -741,17 +796,21 @@ CREATE TABLE [dbo].[AspNetUserLogins](
 	[UserId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUserLogins]') AND name = N'IX_UserId')
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[AspNetUserLogins] 
 (
 	[UserId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AspNetUserClaims]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  Table [dbo].[AspNetUserClaims]    Script Date: 02/15/2016 18:58:12 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUserClaims]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[AspNetUserClaims](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[UserId] [nvarchar](128) NOT NULL,
@@ -762,86 +821,111 @@ CREATE TABLE [dbo].[AspNetUserClaims](
 	[Id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
 GO
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[AspNetUserClaims]') AND name = N'IX_UserId')
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[AspNetUserClaims] 
 (
 	[UserId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
-/****** Object:  ForeignKey [FK_UserCategory_Category]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_UserCategory_Category]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserCategory_Category]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserCategory]'))
 ALTER TABLE [dbo].[UserCategory]  WITH CHECK ADD  CONSTRAINT [FK_UserCategory_Category] FOREIGN KEY([CategoryID])
 REFERENCES [dbo].[Category] ([ID])
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserCategory_Category]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserCategory]'))
 ALTER TABLE [dbo].[UserCategory] CHECK CONSTRAINT [FK_UserCategory_Category]
 GO
-/****** Object:  ForeignKey [FK_UserCategory_User]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_UserCategory_User]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserCategory_User]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserCategory]'))
 ALTER TABLE [dbo].[UserCategory]  WITH CHECK ADD  CONSTRAINT [FK_UserCategory_User] FOREIGN KEY([UserID])
 REFERENCES [dbo].[User] ([ID])
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserCategory_User]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserCategory]'))
 ALTER TABLE [dbo].[UserCategory] CHECK CONSTRAINT [FK_UserCategory_User]
 GO
-/****** Object:  ForeignKey [FK_Notification_User]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_Notification_User]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Notification_User]') AND parent_object_id = OBJECT_ID(N'[dbo].[Notification]'))
 ALTER TABLE [dbo].[Notification]  WITH CHECK ADD  CONSTRAINT [FK_Notification_User] FOREIGN KEY([UserID])
 REFERENCES [dbo].[User] ([ID])
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Notification_User]') AND parent_object_id = OBJECT_ID(N'[dbo].[Notification]'))
 ALTER TABLE [dbo].[Notification] CHECK CONSTRAINT [FK_Notification_User]
 GO
-/****** Object:  ForeignKey [FK_EventUser_Event]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_EventUser_Event]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventUser_Event]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventUser]'))
 ALTER TABLE [dbo].[EventUser]  WITH CHECK ADD  CONSTRAINT [FK_EventUser_Event] FOREIGN KEY([EventID])
 REFERENCES [dbo].[Event] ([ID])
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventUser_Event]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventUser]'))
 ALTER TABLE [dbo].[EventUser] CHECK CONSTRAINT [FK_EventUser_Event]
 GO
-/****** Object:  ForeignKey [FK_EventUser_EventUserRole]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_EventUser_EventUserRole]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventUser_EventUserRole]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventUser]'))
 ALTER TABLE [dbo].[EventUser]  WITH CHECK ADD  CONSTRAINT [FK_EventUser_EventUserRole] FOREIGN KEY([RoleID])
 REFERENCES [dbo].[EventUserRole] ([ID])
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventUser_EventUserRole]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventUser]'))
 ALTER TABLE [dbo].[EventUser] CHECK CONSTRAINT [FK_EventUser_EventUserRole]
 GO
-/****** Object:  ForeignKey [FK_EventUser_User]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_EventUser_User]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventUser_User]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventUser]'))
 ALTER TABLE [dbo].[EventUser]  WITH CHECK ADD  CONSTRAINT [FK_EventUser_User] FOREIGN KEY([UserID])
 REFERENCES [dbo].[User] ([ID])
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventUser_User]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventUser]'))
 ALTER TABLE [dbo].[EventUser] CHECK CONSTRAINT [FK_EventUser_User]
 GO
-/****** Object:  ForeignKey [FK_EventCategory_Category]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_EventCategory_Category]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventCategory_Category]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventCategory]'))
 ALTER TABLE [dbo].[EventCategory]  WITH CHECK ADD  CONSTRAINT [FK_EventCategory_Category] FOREIGN KEY([CategoryID])
 REFERENCES [dbo].[Category] ([ID])
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventCategory_Category]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventCategory]'))
 ALTER TABLE [dbo].[EventCategory] CHECK CONSTRAINT [FK_EventCategory_Category]
 GO
-/****** Object:  ForeignKey [FK_EventCategory_Event]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_EventCategory_Event]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventCategory_Event]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventCategory]'))
 ALTER TABLE [dbo].[EventCategory]  WITH CHECK ADD  CONSTRAINT [FK_EventCategory_Event] FOREIGN KEY([EventID])
 REFERENCES [dbo].[Event] ([ID])
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EventCategory_Event]') AND parent_object_id = OBJECT_ID(N'[dbo].[EventCategory]'))
 ALTER TABLE [dbo].[EventCategory] CHECK CONSTRAINT [FK_EventCategory_Event]
 GO
-/****** Object:  ForeignKey [FK_dbo.AspNetUserRoles_dbo.AspNetRoles_RoleId]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_dbo.AspNetUserRoles_dbo.AspNetRoles_RoleId]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.AspNetUserRoles_dbo.AspNetRoles_RoleId]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetUserRoles]'))
 ALTER TABLE [dbo].[AspNetUserRoles]  WITH CHECK ADD  CONSTRAINT [FK_dbo.AspNetUserRoles_dbo.AspNetRoles_RoleId] FOREIGN KEY([RoleId])
 REFERENCES [dbo].[AspNetRoles] ([Id])
 ON DELETE CASCADE
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.AspNetUserRoles_dbo.AspNetRoles_RoleId]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetUserRoles]'))
 ALTER TABLE [dbo].[AspNetUserRoles] CHECK CONSTRAINT [FK_dbo.AspNetUserRoles_dbo.AspNetRoles_RoleId]
 GO
-/****** Object:  ForeignKey [FK_dbo.AspNetUserRoles_dbo.AspNetUsers_UserId]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_dbo.AspNetUserRoles_dbo.AspNetUsers_UserId]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.AspNetUserRoles_dbo.AspNetUsers_UserId]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetUserRoles]'))
 ALTER TABLE [dbo].[AspNetUserRoles]  WITH CHECK ADD  CONSTRAINT [FK_dbo.AspNetUserRoles_dbo.AspNetUsers_UserId] FOREIGN KEY([UserId])
 REFERENCES [dbo].[AspNetUsers] ([Id])
 ON DELETE CASCADE
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.AspNetUserRoles_dbo.AspNetUsers_UserId]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetUserRoles]'))
 ALTER TABLE [dbo].[AspNetUserRoles] CHECK CONSTRAINT [FK_dbo.AspNetUserRoles_dbo.AspNetUsers_UserId]
 GO
-/****** Object:  ForeignKey [FK_dbo.AspNetUserLogins_dbo.AspNetUsers_UserId]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_dbo.AspNetUserLogins_dbo.AspNetUsers_UserId]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.AspNetUserLogins_dbo.AspNetUsers_UserId]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetUserLogins]'))
 ALTER TABLE [dbo].[AspNetUserLogins]  WITH CHECK ADD  CONSTRAINT [FK_dbo.AspNetUserLogins_dbo.AspNetUsers_UserId] FOREIGN KEY([UserId])
 REFERENCES [dbo].[AspNetUsers] ([Id])
 ON DELETE CASCADE
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.AspNetUserLogins_dbo.AspNetUsers_UserId]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetUserLogins]'))
 ALTER TABLE [dbo].[AspNetUserLogins] CHECK CONSTRAINT [FK_dbo.AspNetUserLogins_dbo.AspNetUsers_UserId]
 GO
-/****** Object:  ForeignKey [FK_dbo.AspNetUserClaims_dbo.AspNetUsers_UserId]    Script Date: 02/04/2016 17:43:00 ******/
+/****** Object:  ForeignKey [FK_dbo.AspNetUserClaims_dbo.AspNetUsers_UserId]    Script Date: 02/15/2016 18:58:12 ******/
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.AspNetUserClaims_dbo.AspNetUsers_UserId]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetUserClaims]'))
 ALTER TABLE [dbo].[AspNetUserClaims]  WITH CHECK ADD  CONSTRAINT [FK_dbo.AspNetUserClaims_dbo.AspNetUsers_UserId] FOREIGN KEY([UserId])
 REFERENCES [dbo].[AspNetUsers] ([Id])
 ON DELETE CASCADE
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.AspNetUserClaims_dbo.AspNetUsers_UserId]') AND parent_object_id = OBJECT_ID(N'[dbo].[AspNetUserClaims]'))
 ALTER TABLE [dbo].[AspNetUserClaims] CHECK CONSTRAINT [FK_dbo.AspNetUserClaims_dbo.AspNetUsers_UserId]
 GO
-
