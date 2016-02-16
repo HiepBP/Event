@@ -9,16 +9,19 @@
 
 namespace YTicket.API2.Models
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    
+    using System.Runtime.Serialization;
     public partial class Notification
     {
         public int ID { get; set; }
         public string Information { get; set; }
         public int UserID { get; set; }
         public bool New { get; set; }
-    
+
+        [JsonIgnore]
+        [IgnoreDataMember]
         public virtual User User { get; set; }
     }
 }

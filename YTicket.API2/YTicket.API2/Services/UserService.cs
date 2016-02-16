@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using YTicket.API2.Models;
 using YTicket.API2.Models.DTO;
@@ -41,6 +42,28 @@ namespace YTicket.API2.Services
         public UserDetailDTO GetUserDetail(int id)
         {
             var user = _respository.Get(id);
+            if (user == null)
+            {
+                return null;
+            }
+            else
+            {
+                return new UserDetailDTO
+                {
+                    ID = user.ID,
+                    Username = user.Username,
+                    Address = user.Address,
+                    Email = user.Email,
+                    Image = user.Image,
+                    Phone = user.Phone,
+                    Categories = user.Categories.ToList()
+                };
+            }
+        }
+
+        public async Task<UserDetailDTO> GetUserDetailAsync(int id)
+        {
+            var user = await _respository.GetAsync(id);
             if (user == null)
             {
                 return null;
@@ -116,10 +139,44 @@ namespace YTicket.API2.Services
             return true;
         }
 
+        public async Task<bool> UpdateUserAsync(User user, string username)
+        {
+            // Validate not found
+            var u = await _respository.GetAsync(user.ID);
+            if (u == null)
+            {
+                _validationDictionary.AddErrors("User", "Not found");
+                return false;
+            }
+
+            // Validate authorization
+            if (!u.Username.Trim().Equals(username.Trim()))
+            {
+                _validationDictionary.AddErrors("Authorization", "User does not have permission.");
+                return false;
+            }
+
+            // Validate logic
+            if (!ValidateUser(user))
+                return false;
+
+            // Database logic
+            try
+            {
+                await _respository.UpdateUserAsync(user);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public int GetTotalResults()
         {
             return TotalResults;
         }
+
     }
 
     public interface IUserService
@@ -127,7 +184,9 @@ namespace YTicket.API2.Services
         IEnumerable<UserDTO> GetAllPaging(int pageNumber, int pageSize);
         IEnumerable<UserDTO> GetByNamePaging(string name, int pageNumber, int pageSize);
         UserDetailDTO GetUserDetail(int id);
+        Task<UserDetailDTO> GetUserDetailAsync(int id);
         bool UpdateUser(User user, string username);
+        Task<bool> UpdateUserAsync(User user, string username);
         int GetTotalResults();
     }
 }

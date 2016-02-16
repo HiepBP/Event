@@ -214,6 +214,18 @@ namespace YTicket.API2.Services
             return false;
         }
 
+        public async Task<bool> GetEventUserStatusAsync(int id, string username)
+        {
+            var @event = await _respository.GetAsync(id);
+            var user = await _userRespository.GetByUsernameAsync(username);
+            foreach (var item in @event.EventUsers)
+            {
+                if (item.UserID == user.ID)
+                    return true;
+            }
+            return false;
+        }
+
         public bool CreateEvent(Event @event, string username)
         {
             // Validate logic
@@ -225,6 +237,25 @@ namespace YTicket.API2.Services
             {
                 var user = _userRespository.GetByUsername(username);
                 _respository.CreateEvent(@event, user);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> CreateEventAsync(Event @event, string username)
+        {
+            // Validate logic
+            if (!ValidateEvent(@event))
+                return false;
+
+            // Database logic
+            try
+            {
+                var user = await _userRespository.GetByUsernameAsync(username);
+                await _respository.CreateEventAsync(@event, user);
             }
             catch
             {
@@ -267,6 +298,40 @@ namespace YTicket.API2.Services
             return true;
         }
 
+        public async Task<bool> UpdateEventAsync(Event @event, string username)
+        {
+            // Validate not found
+            var e = await _respository.GetAsync(@event.ID);
+            if (e == null)
+            {
+                _validationDictionary.AddErrors("Event", "Not found");
+                return false;
+            }
+
+            // Validate authorization
+            var user = await _respository.GetMasterAsync(@event);
+            if (!user.Username.Trim().Equals(username.Trim()))
+            {
+                _validationDictionary.AddErrors("Authorization", "User does not have permission.");
+                return false;
+            }
+
+            // Validate logic
+            if (!ValidateEvent(@event))
+                return false;
+
+            // Database logic
+            try
+            {
+                await _respository.UpdateEventAsync(@event);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool DeleteEvent(int id, string username)
         {
             // Validate not found
@@ -297,6 +362,36 @@ namespace YTicket.API2.Services
             return true;
         }
 
+        public async Task<bool> DeleteEventAsync(int id, string username)
+        {
+            // Validate not found
+            var @event = await _respository.GetAsync(id);
+            if (@event == null)
+            {
+                _validationDictionary.AddErrors("Event", "Not found.");
+                return false;
+            }
+
+            // Validate authorization
+            var user = await _respository.GetMasterAsync(@event);
+            if (!user.Username.Trim().Equals(username.Trim()))
+            {
+                _validationDictionary.AddErrors("Authorization", "User does not have permission.");
+                return false;
+            }
+
+            // Database logic
+            try
+            {
+                await _respository.DeleteEventAsync(@event);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool JoinEvent(int id, string username)
         {
             var @event = _respository.Get(id);
@@ -308,6 +403,21 @@ namespace YTicket.API2.Services
             var user = _userRespository.GetByUsername(username);
 
             _respository.JoinEvent(@event, user);
+
+            return true;
+        }
+
+        public async Task<bool> JoinEventAsync(int id, string username)
+        {
+            var @event = await _respository.GetAsync(id);
+            if (@event == null)
+            {
+                _validationDictionary.AddErrors("Event", "Not found.");
+                return false;
+            }
+            var user = await _userRespository.GetByUsernameAsync(username);
+
+            await _respository.JoinEventAsync(@event, user);
 
             return true;
         }
@@ -327,6 +437,21 @@ namespace YTicket.API2.Services
             return true;
         }
 
+        public async Task<bool> LeaveEventAsync(int id, string username)
+        {
+            var @event = await _respository.GetAsync(id);
+            if (@event == null)
+            {
+                _validationDictionary.AddErrors("Event", "Not found.");
+                return false;
+            }
+            var user = await _userRespository.GetByUsernameAsync(username);
+
+            await _respository.LeaveEventAsync(@event, user);
+
+            return true;
+        }
+
         public int Count()
         {
             return _respository.Count();
@@ -336,6 +461,7 @@ namespace YTicket.API2.Services
         {
             return TotalResults;
         }
+
     }
 
     public interface IEventService
@@ -349,11 +475,17 @@ namespace YTicket.API2.Services
         EventDetailDTO GetEventDetail(int id);
         Task<EventDetailDTO> GetEventDetailAsync(int id);
         bool GetEventUserStatus(int id, string username);
+        Task<bool> GetEventUserStatusAsync(int id, string username);
         bool CreateEvent(Event @event, string username);
+        Task<bool> CreateEventAsync(Event @event, string username);
         bool UpdateEvent(Event @event, string username);
+        Task<bool> UpdateEventAsync(Event @event, string username);
         bool DeleteEvent(int id, string username);
+        Task<bool> DeleteEventAsync(int id, string username);
         bool JoinEvent(int id, string username);
+        Task<bool> JoinEventAsync(int id, string username);
         bool LeaveEvent(int id, string username);
+        Task<bool> LeaveEventAsync(int id, string username);
         int GetTotalResults();
         int Count();
     }

@@ -118,7 +118,7 @@ namespace YTicket.API2.Controllers
         [Route("GetUserDetail")]
         public async Task<IHttpActionResult> GetUserDetail(int id)
         {
-            var user = _service.GetUserDetail(id);
+            var user = await _service.GetUserDetailAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -146,7 +146,7 @@ namespace YTicket.API2.Controllers
                 return BadRequest();
             }
 
-            if (!_service.UpdateUser(user, User.Identity.Name))
+            if (!await _service.UpdateUserAsync(user, User.Identity.Name))
             {
                 return BadRequest(ModelState);
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using YTicket.API2.Models;
 using YTicket.API2.Models.DTO;
@@ -50,6 +51,15 @@ namespace YTicket.API2.Respositories
             var user = Context.Users
                 .Where(p => p.Username == username)
                 .SingleOrDefault();
+
+            return user;
+        }
+
+        public async Task<User> GetByUsernameAsync(string username)
+        {
+            var user = await Context.Users
+                .Where(p => p.Username == username)
+                .SingleOrDefaultAsync();
 
             return user;
         }
@@ -113,6 +123,44 @@ namespace YTicket.API2.Respositories
             Context.SaveChanges();
             return newUser;
         }
+
+        public async Task<User> UpdateUserAsync(User user)
+        {
+            ICollection<Category> categories = new List<Category>();
+            foreach (var item in user.Categories)
+            {
+                var category = await Context.Categories.FindAsync(item.ID);
+                categories.Add(category);
+            }
+
+            user.Categories = categories;
+
+            var newUser = await this.UpdateAsync(user, user.ID);
+
+            // Deattach removed categories
+            for (int i = newUser.Categories.Count - 1; i >= 0; i--)
+            {
+                var item = newUser.Categories.ElementAt(i);
+                if (!categories.Contains(item))
+                {
+                    newUser.Categories.Remove(item);
+                }
+            }
+
+            // Attach new categories
+            foreach (var item in categories)
+            {
+                if (!newUser.Categories.Contains(item))
+                {
+                    newUser.Categories.Add(item);
+                }
+            }
+
+            // save modified event
+            Context.Entry(newUser).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
+            return newUser;
+        }
     }
 
     public interface IUserRespository : IGenericRespository<User>
@@ -121,7 +169,9 @@ namespace YTicket.API2.Respositories
         IEnumerable<UserDTO> GetByNamePaging(string name, int pageNumber, int pageSize);
         IEnumerable<UserDTO> GetJoinedUserPaging(Event curEvent, int pageNumber, int pageSize);
         User GetByUsername(string username);
+        Task<User> GetByUsernameAsync(string username);
         User UpdateUser(User user);
+        Task<User> UpdateUserAsync(User user);
         int GetTotalResults();
     }
 }

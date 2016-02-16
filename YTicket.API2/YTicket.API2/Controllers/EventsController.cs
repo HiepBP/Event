@@ -267,7 +267,7 @@ namespace YTicket.API2.Controllers
                 Status = false,
                 Action = ""
             };
-            if (_service.GetEventUserStatus(id, User.Identity.Name))
+            if (await _service.GetEventUserStatusAsync(id, User.Identity.Name))
             {
                 model = new
                 {
@@ -325,7 +325,7 @@ namespace YTicket.API2.Controllers
                 return BadRequest();
             }
 
-            if (!_service.UpdateEvent(@event, User.Identity.Name))
+            if (! await _service.UpdateEventAsync(@event, User.Identity.Name))
             {
                 return BadRequest(ModelState);
             }
@@ -347,7 +347,7 @@ namespace YTicket.API2.Controllers
         [Route("CreateEvent", Name = "CreateEventRoute")]
         public async Task<IHttpActionResult> CreateEvent(Event @event)
         {
-            if (!_service.CreateEvent(@event, User.Identity.Name))
+            if (! await _service.CreateEventAsync(@event, User.Identity.Name))
             {
                 return BadRequest(ModelState);
             }
@@ -365,7 +365,7 @@ namespace YTicket.API2.Controllers
         [Route("DeleteEvent", Name = "DeleteEventRoute")]
         public async Task<IHttpActionResult> DeleteEvent(int id)
         {
-            if(!_service.DeleteEvent(id, User.Identity.Name))
+            if(! await _service.DeleteEventAsync(id, User.Identity.Name))
             {
                 return BadRequest(ModelState);
             }
@@ -384,7 +384,7 @@ namespace YTicket.API2.Controllers
         [Route("JoinEvent", Name = "JoinEventRoute")]
         public async Task<IHttpActionResult> JoinEvent(int id)
         {
-            if (!_service.JoinEvent(id, User.Identity.Name))
+            if (! await _service.JoinEventAsync(id, User.Identity.Name))
             {
                 return BadRequest(ModelState);
             }
@@ -402,7 +402,7 @@ namespace YTicket.API2.Controllers
         [Route("LeaveEvent", Name = "LeaveEventRoute")]
         public async Task<IHttpActionResult> LeaveEvent(int id)
         {
-            if (!_service.LeaveEvent(id, User.Identity.Name))
+            if (!await _service.LeaveEventAsync(id, User.Identity.Name))
             {
                 return BadRequest(ModelState);
             }
