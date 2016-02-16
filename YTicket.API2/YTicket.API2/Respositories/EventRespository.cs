@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using YTicket.API2.Models;
 using YTicket.API2.Models.DTO;
 using YTicket.API2.Utils;
@@ -125,6 +127,23 @@ namespace YTicket.API2.Respositories
             return null;
         }
 
+        public async Task<User> GetMasterAsync(Event @event)
+        {
+            var e = await this.GetAsync(@event.ID);
+            if (e == null)
+                return null;
+
+            foreach (var item in e.EventUsers)
+            {
+                if (item.RoleID == 1)
+                {
+                    return await Context.Users.FindAsync(item.UserID);
+                }
+            }
+
+            return null;
+        }
+
         public Event CreateEvent(Event @event, User user)
         {
             ICollection<Category> categories = new List<Category>();
@@ -145,6 +164,28 @@ namespace YTicket.API2.Respositories
             @event.EventUsers.Add(eu);
 
             return this.Add(@event);
+        }
+
+        public async Task<Event> CreateEventAsync(Event @event, User user)
+        {
+            ICollection<Category> categories = new List<Category>();
+            foreach (var item in @event.Categories)
+            {
+                var category = await Context.Categories.FindAsync(item.ID);
+                categories.Add(category);
+            }
+
+            @event.Categories = categories;
+
+            EventUser eu = new EventUser
+            {
+                UserID = user.ID,
+                RoleID = 1
+            };
+
+            @event.EventUsers.Add(eu);
+
+            return await this.AddAsync(@event);
         }
 
         public Event UpdateEvent(Event @event)
@@ -185,6 +226,44 @@ namespace YTicket.API2.Respositories
             return newEvent;
         }
 
+        public async Task<Event> UpdateEventAsync(Event @event)
+        {
+            ICollection<Category> categories = new List<Category>();
+            foreach (var item in @event.Categories)
+            {
+                var category = await Context.Categories.FindAsync(item.ID);
+                categories.Add(category);
+            }
+
+            @event.Categories = categories;
+
+            var newEvent = await this.UpdateAsync(@event, @event.ID);
+
+            // Deattach removed categories
+            for (int i = newEvent.Categories.Count - 1; i >= 0; i--)
+            {
+                var item = newEvent.Categories.ElementAt(i);
+                if (!categories.Contains(item))
+                {
+                    newEvent.Categories.Remove(item);
+                }
+            }
+
+            // Attach new categories
+            foreach (var item in categories)
+            {
+                if (!newEvent.Categories.Contains(item))
+                {
+                    newEvent.Categories.Add(item);
+                }
+            }
+
+            // save modified event
+            Context.Entry(newEvent).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
+            return newEvent;
+        }
+
         public void DeleteEvent(Event @event)
         {
             // explicity delete
@@ -195,6 +274,18 @@ namespace YTicket.API2.Respositories
             }
 
             this.Delete(@event);
+        }
+
+        public async Task<int> DeleteEventAsync(Event @event)
+        {
+            // explicity delete
+            for (int i = @event.Categories.Count() - 1; i >= 0; i--)
+            {
+                var category = @event.Categories.ElementAt(i);
+                @event.Categories.Remove(category);
+            }
+
+            return await this.DeleteAsync(@event);
         }
 
         public void JoinEvent(Event @event, User user)
@@ -211,6 +302,20 @@ namespace YTicket.API2.Respositories
             this.Update(@event, @event.ID);
         }
 
+        public async Task<Event> JoinEventAsync(Event @event, User user)
+        {
+            EventUser eu = new EventUser
+            {
+                UserID = user.ID,
+                RoleID = 3,
+                EventID = @event.ID
+            };
+
+            @event.EventUsers.Add(eu);
+
+            return await this.UpdateAsync(@event, @event.ID);
+        }
+
         public void LeaveEvent(Event @event, User user)
         {
             for (int i = @event.EventUsers.Count() - 1; i >= 0; i--)
@@ -224,6 +329,21 @@ namespace YTicket.API2.Respositories
 
             this.Update(@event, @event.ID);
         }
+
+        public async Task<Event> LeaveEventAsync(Event @event, User user)
+        {
+            for (int i = @event.EventUsers.Count() - 1; i >= 0; i--)
+            {
+                var eu = @event.EventUsers.ElementAt(i);
+                if (eu.UserID == user.ID)
+                {
+                    @event.EventUsers.Remove(eu);
+                }
+            }
+
+            return await this.UpdateAsync(@event, @event.ID);
+        }
+
     }
 
     public interface IEventRespository : IGenericRespository<Event>
@@ -234,11 +354,17 @@ namespace YTicket.API2.Respositories
         IEnumerable<EventDTO> GetByUserPaging(User user, int pageNumber, int pageSize);
         IEnumerable<EventDTO> GetByNameCategoryPaging(string name, Category category, int pageNumber, int pageSize);
         User GetMaster(Event @event);
+        Task<User> GetMasterAsync(Event @event);
         Event CreateEvent(Event @event, User user);
+        Task<Event> CreateEventAsync(Event @event, User user);
         Event UpdateEvent(Event @event);
+        Task<Event> UpdateEventAsync(Event @event);
         void DeleteEvent(Event @event);
+        Task<int> DeleteEventAsync(Event @event);
         void JoinEvent(Event @event, User user);
+        Task<Event> JoinEventAsync(Event @event, User user);
         void LeaveEvent(Event @event, User user);
+        Task<Event> LeaveEventAsync(Event @event, User user);
         int GetTotalResults();
     }
 }

@@ -9,7 +9,7 @@ namespace YTicket.API2.Models.DTO
         public string Name { get; set; }
         public System.DateTime Time { get; set; }
         public string Place { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
     }
 
     public class EventDetailDTO
@@ -23,7 +23,7 @@ namespace YTicket.API2.Models.DTO
         public Nullable<int> RequireAttendance { get; set; }
         public Nullable<int> Vote { get; set; }
         public Nullable<decimal> Price { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public List<Category> Categories { get; set; }
     }
 }

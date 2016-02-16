@@ -20,7 +20,7 @@
     <Property Name="RequireAttendance" Type="int" />
     <Property Name="Vote" Type="int" />
     <Property Name="Price" Type="money" />
-    <Property Name="Image" Type="varbinary(max)" />
+    <Property Name="Image" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="EventCategory">
     <Key>
@@ -74,7 +74,7 @@
     <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="Address" Type="varchar" MaxLength="50" />
     <Property Name="Phone" Type="varchar" MaxLength="50" />
-    <Property Name="Image" Type="varbinary(max)" />
+    <Property Name="Image" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="UserCategory">
     <Key>
