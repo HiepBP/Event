@@ -34,7 +34,8 @@ namespace EventBox.Controllers
                 string Name = (string)i["Name"];
                 System.DateTime Time = (System.DateTime)i["Time"];
                 string Place = (string)i["Place"];
-                e = new Event(ID, Name, Time, Place);
+                string Image = (string)i["Image"];
+                e = new Event(ID, Name, Time, Place, Image);
                 events.Add(e);
             }
             ViewData["Events"] = events;

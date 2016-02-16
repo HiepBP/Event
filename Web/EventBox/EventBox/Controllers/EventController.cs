@@ -41,7 +41,8 @@ namespace EventBox.Controllers
                 string Name = (string)i["Name"];
                 System.DateTime Time = (System.DateTime)i["Time"];
                 string Place = (string)i["Place"];
-                e = new Event(ID, Name, Time, Place);
+                string Image = (string)i["Image"];
+                e = new Event(ID, Name, Time, Place,Image);
                 events.Add(e);
             }
             ViewData["Events"] = events;
@@ -171,23 +172,66 @@ namespace EventBox.Controllers
             return RedirectToAction("Detail", new { id = id });
         }
 
-        [Route("Create")]
-        public ActionResult Create(string name, string info, System.DateTime time, string place, int maxAttendance, int requireAttendance, int vote, double price, string image, string[] categories)
+        [Route("RedirectAddEvent")]
+        public ActionResult RedirectAddEvent()
         {
+            return View("~/Views/Event/AddEvent.cshtml");
+        }
+
+        [Route("Create")]
+        public ActionResult Create(string name, string info, HttpPostedFileBase image)
+        {
+
+            //Test get image
+            var folderName = "/Content/Upload/Images/";
+            var fileName = image.FileName;
+            FileStream fileStream;
+            using (fileStream = System.IO.File.Create(AppDomain.CurrentDomain.BaseDirectory + folderName + fileName))
+            {
+                image.InputStream.CopyTo(fileStream);
+            }
+            string nameT = name;
+            string infoT = info;
+            byte[] data;
+            using (Stream inputStream = image.InputStream)
+            {
+                MemoryStream memoryStream = inputStream as MemoryStream;
+                if (memoryStream == null)
+                {
+                    memoryStream = new MemoryStream();
+                    inputStream.CopyTo(memoryStream);
+                }
+                data = memoryStream.ToArray();
+            }
+
+
+            using (WebClient uploader = new WebClient())
+            {
+                try
+                {
+                    byte[] response = uploader.UploadFile(new Uri("http://uploads.im/api?upload"), fileStream.Name);
+                    string s = uploader.Encoding.GetString(response);
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+
+
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/CreateEvent");
             httpWebRequest.Method = "POST";
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = "{\"Name\":\"" + name + "\"," +
+                string json = "";
+                /*string json = "{\"Name\":\"" + name + "\"," +
                               "\"Info\":\"" + info + "\"," +
                               "\"Time\":\"" + time + "\"," +
                               "\"Place\":\"" + place + "\"," +
                               "\"MaxAttendance\":\"" + maxAttendance + "\"," +
                               "\"RequireAttendance\":\"" + requireAttendance + "\"," +
-                              "\"Vote\":\"" + vote + "\"," +
                               "\"Price\":\"" + price + "\"," +
-                              "\"Image\":\"" + image + "\"," +
-                              "\"Categories\":\"" + categories + "\"}";
+                              "\"Image\":\"" + image + "\"}";*/
 
                 streamWriter.Write(json);
                 streamWriter.Flush();
@@ -226,8 +270,9 @@ namespace EventBox.Controllers
             }
             if (result != "")
             {
-                var arr = JsonConvert.DeserializeObject<JObject>(info);
-                return RedirectToAction("Detail", new { id = (int)arr["ID"] });
+                //var arr = JsonConvert.DeserializeObject<JObject>(info);
+                //return RedirectToAction("Detail", new { id = (int)arr["ID"] });
+                return RedirectToAction("Detail", new { id = 40 });
             }
             else
             {
