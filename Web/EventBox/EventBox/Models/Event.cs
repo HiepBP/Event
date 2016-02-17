@@ -8,12 +8,13 @@ namespace EventBox.Models
 {
     public class Event
     {
-        public Event(int id, string name, System.DateTime time, string place)
+        public Event(int id, string name, System.DateTime time, string place,string image)
         {
             ID = id;
             Name = name;
             Time = time;
             Place = place;
+            Image = image;
         }
 
         public Event()
@@ -25,7 +26,7 @@ namespace EventBox.Models
         public string Name { get; set; }
         public System.DateTime Time { get; set; }
         public string Place { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
     }
 
     public class EventDetail
@@ -39,7 +40,7 @@ namespace EventBox.Models
         public Nullable<int> RequireAttendance { get; set; }
         public Nullable<int> Vote { get; set; }
         public Nullable<decimal> Price { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public List<Category> Categories { get; set; }
     }
 }

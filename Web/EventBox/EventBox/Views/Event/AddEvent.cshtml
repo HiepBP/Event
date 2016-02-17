@@ -1,0 +1,56 @@
+﻿@using EventBox.Models;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var EventDetail = (EventDetail)ViewData["EventDetail"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="generator"
+          content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src=@Url.Content("~/Scripts/modernizr.js") type="text/javascript"></script>
+    <script type="text/javascript">
+        function submitform() {
+            var postdata = $('#add-form').serialize();
+            var file = document.getElementById('file').files[0];
+            var name = document.getElementById('name').value;
+            var info = document.getElementById('info').value;
+            var fd = new FormData();
+            fd.append("file", file);
+            fd.append("name", name);
+            fd.append("info", info);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Create", false);
+            xhr.send(fd);
+
+        }
+    </script>
+    <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/normalize.css") />
+    <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/styles.css") />
+    <title>Event Details</title>
+</head>
+<body>
+    @using (Html.BeginForm("","Create", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    { 
+        <input type="text" name="name" placeholder="Name">
+        <input type="text" name="info" placeholder="info">
+        <!--       <input type="text" name="time" placeholder="time">
+               <input type="text" name="place" placeholder="place">
+               <input type="text" name="maxAttendance" placeholder="maxAttendance">
+               <input type="text" name="requireAttendance" placeholder="requireAttendance">
+               <input type="text" name="price" placeholder="price">-->
+        <input type="file" id="file" name="image" accept="image/*">
+        <button type="submit" id="upload" onclick="submitform()">Submit</button>
+    }
+</body>
+</html>

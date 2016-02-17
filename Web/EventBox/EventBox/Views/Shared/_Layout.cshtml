@@ -27,10 +27,17 @@
                 </div>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                @if (Convert.ToString(Session["Username"]) != null || Convert.ToString(Session["Username"]) != string.Empty)
+                @if (Session["Username"] != null || Convert.ToString(Session["Username"]) != string.Empty)
                 {
                     <li>
-                        <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Logout" name="btn_Logout"> Thoat</button>
+                        <form action="/EventBox/Users/Logout">
+                            <button type="submit" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Logout" name="btn_Logout"> Thoat</button>
+                        </form>
+                    </li>
+                    <li>
+                        <form method="POST" action="/EventBox/RedirectAddEvent">
+                            <input type="submit" class="btn btn-info btn-sm glyphicon glyphicon-log-in" value="Add Event">
+                        </form>
                     </li>
                 }
                 else
@@ -45,30 +52,7 @@
             </ul>
         </div>
     </nav>
-    <!-- Carousel -->
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-        <ol class="carousel-indicators"></ol>
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner" role="listbox">
-            <div class="item active">
-                <img src="~/Images/1.jpg" alt="Chania" width="500" height="250" />
-            </div>
-            <div class="item">
-                <img src="~/Images/2.jpg" alt="Chania" width="500" height="250" />
-            </div>
-            <div class="item">
-                <img src="~/Images/3.jpg" alt="Chania" width="500" height="250" />
-            </div>
-        </div>
-        <!-- Left and right controls -->
-        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
+
 
     <!-- Modal DangKy -->
     <div id="myModal" class="modal fade" role="dialog">
@@ -78,7 +62,7 @@
             <div class="login-card">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h1>Đăng ký</h1><br>
-                <form method="post" action="Users/Register">
+                <form method="post" action="/EventBox/Users/Register">
                     <input type="text" id="rEmail" name="email" placeholder="Email">
                     <input type="password" id="rPassword" name="password" placeholder="Mật khẩu">
                     <input type="password" id="rConfirmPassword" name="confirmpassword" placeholder="Nhập lại mật khẩu">
@@ -96,7 +80,7 @@
             <div class="login-card">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h1>Đăng nhập</h1><br>
-                <form method="post" action="Users/Login">
+                <form method="post" action="/EventBox/Users/Login">
                     <input type="text" id="loginEmail" name="email" placeholder="Email" ">
                     <input type="password" id="loginPassword" name="password" placeholder="Mật khẩu">
                     <input type="submit" class="login login-submit" value="Đăng Nhập">
