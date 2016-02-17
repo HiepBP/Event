@@ -1,5 +1,7 @@
 package com.fpt.study.yticket.util;
 
+import com.fpt.study.yticket.model.Token;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -14,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Hinaka on 2/17/2016.
  */
 public class ServiceGenerator {
-    public static final String API_BASE_URL = "http://10.0.3.2/api/";
+    public static final String API_BASE_URL = "http://10.0.3.2/YTicket.API2/";
 
     private static OkHttpClient.Builder sHttpClient = new OkHttpClient.Builder();
 
@@ -32,7 +34,7 @@ public class ServiceGenerator {
         return createService(serviceClass, null);
     }
 
-    public static <S> S createService(Class<S> serviceClass, final String authToken) {
+    public static <S> S createService(Class<S> serviceClass, final Token authToken) {
         if (authToken != null) {
             sHttpClient.addInterceptor(new Interceptor() {
                 @Override
@@ -41,7 +43,9 @@ public class ServiceGenerator {
 
                     // Request customization: add request headers
                     Request.Builder requestBuilder = original.newBuilder()
-                            .header("Authorization", authToken)
+                            .header("Accept", "application/json")
+                            .header("Authorization",
+                                    authToken.getTokenType() + " " + authToken.getAccessToken())
                             .method(original.method(), original.body());
 
                     Request request = requestBuilder.build();

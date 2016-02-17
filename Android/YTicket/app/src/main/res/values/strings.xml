@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">YTicket</string>
     <string name="action_settings">Settings</string>
+    <string name="account.field.username">Username</string>
+    <string name="account.field.password">Password</string>
+    <string name="button.name.login">Log In</string>
+    <string name="button.name.signup">Sign Up</string>
 </resources>
