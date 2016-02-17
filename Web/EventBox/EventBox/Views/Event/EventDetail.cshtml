@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@{ 
+@{
     var EventDetail = (EventDetail)ViewData["EventDetail"];
     var JoinedUsers = (List<User>)ViewData["Users"];
 }
@@ -33,7 +33,7 @@
         </header>
 
         <figure>
-            <img src="~/Images/disney-on-ice-banner.jpg" />
+            <img src="@EventDetail.Image" />
         </figure>
         <h3>Số người tham gia : @JoinedUsers.Count()</h3>
         <section>
@@ -44,7 +44,10 @@
                     @EventDetail.Info
                 </p>
             </details>
-            <button>Tham gia ngay</button>
+            <form action="/EventBox/JoinEvent">
+                <input type="hidden" name="id" value="@EventDetail.ID"/>
+                <button>Tham gia ngay</button>
+            </form>
         </section>
     </div>
 

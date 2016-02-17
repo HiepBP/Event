@@ -11,6 +11,7 @@
     <link rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css'>
 
     <link href="~/Content/style.css" rel="stylesheet" />
+
 </head>
 <body>
     <nav class="navbar navbar-inverse">
@@ -62,12 +63,38 @@
             <div class="login-card">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h1>Đăng ký</h1><br>
-                <form method="post" action="/EventBox/Users/Register">
-                    <input type="text" id="rEmail" name="email" placeholder="Email">
-                    <input type="password" id="rPassword" name="password" placeholder="Mật khẩu">
-                    <input type="password" id="rConfirmPassword" name="confirmpassword" placeholder="Nhập lại mật khẩu">
-                    <input type="submit" id="register" class="login login-submit" value="Đăng ký">
-                </form>
+                <!--<form method="post" action="/EventBox/Users/Register">-->
+                <input type="text" id="rEmail" name="email" placeholder="Email">
+                <input type="password" id="rPassword" name="password" placeholder="Mật khẩu">
+                <input type="password" id="rConfirmPassword" name="confirmpassword" placeholder="Nhập lại mật khẩu">
+                <h5 id="ErrorSignup"></h5>
+                <input type="submit" id="register" class="login login-submit" value="Đăng ký">
+                <script>
+                    $('#register').click(function (e) {
+                        e.preventDefault();
+                        var source = {
+                            'Email': $('#rEmail').val(),
+                            'Password': $('#rPassword').val(),
+                            'ConfirmPassword': $('#rConfirmPassword').val()
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost/YTicket.API2/api/Account/Register",
+                            data: source,
+                            success: function (data) {
+                                var url = window.location.href;
+                                window.location = url;
+                            },
+                            error: function (error) {
+                                jsonValue = JSON.parse(error.responseText);
+                                modelState = jsonValue["ModelState"];
+                                errorMsg = modelState[Object.keys(modelState)[0]];
+                                document.getElementById("ErrorSignup").innerHTML = errorMsg[Object.keys(errorMsg)[0]];
+                            }
+                        });
+                    });
+                </script>
+                <!--</form>-->
             </div>
         </div>
     </div>
@@ -80,12 +107,50 @@
             <div class="login-card">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h1>Đăng nhập</h1><br>
-                <form method="post" action="/EventBox/Users/Login">
-                    <input type="text" id="loginEmail" name="email" placeholder="Email" ">
-                    <input type="password" id="loginPassword" name="password" placeholder="Mật khẩu">
-                    <input type="submit" class="login login-submit" value="Đăng Nhập">
+                <!--<form method="post" action="/EventBox/Users/Login">-->
+                <input type="text" id="loginEmail" name="email" placeholder="Email" ">
+                <input type="password" id="loginPassword" name="password" placeholder="Mật khẩu">
+                <input type="submit" id="login" class="login login-submit" value="Đăng Nhập">
+                <h5 id="ErrorLogin"></h5>
+                <script>
+                    $('#login').click(function (e) {
+                        e.preventDefault();
+                        var loginData = {
+                            grant_type: "password",
+                            username: $("#loginEmail").val(),
+                            password: $("#loginPassword").val()
+                        };
 
-                </form>
+                        $.ajax({
+                            contentType: "application/x-www-form-urlencoded",
+                            type: "POST",
+                            url: "http://localhost/YTicket.API2/Token",
+                            data: loginData,
+                            success: function (data) {
+                                var TokenData = {
+                                    token: data["access_token"],
+                                    username: loginData.username
+                                };
+                                $.ajax({
+                                    contentType: "application/x-www-form-urlencoded",
+                                    type: "POST",
+                                    url: "http://localhost/EventBox/Users/Token",
+                                    data: TokenData,
+                                    success: function () {
+                                        console.log("Success");
+                                        var url = window.location.href;
+                                        window.location = url;
+                                }
+                                });
+                            },
+                            error: function (error) {
+                                jsonValue = JSON.parse(error.responseText);
+                                document.getElementById("ErrorLogin").innerHTML = jsonValue["error_description"];
+                            }
+                        });
+                    });
+                </script>
+                <!--</form>-->
             </div>
         </div>
     </div>

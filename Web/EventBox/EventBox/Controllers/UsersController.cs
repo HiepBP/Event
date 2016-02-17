@@ -133,5 +133,12 @@ namespace EventBox.Controllers
             return RedirectToAction("Home", "Index", new { area = "" });
         }
 
+        [Route("Token")]
+        public void Token(string token, string username)
+        {
+            Session["Token"] = token;
+            Session["Username"] = username;
+        }
+        
     }
 }

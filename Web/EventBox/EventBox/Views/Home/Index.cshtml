@@ -17,13 +17,13 @@
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
             <div class="item active">
-                <img src="~/Images/1.jpg" alt="Chania" width="500" height="250" />
+                <img src="@events[0].Image" alt="Chania" width="500" height="250" />
             </div>
             <div class="item">
-                <img src="~/Images/2.jpg" alt="Chania" width="500" height="250" />
+                <img src="@events[1].Image" alt="Chania" width="500" height="250" />
             </div>
             <div class="item">
-                <img src="~/Images/3.jpg" alt="Chania" width="500" height="250" />
+                <img src="@events[2].Image" alt="Chania" width="500" height="250" />
             </div>
         </div>
         <!-- Left and right controls -->
@@ -43,7 +43,7 @@
             {
                 string url = "/EventBox/EventDetail?id=" + item.ID;
                 <li>
-                    <img src="~/Images/1.jpg" />
+                    <img src="@item.Image" alt="Demo"/>
                     <a href="@url"><h3>@item.Name</h3></a>
                     <p>@item.Time</p>
                 </li>
