@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -17,35 +17,6 @@
     <title>User Details</title>
 </head>
 <body>
-    <!--navbar-->
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">EVENT BOX</a>
-            </div>
-            <div style="margin-left: 2em" class="nav navbar-nav">
-                <div class="search">
-                    <input type="text" class="form-control input-sm" maxlength="64" placeholder="Search" />
-                    <button type="submit" class="btn btn-primary btn-sm" id="btn_Search" name="btn_Search">Search</button>
-                </div>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-user" id="btn_Reg" name="btn_Reg"
-                            data-toggle="modal" data-target="#myModal">
-                        Đăng ký
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Login" name="btn_Login"
-                            data-toggle="modal" data-target="#ModalDangNhap">
-                        Đăng nhập
-                    </button>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <!--navbar-->
     <div class="container">
         <div class="row">
 
