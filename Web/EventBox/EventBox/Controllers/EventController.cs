@@ -179,7 +179,7 @@ namespace EventBox.Controllers
         }
 
         [Route("Create")]
-        public ActionResult Create(string name, string info, HttpPostedFileBase image)
+        public ActionResult Create(string name, string info, DateTime time, string place, int maxAttendance, int requireAttendance, double price, HttpPostedFileBase image)
         {
 
             //Test get image
@@ -190,9 +190,8 @@ namespace EventBox.Controllers
             {
                 image.InputStream.CopyTo(fileStream);
             }
-            string nameT = name;
-            string infoT = info;
             byte[] data;
+            string ImageUrl = "";
             using (Stream inputStream = image.InputStream)
             {
                 MemoryStream memoryStream = inputStream as MemoryStream;
@@ -211,6 +210,8 @@ namespace EventBox.Controllers
                 {
                     byte[] response = uploader.UploadFile(new Uri("http://uploads.im/api?upload"), fileStream.Name);
                     string s = uploader.Encoding.GetString(response);
+                    JObject jo = JObject.Parse(s);
+                    ImageUrl = (string)(jo["data"])["thumb_url"];
                 }
                 catch (Exception ex)
                 {
@@ -220,18 +221,21 @@ namespace EventBox.Controllers
 
 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/CreateEvent");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.MediaType = "application/json";
+            httpWebRequest.Accept = "application/json";
             httpWebRequest.Method = "POST";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = "";
-                /*string json = "{\"Name\":\"" + name + "\"," +
+                string json = "{\"Name\":\"" + name + "\"," +
                               "\"Info\":\"" + info + "\"," +
                               "\"Time\":\"" + time + "\"," +
                               "\"Place\":\"" + place + "\"," +
                               "\"MaxAttendance\":\"" + maxAttendance + "\"," +
                               "\"RequireAttendance\":\"" + requireAttendance + "\"," +
                               "\"Price\":\"" + price + "\"," +
-                              "\"Image\":\"" + image + "\"}";*/
+                              "\"Image\":\"" + ImageUrl + "\"}";
 
                 streamWriter.Write(json);
                 streamWriter.Flush();
@@ -270,9 +274,8 @@ namespace EventBox.Controllers
             }
             if (result != "")
             {
-                //var arr = JsonConvert.DeserializeObject<JObject>(info);
-                //return RedirectToAction("Detail", new { id = (int)arr["ID"] });
-                return RedirectToAction("Detail", new { id = 40 });
+                var arr = JsonConvert.DeserializeObject<JObject>(result);
+                return RedirectToAction("Detail", new { id = (int)arr["ID"] });
             }
             else
             {

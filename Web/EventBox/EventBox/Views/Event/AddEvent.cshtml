@@ -42,15 +42,15 @@
 <body>
     @using (Html.BeginForm("","Create", FormMethod.Post, new { enctype = "multipart/form-data" }))
     { 
-        <input type="text" name="name" placeholder="Name">
-        <input type="text" name="info" placeholder="info">
-        <!--       <input type="text" name="time" placeholder="time">
-               <input type="text" name="place" placeholder="place">
-               <input type="text" name="maxAttendance" placeholder="maxAttendance">
-               <input type="text" name="requireAttendance" placeholder="requireAttendance">
-               <input type="text" name="price" placeholder="price">-->
-        <input type="file" id="file" name="image" accept="image/*">
-        <button type="submit" id="upload" onclick="submitform()">Submit</button>
+        <input type="text" name="name" placeholder="Tên sự kiện" required><br />
+        <input type="text" name="info" placeholder="Thông tin" required><br />
+        <input type="datetime-local" name="time" placeholder="Thời gian" required><br />
+        <input type="text" name="place" placeholder="Địa điểm" required><br />
+        <input type="number" name="maxAttendance" placeholder="Số người tối đa" required><br />
+        <input type="number" name="requireAttendance" placeholder="Số người yêu cầu" required><br />
+        <input type="number" name="price" placeholder="Giá" required><br />
+        <input type="file" id="file" name="image" accept="image/*" required><br />
+        <button type="submit" id="upload" onclick="submitform()">Thêm sự kiện</button><br />
     }
 </body>
 </html>
