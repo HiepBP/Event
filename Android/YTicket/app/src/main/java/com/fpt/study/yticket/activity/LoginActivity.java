@@ -1,6 +1,7 @@
 package com.fpt.study.yticket.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -89,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                     Gson gson = new Gson();
                     String json = gson.toJson(token);
                     editor.putString(PREF_TOKEN, json);
-                    editor.commit();
+                    editor.apply();
 
                 } else {
                     // Parse error from response
@@ -109,13 +110,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onClickButtonSignup(View v) {
-        // Get Token obj from Shared Preferences
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString(PREF_TOKEN, "");
-        Token token = gson.fromJson(json, Token.class);
+//        // Get Token obj from Shared Preferences
+//        Gson gson = new Gson();
+//        String json = sharedPreferences.getString(PREF_TOKEN, "");
+//        Token token = gson.fromJson(json, Token.class);
+//
+//        String authToken = token.getTokenType() + " " + token.getAccessToken();
+//        Toast.makeText(LoginActivity.this, authToken, Toast.LENGTH_LONG).show();
 
-        String authToken = token.getTokenType() + " " + token.getAccessToken();
-        Toast.makeText(LoginActivity.this, authToken, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, SignupActivity.class);
+        startActivity(intent);
     }
 
 }
