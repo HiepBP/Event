@@ -9,7 +9,7 @@ namespace EventBox.Models
     {
         public int ID { get; set; }
         public string Username { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
     }
 
     public class UserDetail
@@ -19,7 +19,7 @@ namespace EventBox.Models
         public string Email { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public List<Category> Categories { get; set; }
     }
 }

@@ -1,5 +1,11 @@
-﻿@{
+﻿@using EventBox.Models;
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var UserDetail = (UserDetail)ViewData["UserDetail"];
 }
 
 <!DOCTYPE html>
@@ -25,11 +31,11 @@
 
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Huy ndp</h3>
+                        <h3 class="panel-title">@UserDetail.Username</h3>
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="https://s-media-cache-ak0.pinimg.com/236x/d3/56/04/d356041853238bfec5f5b1bb97392a8e.jpg" class="img-circle img-responsive"> </div>
+                            <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="@UserDetail.Image" class="img-circle img-responsive"> </div>
 
 
                             <div class=" col-md-9 col-lg-9 ">
@@ -37,34 +43,29 @@
                                     <tbody>
 
                                         <tr>
-                                            <td>Họ tên:</td>
-                                            <td>Ndp Huy</td>
+                                            <td>Username: </td>
+                                            <td>@UserDetail.Username</td>
                                         </tr>
                                         <tr>
-                                            <td>Năm sinh:</td>
-                                            <td>01/24/1988</td>
+                                            <td>Address: </td>
+                                            <td>@UserDetail.Address</td>
                                         </tr>
 
                                         <tr>
 
-                                            <td>Giới tính:</td>
-                                            <td>Nam</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Địa chỉ:</td>
-                                            <td>Metro Manila,Philippines</td>
+                                            <td>Số điện thoại: </td>
+                                            <td>@UserDetail.Phone</td>
                                         </tr>
                                         <tr>
                                             <td>Email</td>
-                                            <td><a href="mailto:huyndp@gmail">huyndp@gmail.com</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Số điện thoại:</td>
-                                            <td>0987654321(Mobile)</td>
+                                            <td><a href="mailto:@UserDetail.Email">@UserDetail.Email</a></td>
                                         </tr>
                                         <tr>
                                             <td>Sở thích:</td>
-                                            <td>Phim, game</td>
+                                            <td>@foreach(var item in UserDetail.Categories)
+                                            {
+                                                <h5>item  </h5>
+                                            }</td>
                                         </tr>
 
                                     </tbody>
