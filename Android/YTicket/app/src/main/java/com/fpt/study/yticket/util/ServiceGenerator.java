@@ -1,8 +1,12 @@
 package com.fpt.study.yticket.util;
 
 import com.fpt.study.yticket.model.Token;
+import com.fpt.study.yticket.util.deserializer.DateTypeDeserializer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.Date;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -23,10 +27,14 @@ public class ServiceGenerator {
     private static HttpLoggingInterceptor sLogging = new HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY);
 
+    private static Gson sGson = new GsonBuilder()
+            .registerTypeAdapter(Date.class, new DateTypeDeserializer())
+            .create();
+
     private static Retrofit.Builder sBuilder =
             new Retrofit.Builder()
                     .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create());
+                    .addConverterFactory(GsonConverterFactory.create(sGson));
 
     private static Retrofit sRetrofit;
 
