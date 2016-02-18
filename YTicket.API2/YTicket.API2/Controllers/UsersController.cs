@@ -195,7 +195,6 @@ namespace YTicket.API2.Controllers
         /// </summary>
         /// <param name="eventId">id of current event</param>
         /// <returns></returns>
-        [Authorize]
         [Route("GetUserByEvent")]
         public async Task<IHttpActionResult> GetUserByEvent(int eventId)
         {
