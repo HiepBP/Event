@@ -11,14 +11,12 @@
 
 <html>
 <head>
-    <title>Thêm sự kiện</title>
     <meta name="generator"
           content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
     <meta charset="UTF-8" />
     <script src=@Url.Content("~/Scripts/modernizr.js") type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/normalize.css") />
     <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/styles.css") />
-    <title>Event Details</title>
 </head>
 <body>
     @using (Html.BeginForm("Update", "Events", FormMethod.Post, new { enctype = "multipart/form-data" }))

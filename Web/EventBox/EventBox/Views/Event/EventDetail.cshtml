@@ -1,6 +1,7 @@
 ﻿@using EventBox.Models;
 
 @{
+    @ViewBag.Title = "Thông tin sự kiện";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,9 +10,18 @@
     var JoinedUsers = (List<User>)ViewData["Users"];
     var CreatedUsers = (User)ViewData["CreatedUser"];
     string disabled = "disabled";
+    var joined = false;
     if (Session["CurrentUserID"] != null || Convert.ToString(Session["CurrentUserID"]) != string.Empty)
     {
         disabled = "";
+    }
+
+    foreach (var user in JoinedUsers)
+    {
+        if (Convert.ToInt32(Session["CurrentUserID"]) == user.ID)
+        {
+            joined = true;
+        }
     }
 }
 
@@ -28,7 +38,6 @@
     <script src=@Url.Content("~/Scripts/modernizr.js") type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/normalize.css") />
     <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/styles.css") />
-    <title>Event Details</title>
 </head>
 <body>
     <div class="product clear">
@@ -75,11 +84,22 @@
                     </p>
                 }
             </details>
-            @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]))
+            @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && !joined)
             {
                 <form action="/EventBox/Events/Join">
                     <input type="hidden" name="id" value="@EventDetail.ID" />
                     <button @disabled>Tham gia ngay</button>
+                </form>
+            }
+            else
+            {
+                <h3>Bạn đã tham gia sự kiện</h3>
+            }
+            @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && joined)
+            {
+                <form action="/EventBox/Events/Leave">
+                    <input type="hidden" name="id" value="@EventDetail.ID" />
+                    <button>Rời sự kiện</button>
                 </form>
             }
             @if (Session["CurrentUserID"] != null || Convert.ToString(Session["CurrentUserID"]) != string.Empty)

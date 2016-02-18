@@ -5,6 +5,7 @@
 }
 
 @{
+    ViewBag.Title = "Thông tin người dùng";
     var UserDetail = (UserDetail)ViewData["UserDetail"];
 }
 
@@ -62,10 +63,12 @@
                                         </tr>
                                         <tr>
                                             <td>Sở thích:</td>
-                                            <td>@foreach(var item in UserDetail.Categories)
-                                            {
-                                                <h5>item  </h5>
-                                            }</td>
+                                            <td>
+                                                @foreach (var item in UserDetail.Categories)
+                                                {
+                                                    <h5>item  </h5>
+                                                }
+                                            </td>
                                         </tr>
 
                                     </tbody>
@@ -75,7 +78,21 @@
                             </div>
                         </div>
                     </div>
-
+                    @if (UserDetail.ID == Convert.ToInt32(Session["CurrentUserID"]))
+                    {
+                        <form method="get" action="/EventBox/Users/Update">
+                            <input type="hidden" name="id" value="@UserDetail.ID" />
+                            <input type="hidden" name="username" value="@UserDetail.Username" />
+                            <input type="hidden" name="email" value="@UserDetail.Email" />
+                            <input type="hidden" name="address" value="@UserDetail.Address" />
+                            <input type="hidden" name="phone" value="@UserDetail.Phone" />
+                            <input type="hidden" name="image" value="@UserDetail.Image" />
+                            <button>Cập nhật thông tin</button>
+                        </form>
+                        <form method="get" action="/EventBox/Users/ChangePassword">
+                            <button>Đổi mật khẩu</button>
+                        </form>
+                    }
                 </div>
             </div>
         </div>
@@ -83,4 +100,3 @@
 
 </body>
 </html>
-
