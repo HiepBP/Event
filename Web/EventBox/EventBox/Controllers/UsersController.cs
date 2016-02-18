@@ -137,6 +137,16 @@ namespace EventBox.Controllers
         [Route("Token")]
         public void Token(string token, string username)
         {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/GetCurrentUserDetail");
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + token;
+            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            Stream stream = httpWebResponse.GetResponseStream();
+            StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+            string info = streamReader.ReadToEnd();
+            var UserDetail = JsonConvert.DeserializeObject<JObject>(info);
+            Session["CurrentUserID"] = (int)UserDetail["ID"];
             Session["Token"] = token;
             Session["Username"] = username;
         }

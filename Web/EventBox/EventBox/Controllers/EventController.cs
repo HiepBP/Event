@@ -43,7 +43,7 @@ namespace EventBox.Controllers
                 System.DateTime Time = (System.DateTime)i["Time"];
                 string Place = (string)i["Place"];
                 string Image = (string)i["Image"];
-                e = new Event(ID, Name, Time, Place,Image);
+                e = new Event(ID, Name, Time, Place, Image);
                 events.Add(e);
             }
             ViewData["Events"] = events;
@@ -54,6 +54,7 @@ namespace EventBox.Controllers
         [Route("Detail")]
         public ActionResult Detail(int id)
         {
+            //Get event detail
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetEventDetail?id=" + id);
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -95,6 +96,8 @@ namespace EventBox.Controllers
             }
             ViewData["EventDetail"] = ed;
 
+
+            //Get joined user
             httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetJoinedUserPaging?id=" + id + "&page=1&pageSize=10");
             httpWebRequest.Method = "GET";
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -108,33 +111,115 @@ namespace EventBox.Controllers
             {
                 user.ID = (int)item["ID"];
                 user.Username = (string)item["Username"];
-                //user.Image = (byte[])item["Image"];
                 users.Add(user);
             }
             ViewData["Users"] = users;
 
-            return View("EventDetail");
+
+            //Get created User
+            httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/GetUserByEvent?eventId=" + ed.ID);
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            stream = httpWebResponse.GetResponseStream();
+            streamReader = new StreamReader(stream, Encoding.UTF8);
+            info = streamReader.ReadToEnd();
+            var JCreatedUser = JsonConvert.DeserializeObject<JObject>(info);
+            User CreatedUser = new User();
+            CreatedUser.ID = (int)JCreatedUser["ID"];
+            CreatedUser.Username = (string)JCreatedUser["Username"];
+            ViewData["CreatedUser"] = CreatedUser;
+
+            return View("~/Views/Event/EventDetail.cshtml");
         }
 
+
+        [HttpGet]
         [Route("Update")]
-        public ActionResult Update(int id, string name, string info, System.DateTime time, string place, int maxAttendance, int requireAttendance, int vote, double price, string image, string[] categories)
+        public ActionResult Update(int id, string name, string info, System.DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, string image)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetEventDetail?id=" + id);
+            EventDetail ed = new EventDetail();
+            ed.ID = id;
+            ed.Name = name;
+            ed.Info = info;
+            ed.Time = time;
+            ed.Place = place;
+            ed.MaxAttendance = maxAttendance;
+            ed.RequireAttendance = requireAttendance;
+            ed.Price = price;
+            ed.Image = image;
+            ViewData["UpdateEvent"] = ed;
+            return View("~/Views/Event/EditEvent.cshtml");
+        }
+
+        [HttpPost]
+        [Route("Update")]
+        public ActionResult Update(int id, string name, string info, System.DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, HttpPostedFileBase image, string oldValueImage)
+        {
+            string ImageUrl = "";
+            if (image != null)
+            {
+                var folderName = "/Content/Upload/Images/";
+                var fileName = image.FileName;
+                FileStream fileStream;
+                using (fileStream = System.IO.File.Create(AppDomain.CurrentDomain.BaseDirectory + folderName + fileName))
+                {
+                    image.InputStream.CopyTo(fileStream);
+                }
+                byte[] data;
+                using (Stream inputStream = image.InputStream)
+                {
+                    MemoryStream memoryStream = inputStream as MemoryStream;
+                    if (memoryStream == null)
+                    {
+                        memoryStream = new MemoryStream();
+                        inputStream.CopyTo(memoryStream);
+                    }
+                    data = memoryStream.ToArray();
+                }
+
+
+                using (WebClient uploader = new WebClient())
+                {
+                    try
+                    {
+                        byte[] response = uploader.UploadFile(new Uri("http://uploads.im/api?upload"), fileStream.Name);
+                        string s = uploader.Encoding.GetString(response);
+                        JObject jo = JObject.Parse(s);
+                        ImageUrl = (string)(jo["data"])["thumb_url"];
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + folderName + fileName);
+                    }
+                }
+            }
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/UpdateEvent?id=" + id);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.MediaType = "application/json";
+            httpWebRequest.Accept = "application/json";
             httpWebRequest.Method = "PUT";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = "{\"ID\":\"" + id + "\"," +
+                string json = "";
+                if (ImageUrl == "")
+                {
+                    ImageUrl = oldValueImage;
+                }
+                json = "{\"ID\":\"" + id + "\"," +
                               "\"Name\":\"" + name + "\"," +
                               "\"Info\":\"" + info + "\"," +
                               "\"Time\":\"" + time + "\"," +
                               "\"Place\":\"" + place + "\"," +
                               "\"MaxAttendance\":\"" + maxAttendance + "\"," +
                               "\"RequireAttendance\":\"" + requireAttendance + "\"," +
-                              "\"Vote\":\"" + vote + "\"," +
                               "\"Price\":\"" + price + "\"," +
-                              "\"Image\":\"" + image + "\"," +
-                              "\"Categories\":\"" + categories + "\"}";
-
+                              "\"Image\":\"" + ImageUrl + "\"}";
                 streamWriter.Write(json);
                 streamWriter.Flush();
                 streamWriter.Close();
@@ -183,7 +268,7 @@ namespace EventBox.Controllers
 
         [HttpPost]
         [Route("Create")]
-        public ActionResult Create(string name, string info, DateTime time, string place, int maxAttendance, int requireAttendance, double price, HttpPostedFileBase image)
+        public ActionResult Create(string name, string info, DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, HttpPostedFileBase image)
         {
 
             //Test get image
@@ -219,6 +304,10 @@ namespace EventBox.Controllers
                 }
                 catch (Exception ex)
                 {
+                }
+                finally
+                {
+                    System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + folderName + fileName);
                 }
             }
 
@@ -287,12 +376,14 @@ namespace EventBox.Controllers
             }
         }
 
+        [HttpGet]
         [Route("Delete")]
         public ActionResult Delete(int id)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/DeleteEvent?id=" + id);
             httpWebRequest.Method = "DELETE";
-            httpWebRequest.Headers["Authorization"] = "bearer" + Session["Token"];
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             string result = "";
             string error = "";
             try
@@ -330,7 +421,7 @@ namespace EventBox.Controllers
         [Route("Join")]
         public ActionResult JoinEvent(string id)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/JoinEvent?id="+id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/JoinEvent?id=" + id);
             httpWebRequest.Method = "PUT";
             httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             httpWebRequest.ContentType = "application/json";
@@ -367,7 +458,52 @@ namespace EventBox.Controllers
                     }
                 }
             }
-            return RedirectToAction("Detail", new { id = id});
+            return RedirectToAction("Detail", new { id = id });
+        }
+
+
+
+        [Route("Leave")]
+        public ActionResult LeaveEvent(string id)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/JoinEvent?id=" + id);
+            httpWebRequest.Method = "PUT";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.ContentLength = 0;
+            string result = "";
+            string error = "";
+            try
+            {
+                using (var httpResponse = httpWebRequest.GetResponse() as HttpWebResponse)
+                {
+                    if (httpWebRequest.HaveResponse && httpResponse != null)
+                    {
+                        using (var reader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            result = reader.ReadToEnd();
+                        }
+                        TempData["StatusCode"] = (int)httpResponse.StatusCode;
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response != null)
+                {
+                    using (var errorResponse = (HttpWebResponse)ex.Response)
+                    {
+                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                        {
+                            error = reader.ReadToEnd();
+                            //TODO: use JSON.net to parse this string and look at the error message
+                        }
+                        TempData["StatusCode"] = (int)errorResponse.StatusCode;
+                    }
+                }
+            }
+            return RedirectToAction("Detail", new { id = id });
         }
     }
 }

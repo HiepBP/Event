@@ -28,10 +28,11 @@
                 </div>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                @if (Session["Username"] != null || Convert.ToString(Session["Username"]) != string.Empty)
+                @if (Session["CurrentUserID"] != null || Convert.ToString(Session["CurrentUserID"]) != string.Empty)
                 {
+                    string url = "http://localhost/EventBox/Users/Detail?id=" + Session["CurrentUserID"];
                     <li>
-                        <a href=""><h5>@Session["Username"]</h5></a>
+                        <a href="@url"><h5>@Session["Username"]</h5></a>
                     </li>
                     <li>
                         <form action="/EventBox/Users/Logout">
@@ -143,7 +144,7 @@
                                         console.log("Success");
                                         var url = window.location.href;
                                         window.location = url;
-                                }
+                                    }
                                 });
                             },
                             error: function (error) {
