@@ -13,4 +13,5 @@ public interface AccountService {
 
     @POST("API/Account/Register")
     Call<Void> postRegister(@Body Account account);
+
 }
