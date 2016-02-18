@@ -40,8 +40,8 @@
     <title>Event Details</title>
 </head>
 <body>
-    @using (Html.BeginForm("","Create", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    { 
+    @using (Html.BeginForm("Create", "Events", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
         <input type="text" name="name" placeholder="Tên sự kiện" required><br />
         <input type="text" name="info" placeholder="Thông tin" required><br />
         <input type="datetime-local" name="time" placeholder="Thời gian" required><br />

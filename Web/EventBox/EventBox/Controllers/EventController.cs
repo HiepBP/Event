@@ -1,4 +1,5 @@
-﻿using AttributeRouting.Web.Mvc;
+﻿using AttributeRouting;
+using AttributeRouting.Web.Mvc;
 using EventBox.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,7 +14,7 @@ using System.Web.Mvc;
 
 namespace EventBox.Controllers
 {
-
+    [RoutePrefix("Events")]
     public class EventController : Controller
     {
 
@@ -22,7 +23,7 @@ namespace EventBox.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [Route("SearchEvent")]
+        [Route("Search")]
         public ActionResult SearchEvent(string searchValue)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetByNamePaging?name=" + searchValue + "&page=1&pageSize=9");
@@ -50,7 +51,7 @@ namespace EventBox.Controllers
             return View("Index");
         }
 
-        [Route("EventDetail")]
+        [Route("Detail")]
         public ActionResult Detail(int id)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetEventDetail?id=" + id);
@@ -173,12 +174,14 @@ namespace EventBox.Controllers
             return RedirectToAction("Detail", new { id = id });
         }
 
-        [Route("RedirectAddEvent")]
-        public ActionResult RedirectAddEvent()
+        [HttpGet]
+        [Route("Create")]
+        public ActionResult Create()
         {
             return View("~/Views/Event/AddEvent.cshtml");
         }
 
+        [HttpPost]
         [Route("Create")]
         public ActionResult Create(string name, string info, DateTime time, string place, int maxAttendance, int requireAttendance, double price, HttpPostedFileBase image)
         {
@@ -324,7 +327,7 @@ namespace EventBox.Controllers
             return RedirectToAction("Home", "Index", new { area = "" });
         }
 
-        [Route("JoinEvent")]
+        [Route("Join")]
         public ActionResult JoinEvent(string id)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/JoinEvent?id="+id);

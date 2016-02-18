@@ -21,7 +21,7 @@
             </div>
             <div style="margin-left: 2em" class="nav navbar-nav">
                 <div class="search">
-                    <form method="GET" action="SearchEvent">
+                    <form method="GET" action="/EventBox/Events/Search">
                         <input type="text" class="form-control input-sm" maxlength="64" placeholder="Search" name="searchValue" />
                         <button type="submit" class="btn btn-primary btn-sm" id="btn_Search">Search</button>
                     </form>
@@ -31,12 +31,15 @@
                 @if (Session["Username"] != null || Convert.ToString(Session["Username"]) != string.Empty)
                 {
                     <li>
+                        <a href=""><h5>@Session["Username"]</h5></a>
+                    </li>
+                    <li>
                         <form action="/EventBox/Users/Logout">
                             <button type="submit" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Logout" name="btn_Logout"> Thoat</button>
                         </form>
                     </li>
                     <li>
-                        <form method="POST" action="/EventBox/RedirectAddEvent">
+                        <form method="GET" action="/EventBox/Events/Create">
                             <button type="submit" class="btn btn-info btn-sm glyphicon glyphicon-log-in">Thêm sự kiện</button>
                         </form>
                     </li>
