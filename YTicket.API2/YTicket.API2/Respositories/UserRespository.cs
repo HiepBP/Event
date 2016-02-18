@@ -30,6 +30,16 @@ namespace YTicket.API2.Respositories
             return users.ToPagedList(pageNumber, pageSize);
         }
 
+        public User GetByEvent(int eventId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> GetByEventAsync(int eventId)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<UserDTO> GetByNamePaging(string name, int pageNumber, int pageSize)
         {
             var users = Context.Users.Where(p => p.Username.Contains(name))

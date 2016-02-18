@@ -14,15 +14,17 @@ namespace YTicket.API2.Services
         private IUserRespository _respository;
         private ICategoryRespository _categoryRespository;
         private IValidationDictionary _validationDictionary;
+        private IEventRespository _eventRespository;
 
         private static int TotalResults;
 
         public UserService(IValidationDictionary validationDictionary, IUserRespository respository,
-            ICategoryRespository categoryRespository)
+            ICategoryRespository categoryRespository, IEventRespository eventRespository)
         {
             _respository = respository;
             _categoryRespository = categoryRespository;
             _validationDictionary = validationDictionary;
+            _eventRespository = eventRespository;
         }
 
         public IEnumerable<UserDTO> GetAllPaging(int pageNumber, int pageSize)
@@ -177,6 +179,113 @@ namespace YTicket.API2.Services
             return TotalResults;
         }
 
+        public UserDTO GetCurrentUser(string name)
+        {
+            User user = _respository.GetByUsername(name);
+            if (user == null)
+                return null;
+            else
+                return new UserDTO
+                {
+                    Username = user.Username,
+                    ID = user.ID,
+                    Image = user.Image
+                };
+        }
+
+        public async Task<UserDTO> GetCurrentUserAsync(string name)
+        {
+            User user = await _respository.GetByUsernameAsync(name);
+            if (user == null)
+                return null;
+            else
+                return new UserDTO
+                {
+                    Username = user.Username,
+                    ID = user.ID,
+                    Image = user.Image
+                };
+        }
+
+        public UserDetailDTO GetCurrentUserDetail(string name)
+        {
+            User user = _respository.GetByUsername(name);
+            if (user == null)
+                return null;
+            else
+                return new UserDetailDTO
+                {
+                    ID = user.ID,
+                    Username = user.Username,
+                    Email = user.Email,
+                    Address = user.Address,
+                    Categories = user.Categories.ToList(),
+                    Phone = user.Phone,
+                    Image = user.Image
+                };
+        }
+
+        public async Task<UserDetailDTO> GetCurrentUserDetailAsync(string name)
+        {
+            User user = await _respository.GetByUsernameAsync(name);
+            if (user == null)
+                return null;
+            else
+                return new UserDetailDTO
+                {
+                    ID = user.ID,
+                    Username = user.Username,
+                    Email = user.Email,
+                    Address = user.Address,
+                    Categories = user.Categories.ToList(),
+                    Phone = user.Phone,
+                    Image = user.Image
+                };
+        }
+
+        public UserDTO GetUserByEvent(int eventId)
+        {
+            var @event = _eventRespository.Get(eventId);
+            if (@event == null)
+            {
+                return null;
+            }
+            else
+            {
+                var user = _eventRespository.GetMaster(@event);
+                if (user == null)
+                    return null;
+                else
+                    return new UserDTO
+                    {
+                        ID = user.ID,
+                        Username = user.Username,
+                        Image = user.Image
+                    };
+            }
+        }
+
+        public async Task<UserDTO> GetUserByEventAsync(int eventId)
+        {
+            var @event = await _eventRespository.GetAsync(eventId);
+            if (@event == null)
+            {
+                return null;
+            }
+            else
+            {
+                var user = await _eventRespository.GetMasterAsync(@event);
+                if (user == null)
+                    return null;
+                else
+                    return new UserDTO
+                    {
+                        ID = user.ID,
+                        Username = user.Username,
+                        Image = user.Image
+                    };
+            }
+        }
     }
 
     public interface IUserService
@@ -187,6 +296,12 @@ namespace YTicket.API2.Services
         Task<UserDetailDTO> GetUserDetailAsync(int id);
         bool UpdateUser(User user, string username);
         Task<bool> UpdateUserAsync(User user, string username);
+        UserDTO GetCurrentUser(string name);
+        Task<UserDTO> GetCurrentUserAsync(string name);
+        UserDetailDTO GetCurrentUserDetail(string name);
+        Task<UserDetailDTO> GetCurrentUserDetailAsync(string name);
+        UserDTO GetUserByEvent(int eventId);
+        Task<UserDTO> GetUserByEventAsync(int eventId);
         int GetTotalResults();
     }
 }

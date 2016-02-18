@@ -21,7 +21,7 @@ namespace YTicket.API2.Controllers
         public UsersController()
         {
             _service = new UserService(new ModelStateWrapper(this.ModelState),
-                new UserRespository(), new CategoryRespository());
+                new UserRespository(), new CategoryRespository(), new EventRespository());
         }
         
         public UsersController(IUserService service)
@@ -136,7 +136,6 @@ namespace YTicket.API2.Controllers
         /// <param name="user">the user object</param>
         /// <returns></returns>
         [Authorize]
-        [ResponseType(typeof(Event))]
         [HttpPut]
         [Route("UpdateUser", Name = "UpdateUserRoute")]
         public async Task<IHttpActionResult> UpdateUser(int id, User user)
@@ -152,6 +151,61 @@ namespace YTicket.API2.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Returns current User.
+        /// User contains detail DTO: ID, Username, Email, Address, Phone, Image, Categories.
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [Route("GetCurrentUser")]
+        public async Task<IHttpActionResult> GetCurrentUser()
+        {
+            var user = await _service.GetCurrentUserAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        /// <summary>
+        /// Returns current User.
+        /// User contains detail DTO: ID, Username, Email, Address, Phone, Image, Categories.
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [Route("GetCurrentUserDetail")]
+        public async Task<IHttpActionResult> GetCurrentUserDetail()
+        {
+            var user = await _service.GetCurrentUserDetailAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        /// <summary>
+        /// Returns creator User of event.
+        /// User contains detail DTO: ID, Username, Email, Address, Phone, Image, Categories.
+        /// </summary>
+        /// <param name="eventId">id of current event</param>
+        /// <returns></returns>
+        [Authorize]
+        [Route("GetUserByEvent")]
+        public async Task<IHttpActionResult> GetUserByEvent(int eventId)
+        {
+            var user = await _service.GetUserByEventAsync(eventId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
 
         protected override void Dispose(bool disposing)
