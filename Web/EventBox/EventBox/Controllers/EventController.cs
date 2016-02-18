@@ -105,10 +105,10 @@ namespace EventBox.Controllers
             streamReader = new StreamReader(stream, Encoding.UTF8);
             info = streamReader.ReadToEnd();
             var JUser = JsonConvert.DeserializeObject<JArray>(info);
-            User user = new User();
             List<User> users = new List<Models.User>();
             foreach (var item in JUser)
             {
+                User user = new User();
                 user.ID = (int)item["ID"];
                 user.Username = (string)item["Username"];
                 users.Add(user);
@@ -466,7 +466,7 @@ namespace EventBox.Controllers
         [Route("Leave")]
         public ActionResult LeaveEvent(string id)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/JoinEvent?id=" + id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/LeaveEvent?id=" + id);
             httpWebRequest.Method = "PUT";
             httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             httpWebRequest.ContentType = "application/json";

@@ -222,5 +222,131 @@ namespace EventBox.Controllers
             }
             return View("~/Views/User/UserDetail.cshtml");
         }
+
+        [HttpGet]
+        [Route("Update")]
+        public ActionResult Update(int id, string username, string email, string address, string phone, string image)
+        {
+            UserDetail ud = new UserDetail();
+            ud.ID = id;
+            ud.Username = username;
+            ud.Email = email;
+            ud.Address = address;
+            ud.Phone = phone;
+            ud.Image = image;
+            ViewData["UpdateUser"] = ud;
+            return View("~/Views/User/EditUser.cshtml");
+        }
+
+        [HttpPost]
+        [Route("Update")]
+        public ActionResult Update(int id, string username, string email, string address, string phone, HttpPostedFileBase image, string oldValueImage)
+        {
+            string ImageUrl = "";
+            if (image != null)
+            {
+                var folderName = "/Content/Upload/Images/";
+                var fileName = image.FileName;
+                FileStream fileStream;
+                using (fileStream = System.IO.File.Create(AppDomain.CurrentDomain.BaseDirectory + folderName + fileName))
+                {
+                    image.InputStream.CopyTo(fileStream);
+                }
+                byte[] data;
+                using (Stream inputStream = image.InputStream)
+                {
+                    MemoryStream memoryStream = inputStream as MemoryStream;
+                    if (memoryStream == null)
+                    {
+                        memoryStream = new MemoryStream();
+                        inputStream.CopyTo(memoryStream);
+                    }
+                    data = memoryStream.ToArray();
+                }
+
+
+                using (WebClient uploader = new WebClient())
+                {
+                    try
+                    {
+                        byte[] response = uploader.UploadFile(new Uri("http://uploads.im/api?upload"), fileStream.Name);
+                        string s = uploader.Encoding.GetString(response);
+                        JObject jo = JObject.Parse(s);
+                        ImageUrl = (string)(jo["data"])["thumb_url"];
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + folderName + fileName);
+                    }
+                }
+            }
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/UpdateUser?id=" + id);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.MediaType = "application/json";
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "PUT";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "";
+                if (ImageUrl == "")
+                {
+                    ImageUrl = oldValueImage;
+                }
+                json = "{\"ID\":\"" + id + "\"," +
+                              "\"Username\":\"" + username + "\"," +
+                              "\"Email\":\"" + email + "\"," +
+                              "\"Address\":\"" + address + "\"," +
+                              "\"Phone\":\"" + phone + "\"," +
+                              "\"Image\":\"" + ImageUrl + "\"}";
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+            string result = "";
+            string error = "";
+            try
+            {
+                using (var httpResponse = httpWebRequest.GetResponse() as HttpWebResponse)
+                {
+                    if (httpWebRequest.HaveResponse && httpResponse != null)
+                    {
+                        using (var reader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            result = reader.ReadToEnd();
+                        }
+                        TempData["StatusCode"] = (int)httpResponse.StatusCode;
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response != null)
+                {
+                    using (var errorResponse = (HttpWebResponse)ex.Response)
+                    {
+                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                        {
+                            error = reader.ReadToEnd();
+                            //TODO: use JSON.net to parse this string and look at the error message
+                        }
+                        TempData["StatusCode"] = (int)errorResponse.StatusCode;
+                    }
+                }
+            }
+
+            return RedirectToAction("Detail", new { id = id });
+        }
+
+        [HttpGet]
+        [Route("ChangePassword")]
+        public ActionResult ChangePassword()
+        {
+            return View("~/Views/User/ChangePassword.cshtml");
+        }
     }
 }
