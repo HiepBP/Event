@@ -66,6 +66,7 @@ namespace EventBox.Controllers
             ed.Info = (string)eventDetail["Info"];
             ed.Time = (System.DateTime)eventDetail["Time"];
             ed.Place = (string)eventDetail["Place"];
+            ed.Image = (string)eventDetail["Image"];
             JToken token = eventDetail["MaxAttendance"];
             if (token != null && token.Type != JTokenType.Null)
             {
@@ -106,7 +107,7 @@ namespace EventBox.Controllers
             {
                 user.ID = (int)item["ID"];
                 user.Username = (string)item["Username"];
-                user.Image = (byte[])item["Image"];
+                //user.Image = (byte[])item["Image"];
                 users.Add(user);
             }
             ViewData["Users"] = users;
@@ -323,5 +324,47 @@ namespace EventBox.Controllers
             return RedirectToAction("Home", "Index", new { area = "" });
         }
 
+        [Route("JoinEvent")]
+        public ActionResult JoinEvent(string id)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/JoinEvent?id="+id);
+            httpWebRequest.Method = "PUT";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.ContentLength = 0;
+            string result = "";
+            string error = "";
+            try
+            {
+                using (var httpResponse = httpWebRequest.GetResponse() as HttpWebResponse)
+                {
+                    if (httpWebRequest.HaveResponse && httpResponse != null)
+                    {
+                        using (var reader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            result = reader.ReadToEnd();
+                        }
+                        TempData["StatusCode"] = (int)httpResponse.StatusCode;
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response != null)
+                {
+                    using (var errorResponse = (HttpWebResponse)ex.Response)
+                    {
+                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                        {
+                            error = reader.ReadToEnd();
+                            //TODO: use JSON.net to parse this string and look at the error message
+                        }
+                        TempData["StatusCode"] = (int)errorResponse.StatusCode;
+                    }
+                }
+            }
+            return RedirectToAction("Detail", new { id = id});
+        }
     }
 }
