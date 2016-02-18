@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID"
+        android:id="@+id/fragment_event_id"
+        android:layout_x="38dp"
+        android:layout_y="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:id="@+id/fragment_event_name"
+        android:layout_x="39dp"
+        android:layout_y="86dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:id="@+id/fragment_event_time"
+        android:layout_x="38dp"
+        android:layout_y="129dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place"
+        android:id="@+id/fragment_event_place"
+        android:layout_x="38dp"
+        android:layout_y="167dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Image"
+        android:id="@+id/fragment_event_image"
+        android:layout_x="38dp"
+        android:layout_y="205dp" />
+
+    <EditText
+        android:layout_width="117dp"
+        android:layout_height="30dp"
+        android:id="@+id/fragment_event_edittext_id"
+        android:layout_x="98dp"
+        android:layout_y="43dp" />
+</AbsoluteLayout>

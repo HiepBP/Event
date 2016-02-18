@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.fpt.study.yticket.R;
+import com.fpt.study.yticket.activity.EventActivity;
 import com.fpt.study.yticket.model.Event;
 import com.fpt.study.yticket.service.HomeService;
 import com.fpt.study.yticket.util.ServiceGenerator;
@@ -26,11 +27,11 @@ import retrofit2.Response;
 
 public class HomeFragment extends ListFragment {
     private static final String TAG = "HomeFragment";
-    private static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
-    private static final String EXTRA_EVENT_NAME = "EXTRA_EVENT_NAME";
-    private static final String EXTRA_EVENT_TIME = "EXTRA_EVENT_TIME";
-    private static final String EXTRA_EVENT_PLACE = "EXTRA_EVENT_PLACE";
-    private static final String EXTRA_EVENT_IMAGE = "EXTRA_EVENT_IMAGE";
+    public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
+    public static final String EXTRA_EVENT_NAME = "EXTRA_EVENT_NAME";
+    public static final String EXTRA_EVENT_TIME = "EXTRA_EVENT_TIME";
+    public static final String EXTRA_EVENT_PLACE = "EXTRA_EVENT_PLACE";
+    public static final String EXTRA_EVENT_IMAGE = "EXTRA_EVENT_IMAGE";
     private static final int PAGE_SIZE = 10;
 
     HomeService service;
@@ -44,7 +45,7 @@ public class HomeFragment extends ListFragment {
         service = ServiceGenerator.createService(HomeService.class);
 
 
-        Call<List<Event>> call = service.getAllEvents(1, PAGE_SIZE);
+        Call<List<Event>> call = service.getAllEvents(1, 9);
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
@@ -92,7 +93,7 @@ public class HomeFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         Event e = ((EventAdapter) getListAdapter()).getItem(position);
         Log.d(TAG, e.getName() + "was clicked");
-        Intent intent = new Intent();
+        Intent intent = new Intent(getActivity(), EventActivity.class);
         intent.putExtra(EXTRA_EVENT_ID, e.getID());
         getActivity().startActivity(intent);
     }

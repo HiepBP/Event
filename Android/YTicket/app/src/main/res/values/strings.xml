@@ -7,6 +7,7 @@
     <string name="button.name.signup">Sign Up</string>
     <string name="title_activity_signup">SignupActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_event">EventActivity</string>
     <string name="account.field.email">Email</string>
     <string name="account.field.confirmPassword">Confirm Password</string>
 </resources>
