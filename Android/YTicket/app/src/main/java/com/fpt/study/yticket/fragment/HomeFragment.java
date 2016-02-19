@@ -69,6 +69,10 @@ public class HomeFragment extends ListFragment {
         });
     }
 
+
+    /*
+     * Custom adapter for home page list view
+     */
     private class EventAdapter extends ArrayAdapter<Event> {
         public EventAdapter(List<Event> events) {
             super(getActivity(), 0, new ArrayList<Event>(events));
