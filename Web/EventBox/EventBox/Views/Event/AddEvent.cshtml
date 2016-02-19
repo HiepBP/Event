@@ -22,16 +22,42 @@
 </head>
 <body>
     @using (Html.BeginForm("Create", "Events", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        <input type="text" name="name" placeholder="Tên sự kiện" required><br />
-        <input type="text" name="info" placeholder="Thông tin" required><br />
-        <input type="datetime-local" name="time" placeholder="Thời gian" required><br />
-        <input type="text" name="place" placeholder="Địa điểm" required><br />
-        <input type="number" name="maxAttendance" placeholder="Số người tối đa" ><br />
-        <input type="number" name="requireAttendance" placeholder="Số người yêu cầu" ><br />
-        <input type="number" name="price" placeholder="Giá" ><br />
-        <input type="file" id="file" name="image" accept="image/*" required><br />
-        <button type="submit" id="upload" onclick="submitform()">Thêm sự kiện</button><br />
-    }
+{
+
+    <table class="table table-add-event">
+       
+
+            <tr>
+                <td><input type="text" name="name" placeholder="Tên sự kiện" required></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="info" placeholder="Thông tin" required><br /></td>
+            </tr>
+            <tr>
+                <td><input type="datetime-local" name="time" placeholder="Thời gian" required></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="place" placeholder="Địa điểm" required></td>
+            </tr>
+            <tr>
+                <td><input type="number" name="maxAttendance" placeholder="Số người tối đa"></td>
+            </tr>
+            <tr>
+                <td><input type="number" name="requireAttendance" placeholder="Số người yêu cầu"></td>
+            </tr>
+            <tr>
+                <td><input type="number" name="price" placeholder="Giá"></td>
+            </tr>
+            <tr>
+                <td><input type="file" id="file" name="image" accept="image/*" required></td>
+            </tr>
+            <tr>
+                <td><button type="submit" id="upload" onclick="submitform()">Thêm sự kiện</button><br /></td>
+            </tr>
+
+      
+    </table>
+
+}
 </body>
 </html>

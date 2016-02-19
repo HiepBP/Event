@@ -9,6 +9,7 @@
     <link rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css'>
     <title>@ViewBag.Title</title>
     <link href="~/Content/style.css" rel="stylesheet" />
+    <link href="~/Content/styles.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -20,7 +21,7 @@
             <div style="margin-left: 2em" class="nav navbar-nav">
                 <div class="search">
                     <form method="GET" action="/EventBox/Events/Search">
-                        <input type="text" class="form-control input-sm" maxlength="64" placeholder="Search" name="searchValue" />
+                        <input class="form-control input-sm" maxlength="64" placeholder="Search" name="searchValue" />
                         <button type="submit" class="btn btn-primary btn-sm" id="btn_Search">Search</button>
                     </form>
                 </div>
