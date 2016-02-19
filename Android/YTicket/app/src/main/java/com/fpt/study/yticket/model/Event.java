@@ -3,6 +3,8 @@ package com.fpt.study.yticket.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * Created by ThienPG on 2/18/2016.
  */
@@ -18,7 +20,7 @@ public class Event {
 
     @SerializedName("Time")
     @Expose
-    private String Time;
+    private Date Time;
 
     @SerializedName("Place")
     @Expose
@@ -47,11 +49,11 @@ public class Event {
         Name = name;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return Time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         Time = time;
     }
 

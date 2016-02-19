@@ -45,7 +45,7 @@ public class HomeFragment extends ListFragment {
         service = ServiceGenerator.createService(HomeService.class);
 
 
-        Call<List<Event>> call = service.getAllEvents(1, 9);
+        Call<List<Event>> call = service.getAllEvents(1, PAGE_SIZE);
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
@@ -66,6 +66,9 @@ public class HomeFragment extends ListFragment {
     }
 
 
+    /*
+     * Custom adapter for home page list view
+     */
     private class EventAdapter extends ArrayAdapter<Event> {
         public EventAdapter(List<Event> events) {
             super(getActivity(), 0, new ArrayList<Event>(events));

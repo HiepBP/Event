@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:text="ID"
         android:id="@+id/fragment_event_id"
-        android:layout_x="38dp"
+        android:layout_x="40dp"
         android:layout_y="50dp" />
 
     <TextView
@@ -16,37 +16,66 @@
         android:layout_height="wrap_content"
         android:text="Name"
         android:id="@+id/fragment_event_name"
-        android:layout_x="39dp"
-        android:layout_y="86dp" />
+        android:layout_x="40dp"
+        android:layout_y="100dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Time"
         android:id="@+id/fragment_event_time"
-        android:layout_x="38dp"
-        android:layout_y="129dp" />
+        android:layout_x="40dp"
+        android:layout_y="150dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Place"
         android:id="@+id/fragment_event_place"
-        android:layout_x="38dp"
-        android:layout_y="167dp" />
+        android:layout_x="40dp"
+        android:layout_y="200dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Image"
         android:id="@+id/fragment_event_image"
-        android:layout_x="38dp"
-        android:layout_y="205dp" />
+        android:layout_x="40dp"
+        android:layout_y="250dp" />
 
     <EditText
-        android:layout_width="117dp"
-        android:layout_height="30dp"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
         android:id="@+id/fragment_event_edittext_id"
-        android:layout_x="98dp"
-        android:layout_y="43dp" />
+        android:layout_x="100dp"
+        android:layout_y="40dp" />
+
+    <EditText
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_event_edittext_name"
+        android:layout_x="100dp"
+        android:layout_y="90dp" />
+
+    <EditText
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_event_edittext_time"
+        android:layout_x="100dp"
+        android:layout_y="140dp" />
+
+    <EditText
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_event_edittext_place"
+        android:layout_x="100dp"
+        android:layout_y="190dp" />
+
+    <Gallery
+        android:layout_width="54dp"
+        android:layout_height="39dp"
+        android:id="@+id/gallery"
+        android:layout_x="104dp"
+        android:layout_y="255dp" />
+
 </AbsoluteLayout>
