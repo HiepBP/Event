@@ -52,18 +52,31 @@
         </ul>
     </div>
     <!-- grid Image -->
-
     <!--Paging-->
     <ul class="pagination">
-        <li><a href="#">«</a></li>
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li><a href="#">6</a></li>
-        <li><a href="#">7</a></li>
-        <li><a href="#">»</a></li>
+        @if ((string)ViewData["FirstPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["FirstPage"];
+            <li><a href="@url">First Page</a></li>
+        }
+        @if ((string)ViewData["PrevPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["PrevPage"];
+            <li><a href="@url"><<</a></li>
+        }
+        @if ((string)ViewData["NextPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["NextPage"];
+            <li><a href="@url">>></a></li>
+        }
+        @if ((string)ViewData["LastPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["LastPage"];
+            <li><a href="@url">Last Page</a></li>
+        }
+
+
+
     </ul>
     <!--Paging-->
 </body>
