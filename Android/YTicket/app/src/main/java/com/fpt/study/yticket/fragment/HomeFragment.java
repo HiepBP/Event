@@ -47,6 +47,10 @@ public class HomeFragment extends ListFragment {
         service = ServiceGenerator.createService(HomeService.class);
         
         getAll(1,9);
+        getAll(2,9);
+        getAll(3,9);
+        getAll(4,9);
+        getAll(5,9);
     }
 
     public void getAll(int page, int pageSize){
