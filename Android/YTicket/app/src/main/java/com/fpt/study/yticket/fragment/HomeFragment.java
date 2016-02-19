@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.fpt.study.yticket.R;
@@ -37,21 +38,26 @@ public class HomeFragment extends ListFragment {
     HomeService service;
     List<Event> events = new ArrayList<>();
     TextView txtEventName;
+    Button btn_NextPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("HomeFragment", "onCreate called");
         service = ServiceGenerator.createService(HomeService.class);
+        
+        getAll(1,9);
+    }
 
-
-        Call<List<Event>> call = service.getAllEvents(1, 9);
+    public void getAll(int page, int pageSize){
+        Call<List<Event>> call = service.getAllEvents(page, pageSize);
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 Log.d("HomeFragment", response.body().get(0).getName());
-                events = response.body();
-
+//                events = response.body();
+                events.addAll(response.body());
+                System.out.println(response.body());
                 EventAdapter adapter = new EventAdapter(events);
                 setListAdapter(adapter);
             }
@@ -61,16 +67,12 @@ public class HomeFragment extends ListFragment {
 
             }
         });
-
-
     }
-
 
     private class EventAdapter extends ArrayAdapter<Event> {
         public EventAdapter(List<Event> events) {
             super(getActivity(), 0, new ArrayList<Event>(events));
         }
-
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
