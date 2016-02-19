@@ -104,14 +104,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
 
-    <Gallery
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/gallery"
-        android:layout_x="104dp"
-        android:layout_y="255dp"
-        android:layout_alignBottom="@+id/fragment_event_image"
-        />
+        android:id="@+id/fragment_event_image_image"
+        android:layout_below="@+id/fragment_event_image"
+        android:layout_toRightOf="@+id/fragment_event_image"
+        android:layout_toEndOf="@+id/fragment_event_image" />
+
 
 </RelativeLayout>
 
