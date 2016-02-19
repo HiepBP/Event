@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.model.Event;
 import com.fpt.study.yticket.service.EventService;
@@ -25,7 +27,7 @@ public class EventFragment extends Fragment {
     EditText etxtEventName;
     EditText etxtEventTime;
     EditText etxtEventPlace;
-    // EditText etxtEventImage;
+    ImageView eventImage;
     EventService service;
 
     EditText etxtEventId;
@@ -47,6 +49,7 @@ public class EventFragment extends Fragment {
         etxtEventName = (EditText) v.findViewById(R.id.fragment_event_edittext_name);
         etxtEventTime = (EditText) v.findViewById(R.id.fragment_event_edittext_time);
         etxtEventPlace = (EditText) v.findViewById(R.id.fragment_event_edittext_place);
+        eventImage = (ImageView) v.findViewById(R.id.fragment_event_image_image);
 
         Call<Event> call = service.getEventDetail(eventId);
         call.enqueue(new Callback<Event>() {
@@ -57,6 +60,8 @@ public class EventFragment extends Fragment {
                 etxtEventName.setText(e.getName());
                 etxtEventTime.setText(e.getTime() + "");
                 etxtEventPlace.setText(e.getPlace());
+                Glide.with(getActivity()).load(e.getImage()).into(eventImage);
+
             }
 
             @Override

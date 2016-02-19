@@ -1,6 +1,7 @@
 package com.fpt.study.yticket.fragment;
 
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +46,8 @@ public class HomeFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         Log.d("HomeFragment", "onCreate called");
         service = ServiceGenerator.createService(HomeService.class);
-        
+
+
         getAll(1,9);
         getAll(2,9);
         getAll(3,9);
@@ -99,6 +101,7 @@ public class HomeFragment extends ListFragment {
 
     }
 
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Event e = ((EventAdapter) getListAdapter()).getItem(position);
@@ -107,4 +110,6 @@ public class HomeFragment extends ListFragment {
         intent.putExtra(EXTRA_EVENT_ID, e.getID());
         getActivity().startActivity(intent);
     }
+
+
 }
