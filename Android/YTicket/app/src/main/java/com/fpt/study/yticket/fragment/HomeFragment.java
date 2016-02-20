@@ -67,9 +67,6 @@ public class HomeFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = getListView();
-
-        listView.addHeaderView(getActivity().getLayoutInflater().inflate(R.layout.header, null));
-        listView.addFooterView(getActivity().getLayoutInflater().inflate(R.layout.footer, null));
         listView.setOnScrollListener(new InfiniteScrollListener(5) {
             @Override
             public void loadMore(int page, int totalItemsCount) {
