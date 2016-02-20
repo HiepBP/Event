@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -25,6 +27,7 @@ import com.fpt.study.yticket.util.infinitescroll.InfiniteScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +40,7 @@ public class HomeFragment extends ListFragment {
     private static final String TAG = "HomeFragment";
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 20;
 
     HomeService service;
     List<Event> events = new ArrayList<>();
@@ -51,15 +54,13 @@ public class HomeFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         Log.d("HomeFragment", "onCreate called");
         service = ServiceGenerator.createService(HomeService.class);
-        getAll(1, 20);
+        getAll(1, PAGE_SIZE);
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-
-
         return v;
     }
 
@@ -67,18 +68,25 @@ public class HomeFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = getListView();
-
         listView.addHeaderView(getActivity().getLayoutInflater().inflate(R.layout.header, null));
         listView.addFooterView(getActivity().getLayoutInflater().inflate(R.layout.footer, null));
-        listView.setOnScrollListener(new InfiniteScrollListener(5) {
+        listView.setOnScrollListener(new InfiniteScrollListener(0) {
             @Override
-            public void loadMore(int page, int totalItemsCount) {
-                getAll(page, PAGE_SIZE);
+            public void loadMore(final int page, int totalItemsCount) {
+                //delay 3s then load more
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getAll(page, PAGE_SIZE);
+                    }
+                }, 3000);
+
             }
         });
     }
 
-    public void getAll(int page, int pageSize){
+    public void getAll(int page, int pageSize) {
         Call<List<Event>> call = service.getAllEvents(page, pageSize);
         call.enqueue(new Callback<List<Event>>() {
             @Override
@@ -87,9 +95,9 @@ public class HomeFragment extends ListFragment {
                     events.addAll(response.body());
                     adapter = new EventAdapter(events);
                     setListAdapter(adapter);
+                    //set list view to a position
+                    listView.setSelection(adapter.getCount() - 33);
                 }
-
-
             }
 
             @Override
@@ -115,20 +123,17 @@ public class HomeFragment extends ListFragment {
             }
 
             Event e = getItem(position);
+
             txtEventName = (TextView) convertView.findViewById(R.id.list_event_item_Name);
             txtEventName.setText(e.getName());
-
-
             return convertView;
         }
-
-
     }
 
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Event e = ((EventAdapter) getListAdapter()).getItem(position);
+        Event e = ((EventAdapter) getListAdapter()).getItem(position - 1);
         Log.d(TAG, e.getName() + "was clicked");
         Intent intent = new Intent(getActivity(), EventActivity.class);
         intent.putExtra(EXTRA_EVENT_ID, e.getID());

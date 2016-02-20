@@ -6,7 +6,7 @@ import android.widget.AbsListView;
  * Created by ThienPG on 2/19/2016.
  */
 public abstract class InfiniteScrollListener implements AbsListView.OnScrollListener {
-    private int bufferItemCount = 10;
+    private int bufferItemCount = 0;
     private int currentPage = 0;
     private int itemCount = 0;
     private boolean isLoading = true;
@@ -24,17 +24,30 @@ public abstract class InfiniteScrollListener implements AbsListView.OnScrollList
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (totalItemCount < itemCount) {
-            this.itemCount = totalItemCount;
-            if (totalItemCount == 0) {
-                this.isLoading = true;
-            }
-        }
+//        if (totalItemCount < itemCount) {
+//            this.itemCount = totalItemCount;
+//            if (totalItemCount == 0) {
+//                this.isLoading = true;
+//            }
+//        }
+//
+//        if (isLoading && (totalItemCount > itemCount)) {
+//            isLoading = false;
+//            itemCount = totalItemCount;
+//            currentPage++;
+//        }
+//
+//        if (!isLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + bufferItemCount)) {
+//            loadMore(currentPage + 1, totalItemCount);
+//            isLoading = true;
+//        }
 
-        if (isLoading && (totalItemCount > itemCount)) {
-            isLoading = false;
-            itemCount = totalItemCount;
-            currentPage++;
+        if(isLoading){
+            if(totalItemCount > itemCount){
+                isLoading = false;
+                itemCount = totalItemCount;
+                currentPage++;
+            }
         }
 
         if (!isLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + bufferItemCount)) {
