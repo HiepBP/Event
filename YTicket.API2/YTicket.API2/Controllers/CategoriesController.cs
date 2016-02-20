@@ -26,6 +26,32 @@ namespace YTicket.API2.Controllers
         }
 
         /// <summary>
+        /// Returns all categories, order by name.
+        /// Category Collection contains basic DTO: ID, Name.
+        /// </summary>
+        /// <returns></returns>
+        [Route("GetAll", Name = "GetAll")]
+        public IQueryable<CategoryDTO> GetAll()
+        {
+            var list = _service.GetAll();
+
+            if (list != null)
+            {
+                var totalCount = _service.GetTotalResults();
+
+                var paginationHeader = new
+                {
+                    TotalCount = totalCount
+                };
+
+                System.Web.HttpContext.Current.Response.Headers.Add("X-Pagination",
+                    Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+            }
+
+            return Queryable.AsQueryable(list);
+        }
+
+        /// <summary>
         /// Returns all categories with paging and newest first.
         /// Category Collection contains basic DTO: ID, Name.
         /// </summary>

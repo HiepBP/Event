@@ -14,16 +14,19 @@ namespace YTicket.API2.Services
         private ICategoryRespository _categoryRespository;
         private IUserRespository _userRespository;
         private IValidationDictionary _validationDictionary;
+        private INotificationRespository _notificationRespository;
 
         private static int TotalResults;
 
         public EventService(IValidationDictionary validationDictionary, IEventRespository respository,
-            ICategoryRespository categoryRespository, IUserRespository userRespository)
+            ICategoryRespository categoryRespository, IUserRespository userRespository, 
+            INotificationRespository notificationRespository)
         {
             _respository = respository;
             _categoryRespository = categoryRespository;
             _userRespository = userRespository;
             _validationDictionary = validationDictionary;
+            _notificationRespository = notificationRespository;
         }
 
         public IEnumerable<EventDTO> GetAllPaging(int pageNumber, int pageSize)
@@ -289,12 +292,24 @@ namespace YTicket.API2.Services
             // Database logic
             try
             {
-                _respository.UpdateEvent(@event);
+                e = _respository.UpdateEvent(@event);
             }
             catch
             {
                 return false;
             }
+
+            //Create notification
+            var list = _userRespository.GetJoinedUserPaging(e, 1, (int)e.MaxAttendance);
+            foreach (var item in list)
+            {
+                User u = new User
+                {
+                    ID = item.ID
+                };
+                _notificationRespository.CreateNotification(u, "Hey guess what!!! [Event Name] has been updated, check it out now!");
+            }
+
             return true;
         }
 
@@ -329,6 +344,18 @@ namespace YTicket.API2.Services
             {
                 return false;
             }
+
+            //Create notification
+            var list = _userRespository.GetJoinedUserPaging(e, 1, (int)e.MaxAttendance);
+            foreach (var item in list)
+            {
+                User u = new User
+                {
+                    ID = item.ID
+                };
+                await _notificationRespository.CreateNotificationAsync(u, "Hey guess what!!! [Event Name] has been updated, check it out now!");
+            }
+
             return true;
         }
 

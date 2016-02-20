@@ -1,0 +1,61 @@
+﻿@using EventBox.Models;
+
+@{
+    var events = (List<Event>)ViewData["Events"];
+}
+
+@{
+    ViewBag.Title = "Tìm Kiếm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<body>
+
+
+    <!-- Carousel -->
+    <!-- grid Image -->
+    <div id="three-columns" class="grid-container" style="display: block;">
+
+        <ul class="rig columns-3">
+            @foreach (var item in events)
+            {
+                string url = "/EventBox/Events/Detail?id=" + item.ID;
+                <li>
+                    <img src="@item.Image" alt="Demo" />
+                    <a href="@url"><h3>@item.Name</h3></a>
+                    <p>@item.Time</p>
+                </li>
+            }
+        </ul>
+    </div>
+    <!-- grid Image -->
+    <!--Paging-->
+    <ul class="pagination">
+        @if ((string)ViewData["FirstPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["FirstPage"];
+            <li><a href="@url">First Page</a></li>
+        }
+        @if ((string)ViewData["PrevPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["PrevPage"];
+            <li><a href="@url"><<</a></li>
+        }
+        @if ((string)ViewData["NextPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["NextPage"];
+            <li><a href="@url">>></a></li>
+        }
+        @if ((string)ViewData["LastPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["LastPage"];
+            <li><a href="@url">Last Page</a></li>
+        }
+
+
+
+    </ul>
+    <!--Paging-->
+</body>
+</html>
