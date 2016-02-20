@@ -21,7 +21,8 @@ namespace YTicket.API2.Controllers
         public EventsController()
         {
             _service = new EventService(new ModelStateWrapper(this.ModelState),
-                new EventRespository(), new CategoryRespository(), new UserRespository());
+                new EventRespository(), new CategoryRespository(), new UserRespository(),
+                new NotificationRespository());
         }
 
         public EventsController(IEventService service)

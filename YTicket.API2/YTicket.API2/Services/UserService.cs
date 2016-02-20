@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using YTicket.API2.DTO;
 using YTicket.API2.Models;
 using YTicket.API2.Models.DTO;
 using YTicket.API2.Respositories;
@@ -15,16 +16,19 @@ namespace YTicket.API2.Services
         private ICategoryRespository _categoryRespository;
         private IValidationDictionary _validationDictionary;
         private IEventRespository _eventRespository;
+        private INotificationRespository _notificationRespository;
 
         private static int TotalResults;
 
         public UserService(IValidationDictionary validationDictionary, IUserRespository respository,
-            ICategoryRespository categoryRespository, IEventRespository eventRespository)
+            ICategoryRespository categoryRespository, IEventRespository eventRespository,
+            INotificationRespository notificationRespository)
         {
             _respository = respository;
             _categoryRespository = categoryRespository;
             _validationDictionary = validationDictionary;
             _eventRespository = eventRespository;
+            _notificationRespository = notificationRespository;
         }
 
         public IEnumerable<UserDTO> GetAllPaging(int pageNumber, int pageSize)
@@ -286,12 +290,23 @@ namespace YTicket.API2.Services
                     };
             }
         }
+
+        public IEnumerable<NotificationDTO> GetNotificationCurrentUser(string username)
+        {
+            var user = _respository.GetByUsername(username);
+            if (user == null)
+                return null;
+
+            var list = _notificationRespository.GetAllByUser(user);
+            return list;
+        }
     }
 
     public interface IUserService
     {
         IEnumerable<UserDTO> GetAllPaging(int pageNumber, int pageSize);
         IEnumerable<UserDTO> GetByNamePaging(string name, int pageNumber, int pageSize);
+        IEnumerable<NotificationDTO> GetNotificationCurrentUser(string username);
         UserDetailDTO GetUserDetail(int id);
         Task<UserDetailDTO> GetUserDetailAsync(int id);
         bool UpdateUser(User user, string username);
