@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.activity.EventActivity;
 import com.fpt.study.yticket.model.Event;
@@ -40,6 +42,7 @@ public class HomeFragment extends ListFragment {
     HomeService service;
     List<Event> events = new ArrayList<>();
     TextView txtEventName;
+    ImageView eventImage;
     ListView listView;
     EventAdapter adapter;
 
@@ -75,7 +78,7 @@ public class HomeFragment extends ListFragment {
                     public void run() {
                         getAll(page, PAGE_SIZE);
                     }
-                }, 3000);
+                }, 1000);
 
             }
         });
@@ -121,6 +124,8 @@ public class HomeFragment extends ListFragment {
 
             txtEventName = (TextView) convertView.findViewById(R.id.list_event_item_Name);
             txtEventName.setText(e.getName());
+            eventImage = (ImageView) convertView.findViewById(R.id.list_event_item_Image);
+            Glide.with(getActivity()).load(e.getImage()).into(eventImage);
             return convertView;
         }
     }

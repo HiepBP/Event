@@ -5,20 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.design.widget.AppBarLayout
+
+    <ImageView
+        android:id="@+id/list_event_item_Image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="200dp"
+        android:scaleType="fitXY"/>
 
         <TextView
             android:id="@+id/list_event_item_Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/font_larger"
             android:layout_alignParentLeft="true"
             android:gravity="center"
-            android:padding="10dp" />
+            android:layout_below="@id/list_event_item_Image"
+            android:padding="10dp"
+            />
 
-    </android.support.design.widget.AppBarLayout>
+
 
 
 
