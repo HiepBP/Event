@@ -154,3 +154,47 @@ details.open > summary:before {
 #userJoined {
 	float: right;
 }
+
+.table-add-event td{
+    text-align:center;
+}
+
+input[type=text],[type=number],[type=datetime-local] {
+   
+   width: 250px;
+}
+input[type=file]{
+
+margin-left:520px;
+}
+
+
+
+
+/*paging*/
+
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin-left:40%;
+    
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+ul.pagination li a.active {
+    background-color: #84E5DE;
+    color: #84E5DE;
+    border-radius: 5px;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #84E5DE;}
+/*paging*/
