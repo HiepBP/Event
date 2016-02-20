@@ -10,4 +10,6 @@
     <string name="title_activity_event">EventActivity</string>
     <string name="account.field.email">Email</string>
     <string name="account.field.confirmPassword">Confirm Password</string>
+    <string name="header">YTicket</string>
+    <string name="footer">Contact: abc@fpt.edu.vn</string>
 </resources>

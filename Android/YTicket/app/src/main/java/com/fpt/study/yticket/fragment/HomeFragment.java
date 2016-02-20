@@ -71,6 +71,9 @@ public class HomeFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = getListView();
+
+        listView.addHeaderView(getActivity().getLayoutInflater().inflate(R.layout.header, null));
+        listView.addFooterView(getActivity().getLayoutInflater().inflate(R.layout.footer, null));
         listView.setOnScrollListener(new InfiniteScrollListener(5) {
             @Override
             public void loadMore(int page, int totalItemsCount) {
@@ -85,13 +88,12 @@ public class HomeFragment extends ListFragment {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 if (response.isSuccess()) {
-
+                    events.addAll(response.body());
+                    adapter = new EventAdapter(events);
+                    setListAdapter(adapter);
                 }
-                Log.d("HomeFragment", response.body().get(0).getName());
-//                events = response.body();
-                events.addAll(response.body());
-                adapter = new EventAdapter(events);
-                setListAdapter(adapter);
+
+
             }
 
             @Override
