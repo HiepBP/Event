@@ -17,4 +17,5 @@
         android:id="@+id/progressBar"
         android:layout_gravity="center_horizontal" />
 
+
 </LinearLayout>

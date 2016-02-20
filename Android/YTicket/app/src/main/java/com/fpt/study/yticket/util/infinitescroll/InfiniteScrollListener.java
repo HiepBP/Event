@@ -22,6 +22,7 @@ public abstract class InfiniteScrollListener implements AbsListView.OnScrollList
         // Do Nothing
     }
 
+
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 //        if (totalItemCount < itemCount) {
@@ -54,5 +55,7 @@ public abstract class InfiniteScrollListener implements AbsListView.OnScrollList
             loadMore(currentPage + 1, totalItemCount);
             isLoading = true;
         }
+
+
     }
 }
