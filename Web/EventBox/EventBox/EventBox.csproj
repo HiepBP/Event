@@ -329,7 +329,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Shared\Index.cshtml" />
+    <Content Include="Views\Event\SearchEvent.cshtml" />
     <Content Include="Views\Event\EventDetail.cshtml" />
     <Content Include="Views\User\UserDetail.cshtml" />
     <Content Include="Views\Event\AddEvent.cshtml" />
