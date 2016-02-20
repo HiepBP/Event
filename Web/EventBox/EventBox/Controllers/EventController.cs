@@ -30,6 +30,12 @@ namespace EventBox.Controllers
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var Pagination = httpWebResponse.Headers["X-Pagination"];
+            JObject json = JObject.Parse(Pagination);
+            ViewData["PrevPage"] = Server.UrlEncode((string)json["PrevPageLink"]);
+            ViewData["NextPage"] = Server.UrlEncode((string)json["NextPageLink"]);
+            ViewData["FirstPage"] = Server.UrlEncode((string)json["FirstPageLink"]);
+            ViewData["LastPage"] = Server.UrlEncode((string)json["LastPageLink"]);
             Stream stream = httpWebResponse.GetResponseStream();
             StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
             string info = streamReader.ReadToEnd();
@@ -48,7 +54,41 @@ namespace EventBox.Controllers
             }
             ViewData["Events"] = events;
 
-            return View("Index");
+            return View("~/Views/Event/SearchEvent.cshtml");
+        }
+
+        [Route("SearchPaging")]
+        public ActionResult SearchEventPaging(string url)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("url");
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "GET";
+            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var Pagination = httpWebResponse.Headers["X-Pagination"];
+            JObject json = JObject.Parse(Pagination);
+            ViewData["PrevPage"] = Server.UrlEncode((string)json["PrevPageLink"]);
+            ViewData["NextPage"] = Server.UrlEncode((string)json["NextPageLink"]);
+            ViewData["FirstPage"] = Server.UrlEncode((string)json["FirstPageLink"]);
+            ViewData["LastPage"] = Server.UrlEncode((string)json["LastPageLink"]);
+            Stream stream = httpWebResponse.GetResponseStream();
+            StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+            string info = streamReader.ReadToEnd();
+            var arr = JsonConvert.DeserializeObject<JArray>(info);
+            Event e = new Event();
+            List<Event> events = new List<Event>();
+            foreach (JObject i in arr)
+            {
+                int ID = (int)i["ID"];
+                string Name = (string)i["Name"];
+                System.DateTime Time = (System.DateTime)i["Time"];
+                string Place = (string)i["Place"];
+                string Image = (string)i["Image"];
+                e = new Event(ID, Name, Time, Place, Image);
+                events.Add(e);
+            }
+            ViewData["Events"] = events;
+
+            return View("~/Views/Event/SearchEvent.cshtml");
         }
 
         [Route("Detail")]
