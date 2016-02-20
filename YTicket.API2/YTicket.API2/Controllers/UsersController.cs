@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.Routing;
+using YTicket.API2.DTO;
 using YTicket.API2.Models;
 using YTicket.API2.Models.DTO;
 using YTicket.API2.Respositories;
@@ -21,7 +22,8 @@ namespace YTicket.API2.Controllers
         public UsersController()
         {
             _service = new UserService(new ModelStateWrapper(this.ModelState),
-                new UserRespository(), new CategoryRespository(), new EventRespository());
+                new UserRespository(), new CategoryRespository(), new EventRespository(),
+                new NotificationRespository());
         }
         
         public UsersController(IUserService service)
@@ -110,6 +112,19 @@ namespace YTicket.API2.Controllers
         }
 
         /// <summary>
+        /// Returns all notifications of current user, newest first.
+        /// Notification Collection contains basic DTO: ID, Information, New.
+        /// </summary>
+        [Authorize]
+        [Route("GetNotification", Name = "GetNotification")]
+        public IQueryable<NotificationDTO> GetNotification()
+        {
+            var list = _service.GetNotificationCurrentUser(User.Identity.Name);
+
+            return Queryable.AsQueryable(list);
+        }
+
+        /// <summary>
         /// Returns individual User.
         /// User contains detail DTO: ID, Username, Email, Address, Phone, Image, Categories.
         /// </summary>
@@ -126,6 +141,8 @@ namespace YTicket.API2.Controllers
 
             return Ok(user);
         }
+
+
 
         /// <summary>
         /// Authorize action, the request header need bearer authorization token.

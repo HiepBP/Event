@@ -30,6 +30,12 @@ namespace EventBox.Controllers
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var Pagination = httpWebResponse.Headers["X-Pagination"];
+            JObject json = JObject.Parse(Pagination);
+            ViewData["PrevPage"] = Server.UrlEncode((string)json["PrevPageLink"]);
+            ViewData["NextPage"] = Server.UrlEncode((string)json["NextPageLink"]);
+            ViewData["FirstPage"] = Server.UrlEncode((string)json["FirstPageLink"]);
+            ViewData["LastPage"] = Server.UrlEncode((string)json["LastPageLink"]);
             Stream stream = httpWebResponse.GetResponseStream();
             StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
             string info = streamReader.ReadToEnd();
@@ -48,7 +54,41 @@ namespace EventBox.Controllers
             }
             ViewData["Events"] = events;
 
-            return View("Index");
+            return View("~/Views/Event/SearchEvent.cshtml");
+        }
+
+        [Route("SearchPaging")]
+        public ActionResult SearchEventPaging(string url)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("url");
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "GET";
+            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var Pagination = httpWebResponse.Headers["X-Pagination"];
+            JObject json = JObject.Parse(Pagination);
+            ViewData["PrevPage"] = Server.UrlEncode((string)json["PrevPageLink"]);
+            ViewData["NextPage"] = Server.UrlEncode((string)json["NextPageLink"]);
+            ViewData["FirstPage"] = Server.UrlEncode((string)json["FirstPageLink"]);
+            ViewData["LastPage"] = Server.UrlEncode((string)json["LastPageLink"]);
+            Stream stream = httpWebResponse.GetResponseStream();
+            StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+            string info = streamReader.ReadToEnd();
+            var arr = JsonConvert.DeserializeObject<JArray>(info);
+            Event e = new Event();
+            List<Event> events = new List<Event>();
+            foreach (JObject i in arr)
+            {
+                int ID = (int)i["ID"];
+                string Name = (string)i["Name"];
+                System.DateTime Time = (System.DateTime)i["Time"];
+                string Place = (string)i["Place"];
+                string Image = (string)i["Image"];
+                e = new Event(ID, Name, Time, Place, Image);
+                events.Add(e);
+            }
+            ViewData["Events"] = events;
+
+            return View("~/Views/Event/SearchEvent.cshtml");
         }
 
         [Route("Detail")]
@@ -130,13 +170,46 @@ namespace EventBox.Controllers
             CreatedUser.Username = (string)JCreatedUser["Username"];
             ViewData["CreatedUser"] = CreatedUser;
 
+            //Check current user status
+            httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetEventUserStatus?id="+id);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.MediaType = "application/json";
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "GET";
+            if (Session["Token"] != null)
+            {
+                httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
+            }
+            try
+            {
+                httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                stream = httpWebResponse.GetResponseStream();
+                streamReader = new StreamReader(stream, Encoding.UTF8);
+                info = streamReader.ReadToEnd();
+                var JObject = JsonConvert.DeserializeObject<JObject>(info);
+                ViewData["UserStatus"] = (bool)JObject["Status"];
+            }
+            catch(WebException ex)
+            {
+                if (ex.Response != null)
+                {
+                    using (var errorResponse = (HttpWebResponse)ex.Response)
+                    {
+                        if(errorResponse.StatusCode == HttpStatusCode.Unauthorized)
+                        {
+                            ViewData["UserStatus"] = null;
+                        }
+                    }
+                }
+            }
+
             return View("~/Views/Event/EventDetail.cshtml");
         }
 
 
         [HttpGet]
         [Route("Update")]
-        public ActionResult Update(int id, string name, string info, System.DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, string image)
+        public ActionResult Update(int id, string name, string info, System.DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, string image, int[] categories)
         {
             EventDetail ed = new EventDetail();
             ed.ID = id;
@@ -148,13 +221,49 @@ namespace EventBox.Controllers
             ed.RequireAttendance = requireAttendance;
             ed.Price = price;
             ed.Image = image;
+            List<Category> CategoriesTmp = new List<Category>();
+            if (categories != null)
+            {
+                foreach (var item in categories)
+                {
+                    Category c = new Category
+                    {
+                        ID = item,
+                        Name = ""
+                    };
+                    CategoriesTmp.Add(c);
+                }
+            }
+            ed.Categories = CategoriesTmp;
             ViewData["UpdateEvent"] = ed;
+
+
+            //Get categories
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Categories/GetAll");
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "GET";
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            Stream rebut = httpResponse.GetResponseStream();
+            StreamReader readStream = new StreamReader(rebut, Encoding.UTF8);
+            string tmp = readStream.ReadToEnd();
+            var arr = JsonConvert.DeserializeObject<JArray>(tmp);
+            List<Category> Categories = new List<Category>();
+            foreach (JObject i in arr)
+            {
+                Category c = new Category();
+                c.ID = (int)i["ID"];
+                c.Name = (string)i["Name"];
+                Categories.Add(c);
+            }
+            ViewData["Categories"] = Categories;
+
+
             return View("~/Views/Event/EditEvent.cshtml");
         }
 
         [HttpPost]
         [Route("Update")]
-        public ActionResult Update(int id, string name, string info, System.DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, HttpPostedFileBase image, string oldValueImage)
+        public ActionResult Update(int id, string name, string info, System.DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, HttpPostedFileBase image, string oldValueImage, int[] categories)
         {
             string ImageUrl = "";
             if (image != null)
@@ -206,21 +315,41 @@ namespace EventBox.Controllers
             httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = "";
                 if (ImageUrl == "")
                 {
                     ImageUrl = oldValueImage;
                 }
-                json = "{\"ID\":\"" + id + "\"," +
-                              "\"Name\":\"" + name + "\"," +
-                              "\"Info\":\"" + info + "\"," +
-                              "\"Time\":\"" + time + "\"," +
-                              "\"Place\":\"" + place + "\"," +
-                              "\"MaxAttendance\":\"" + maxAttendance + "\"," +
-                              "\"RequireAttendance\":\"" + requireAttendance + "\"," +
-                              "\"Price\":\"" + price + "\"," +
-                              "\"Image\":\"" + ImageUrl + "\"}";
-                streamWriter.Write(json);
+
+
+                EventDetail temp = new EventDetail
+                {
+                    ID = id,
+                    Name = name,
+                    Info = info,
+                    Time = time,
+                    Place = place,
+                    MaxAttendance = maxAttendance,
+                    RequireAttendance = requireAttendance,
+                    Price = price,
+                    Image = ImageUrl,
+                    Categories = new List<Category>()
+                };
+                if (categories != null)
+                {
+                    foreach (var item in categories)
+                    {
+                        var obj = new Category
+                        {
+                            ID = item,
+                            Name = ""
+                        };
+                        temp.Categories.Add(obj);
+                    }
+                }
+                string tmp = JsonConvert.SerializeObject(temp);
+
+
+                streamWriter.Write(tmp);
                 streamWriter.Flush();
                 streamWriter.Close();
             }
@@ -263,12 +392,29 @@ namespace EventBox.Controllers
         [Route("Create")]
         public ActionResult Create()
         {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Categories/GetAll");
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "GET";
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            Stream rebut = httpResponse.GetResponseStream();
+            StreamReader readStream = new StreamReader(rebut, Encoding.UTF8);
+            string info = readStream.ReadToEnd();
+            var arr = JsonConvert.DeserializeObject<JArray>(info);
+            List<Category> Categories = new List<Category>();
+            foreach (JObject i in arr)
+            {
+                Category c = new Category();
+                c.ID = (int)i["ID"];
+                c.Name = (string)i["Name"];
+                Categories.Add(c);
+            }
+            ViewData["Categories"] = Categories;
             return View("~/Views/Event/AddEvent.cshtml");
         }
 
         [HttpPost]
         [Route("Create")]
-        public ActionResult Create(string name, string info, DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, HttpPostedFileBase image)
+        public ActionResult Create(string name, string info, DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, HttpPostedFileBase image, int[] categories)
         {
 
             //Test get image
@@ -321,16 +467,33 @@ namespace EventBox.Controllers
             httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = "{\"Name\":\"" + name + "\"," +
-                              "\"Info\":\"" + info + "\"," +
-                              "\"Time\":\"" + time + "\"," +
-                              "\"Place\":\"" + place + "\"," +
-                              "\"MaxAttendance\":\"" + maxAttendance + "\"," +
-                              "\"RequireAttendance\":\"" + requireAttendance + "\"," +
-                              "\"Price\":\"" + price + "\"," +
-                              "\"Image\":\"" + ImageUrl + "\"}";
+                EventDetail temp = new EventDetail
+                {
+                    Name = name,
+                    Info = info,
+                    Time = time,
+                    Place = place,
+                    MaxAttendance = maxAttendance,
+                    RequireAttendance = requireAttendance,
+                    Price = price,
+                    Image = ImageUrl,
+                    Categories = new List<Category>()
+                };
+                if (categories != null)
+                {
+                    foreach (var item in categories)
+                    {
+                        var obj = new Category
+                        {
+                            ID = item,
+                            Name = ""
+                        };
+                        temp.Categories.Add(obj);
+                    }
+                }
+                string tmp = JsonConvert.SerializeObject(temp);
 
-                streamWriter.Write(json);
+                streamWriter.Write(tmp);
                 streamWriter.Flush();
                 streamWriter.Close();
             }

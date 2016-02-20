@@ -20,6 +20,13 @@ namespace YTicket.API2.Services
             _respository = respository;
         }
 
+        public IEnumerable<CategoryDTO> GetAll()
+        {
+            var list = _respository.GetAll();
+            TotalResults = list.Count();
+            return list;
+        }
+
         public IEnumerable<CategoryDTO> GetAllPaging(int pageNumber, int pageSize)
         {
             var list = _respository.GetAllPaging(pageNumber, pageSize);
@@ -38,10 +45,12 @@ namespace YTicket.API2.Services
         {
             return TotalResults;
         }
+
     }
 
     public interface ICategoryService
     {
+        IEnumerable<CategoryDTO> GetAll();
         IEnumerable<CategoryDTO> GetAllPaging(int pageNumber, int pageSize);
         IEnumerable<CategoryDTO> GetByNamePaging(string name, int pageNumber, int pageSize);
         int GetTotalResults();

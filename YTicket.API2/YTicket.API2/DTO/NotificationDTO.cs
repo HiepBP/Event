@@ -8,6 +8,7 @@ namespace YTicket.API2.DTO
     public class NotificationDTO
     {
         public int ID { get; set; }
-        string Information { get; set; }
+        public string Information { get; set; }
+        public bool New { get; set; }
     }
 }

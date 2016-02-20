@@ -348,5 +348,32 @@ namespace EventBox.Controllers
         {
             return View("~/Views/User/ChangePassword.cshtml");
         }
+
+        [Route("Notification")]
+        public ActionResult GetNotification()
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/GetNotification");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.MediaType = "application/json";
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
+            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            Stream stream = httpWebResponse.GetResponseStream();
+            StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+            string info = streamReader.ReadToEnd();
+            var JArray = JsonConvert.DeserializeObject<JArray>(info);
+            List<Notification> Notifications = new List<Notification>();
+            foreach (var JObject in JArray)
+            {
+                Notification Noti = new Notification();
+                Noti.ID = (int)JObject["ID"];
+                Noti.Information = (string)JObject["Information"];
+                Noti.New = (bool)JObject["New"];
+                Notifications.Add(Noti);
+            }
+            ViewData["Notifications"] = Notifications;
+            return View();
+        }
     }
 }
