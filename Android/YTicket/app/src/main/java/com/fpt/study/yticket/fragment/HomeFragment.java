@@ -6,17 +6,23 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.activity.EventActivity;
 import com.fpt.study.yticket.model.Event;
 import com.fpt.study.yticket.service.HomeService;
 import com.fpt.study.yticket.util.ServiceGenerator;
+import com.fpt.study.yticket.util.infinitescroll.InfiniteScrollListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -30,29 +36,43 @@ import retrofit2.Response;
 public class HomeFragment extends ListFragment {
     private static final String TAG = "HomeFragment";
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
-    public static final String EXTRA_EVENT_NAME = "EXTRA_EVENT_NAME";
-    public static final String EXTRA_EVENT_TIME = "EXTRA_EVENT_TIME";
-    public static final String EXTRA_EVENT_PLACE = "EXTRA_EVENT_PLACE";
-    public static final String EXTRA_EVENT_IMAGE = "EXTRA_EVENT_IMAGE";
+
     private static final int PAGE_SIZE = 10;
 
     HomeService service;
     List<Event> events = new ArrayList<>();
     TextView txtEventName;
-    Button btn_NextPage;
+    ListView listView;
+    EventAdapter adapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("HomeFragment", "onCreate called");
         service = ServiceGenerator.createService(HomeService.class);
+        getAll(1, 20);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
 
 
-        getAll(1,9);
-        getAll(2,9);
-        getAll(3,9);
-        getAll(4,9);
-        getAll(5,9);
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        listView = getListView();
+        listView.setOnScrollListener(new InfiniteScrollListener(5) {
+            @Override
+            public void loadMore(int page, int totalItemsCount) {
+                getAll(page, PAGE_SIZE);
+            }
+        });
     }
 
     public void getAll(int page, int pageSize){
@@ -60,12 +80,13 @@ public class HomeFragment extends ListFragment {
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
-                Log.d("HomeFragment", response.body().get(0).getName());
-//                events = response.body();
-                events.addAll(response.body());
-                System.out.println(response.body());
-                EventAdapter adapter = new EventAdapter(events);
-                setListAdapter(adapter);
+                if (response.isSuccess()) {
+                    events.addAll(response.body());
+                    adapter = new EventAdapter(events);
+                    setListAdapter(adapter);
+                }
+
+
             }
 
             @Override
@@ -113,3 +134,4 @@ public class HomeFragment extends ListFragment {
 
 
 }
+
