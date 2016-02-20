@@ -52,5 +52,32 @@
         </ul>
     </div>
     <!-- grid Image -->
+    <!--Paging-->
+    <ul class="pagination">
+        @if ((string)ViewData["FirstPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["FirstPage"];
+            <li><a href="@url">First Page</a></li>
+        }
+        @if ((string)ViewData["PrevPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["PrevPage"];
+            <li><a href="@url"><<</a></li>
+        }
+        @if ((string)ViewData["NextPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["NextPage"];
+            <li><a href="@url">>></a></li>
+        }
+        @if ((string)ViewData["LastPage"] != "")
+        {
+            var url = "http://localhost/EventBox/Index/Paging?url=" + (string)ViewData["LastPage"];
+            <li><a href="@url">Last Page</a></li>
+        }
+
+
+
+    </ul>
+    <!--Paging-->
 </body>
 </html>

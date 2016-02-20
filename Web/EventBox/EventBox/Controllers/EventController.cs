@@ -26,7 +26,7 @@ namespace EventBox.Controllers
         [Route("Search")]
         public ActionResult SearchEvent(string searchValue)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetByNamePaging?name=" + searchValue + "&page=1&pageSize=9");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetByNamePaging?name=" + searchValue + "&page=1&pageSize=12");
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();

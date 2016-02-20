@@ -28,6 +28,22 @@ public class Event {
     @Expose
     private String Image;
 
+    @SerializedName("MaxAttendance")
+    @Expose
+    private Integer MaxAttendance;
+
+    @SerializedName("RequireAttendance")
+    @Expose
+    private Integer RequireAttendance;
+
+    @SerializedName("Vote")
+    @Expose
+    private Integer Vote;
+
+    @SerializedName("Price")
+    @Expose
+    private Double Price;
+
     /**
      * @return ID
      */
@@ -69,6 +85,38 @@ public class Event {
 
     public void setImage(String image) {
         Image = image;
+    }
+
+    public Integer getMaxAttendance() {
+        return MaxAttendance;
+    }
+
+    public void setMaxAttendance(Integer maxAttendance) {
+        MaxAttendance = maxAttendance;
+    }
+
+    public Integer getRequireAttendance() {
+        return RequireAttendance;
+    }
+
+    public void setRequireAttendance(Integer requireAttendance) {
+        RequireAttendance = requireAttendance;
+    }
+
+    public Integer getVote() {
+        return Vote;
+    }
+
+    public void setVote(Integer vote) {
+        Vote = vote;
+    }
+
+    public Double getPrice() {
+        return Price;
+    }
+
+    public void setPrice(Double price) {
+        Price = price;
     }
 
     @Override

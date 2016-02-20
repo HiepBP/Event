@@ -18,10 +18,16 @@ namespace EventBox.Controllers
         [Route("Index/Home")]
         public ViewResult Index()
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetAllPaging?page=1&pageSize=9");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetAllPaging?page=1&pageSize=12");
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var Pagination = httpResponse.Headers["X-Pagination"];
+            JObject json = JObject.Parse(Pagination);
+            ViewData["PrevPage"] = Server.UrlEncode((string)json["PrevPageLink"]);
+            ViewData["NextPage"] = Server.UrlEncode((string)json["NextPageLink"]);
+            ViewData["FirstPage"] = Server.UrlEncode((string)json["FirstPageLink"]);
+            ViewData["LastPage"] = Server.UrlEncode((string)json["LastPageLink"]);
             Stream rebut = httpResponse.GetResponseStream();
             StreamReader readStream = new StreamReader(rebut, Encoding.UTF8);
             string info = readStream.ReadToEnd();
@@ -40,6 +46,40 @@ namespace EventBox.Controllers
             }
             ViewData["Events"] = events;
             return View();
+        }
+
+
+        [Route("Index/Paging")]
+        public ViewResult Paging(string url)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(Server.UrlDecode(url));
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "GET";
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var Pagination = httpResponse.Headers["X-Pagination"];
+            JObject json = JObject.Parse(Pagination);
+            ViewData["PrevPage"] = Server.UrlEncode((string)json["PrevPageLink"]);
+            ViewData["NextPage"] = Server.UrlEncode((string)json["NextPageLink"]);
+            ViewData["FirstPage"] = Server.UrlEncode((string)json["FirstPageLink"]);
+            ViewData["LastPage"] = Server.UrlEncode((string)json["LastPageLink"]);
+            Stream rebut = httpResponse.GetResponseStream();
+            StreamReader readStream = new StreamReader(rebut, Encoding.UTF8);
+            string info = readStream.ReadToEnd();
+            var arr = JsonConvert.DeserializeObject<JArray>(info);
+            Event e = new Event();
+            List<Event> events = new List<Event>();
+            foreach (JObject i in arr)
+            {
+                int ID = (int)i["ID"];
+                string Name = (string)i["Name"];
+                System.DateTime Time = (System.DateTime)i["Time"];
+                string Place = (string)i["Place"];
+                string Image = (string)i["Image"];
+                e = new Event(ID, Name, Time, Place, Image);
+                events.Add(e);
+            }
+            ViewData["Events"] = events;
+            return View("~/Views/Home/Index.cshtml");
         }
     }
 }
