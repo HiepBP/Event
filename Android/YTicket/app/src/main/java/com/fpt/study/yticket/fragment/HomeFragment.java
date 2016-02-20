@@ -40,15 +40,11 @@ public class HomeFragment extends ListFragment {
     private static final int PAGE_SIZE = 10;
 
     HomeService service;
-    private AbsListView.OnScrollListener scrollListener;
     List<Event> events = new ArrayList<>();
     TextView txtEventName;
-    Button btn_NextPage;
     ListView listView;
     EventAdapter adapter;
-    int currentFirstVisibleItem;
-    int currentVisibleItemCount;
-    int currentScrollState;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +73,7 @@ public class HomeFragment extends ListFragment {
         listView.setOnScrollListener(new InfiniteScrollListener(5) {
             @Override
             public void loadMore(int page, int totalItemsCount) {
-                getAll(page, 10);
+                getAll(page, PAGE_SIZE);
             }
         });
     }
