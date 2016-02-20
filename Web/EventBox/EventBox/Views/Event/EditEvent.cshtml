@@ -7,6 +7,20 @@
 
 @{
     var EventDetail = (EventDetail)ViewData["UpdateEvent"];
+    var Categories = (List<Category>)ViewData["Categories"];
+
+}
+
+@functions{
+
+    string checkExist(List<Category> categories, Category category)
+    {
+        if (categories.Contains(category))
+        {
+            return "checked";
+        }
+        return "";
+    }
 }
 
 <html>
@@ -23,15 +37,24 @@
     {
         <input type="text" name="name" placeholder="Tên sự kiện" value="@EventDetail.Name" required><br />
         <input type="text" name="info" placeholder="Thông tin" value="@EventDetail.Info" required><br />
-        <input type="datetime-local" name="time" placeholder="Thời gian" value="@EventDetail.Time.ToString("yyyy-MM-ddThh:mm:ss")" step="1"  required><br />
+        <input type="datetime-local" name="time" placeholder="Thời gian" value="@EventDetail.Time.ToString("yyyy-MM-ddThh:mm:ss")" step="1" required><br />
         <input type="text" name="place" placeholder="Địa điểm" value="@EventDetail.Place" required><br />
         <input type="number" name="maxAttendance" placeholder="Số người tối đa" value="@EventDetail.MaxAttendance"><br />
         <input type="number" name="requireAttendance" placeholder="Số người yêu cầu" value="@EventDetail.RequireAttendance"><br />
         <input type="number" name="price" placeholder="Giá" value="@EventDetail.Price"><br />
-        <input type="file" id="file" name="image" accept="image/*"><br />
-        <input type="hidden" name="id" value="@EventDetail.ID" /><br />
-        <input type="hidden" name="oldValueImage" value="@EventDetail.Image" /><br/>
-        <button type="submit" id="upload">Cập nhật sự kiện</button><br />
+        foreach (var Category in Categories)
+        {
+            <h3>
+                <input name="categories" value="@Category.ID" type="checkbox"
+                       @checkExist(EventDetail.Categories, Category) />
+                @Category.Name
+            </h3>
+        }
+        <br />
+                <input type="file" id="file" name="image" accept="image/*"><br />
+                <input type="hidden" name="id" value="@EventDetail.ID" /><br />
+                <input type="hidden" name="oldValueImage" value="@EventDetail.Image" /><br />
+                <button type="submit" id="upload">Cập nhật sự kiện</button><br />
     }
 </body>
 </html>

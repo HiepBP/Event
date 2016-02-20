@@ -9,19 +9,14 @@
     var EventDetail = (EventDetail)ViewData["EventDetail"];
     var JoinedUsers = (List<User>)ViewData["Users"];
     var CreatedUsers = (User)ViewData["CreatedUser"];
+    var UserStatus = false;
+    if(ViewData["UserStatus"]!= null) {
+        UserStatus = (bool)ViewData["UserStatus"];
+    }
     string disabled = "disabled";
-    var joined = false;
     if (Session["CurrentUserID"] != null || Convert.ToString(Session["CurrentUserID"]) != string.Empty)
     {
         disabled = "";
-    }
-
-    foreach (var user in JoinedUsers)
-    {
-        if (Convert.ToInt32(Session["CurrentUserID"]) == user.ID)
-        {
-            joined = true;
-        }
     }
 }
 
@@ -83,8 +78,15 @@
                         Giá: @EventDetail.Price
                     </p>
                 }
+
+                <p>
+                    Thể loại :
+                    @foreach (var Category in @EventDetail.Categories)
+                    {@Category.Name }
+                </p>
+
             </details>
-            @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && !joined)
+            @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && !UserStatus)
             {
                 <form action="/EventBox/Events/Join">
                     <input type="hidden" name="id" value="@EventDetail.ID" />
@@ -95,7 +97,7 @@
             {
                 <h3>Bạn đã tham gia sự kiện</h3>
             }
-            @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && joined)
+            @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && UserStatus)
             {
                 <form action="/EventBox/Events/Leave">
                     <input type="hidden" name="id" value="@EventDetail.ID" />
@@ -115,6 +117,10 @@
                         <input type="hidden" name="maxAttendance" value="@EventDetail.MaxAttendance" />
                         <input type="hidden" name="requireAttendance" value="@EventDetail.RequireAttendance" />
                         <input type="hidden" name="price" value="@EventDetail.Price" />
+                        @foreach (var item in EventDetail.Categories)
+                        {
+                            <input type="hidden" name="categories" value="@item.ID" />
+                        }
                         <input type="hidden" name="image" value="@EventDetail.Image" />
                         <button>Cập nhật sự kiện</button>
                     </form>
