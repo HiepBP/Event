@@ -84,11 +84,11 @@ public class HomeFragment extends ListFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.d(TAG, "edit");
                 getEventsByName(s.toString(), 1, 10);
                 if (s.toString().trim().equals("")) {
                     getAll(1, PAGE_SIZE);
                 }
+                Log.d(TAG, "getEventsByName: " + s.toString());
 
             }
 

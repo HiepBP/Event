@@ -43,8 +43,6 @@ public class MainActivity extends FragmentActivity {
         tabHost.setup();
 
 
-
-
         TabHost.OnTabChangeListener tabChangeListener = new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
@@ -54,31 +52,30 @@ public class MainActivity extends FragmentActivity {
                 FragmentTransaction ft = fm.beginTransaction();
 
                 /** Detaches the androidfragment if exists */
-                if(homeFragment!=null)
+                if (homeFragment != null)
                     ft.detach(homeFragment);
 
                 /** Detaches the applefragment if exists */
-                if(userFragment!=null)
+                if (userFragment != null)
                     ft.detach(userFragment);
 
-                if(tabId.equalsIgnoreCase("home")){
+                if (tabId.equalsIgnoreCase("home")) {
 
-                    if(homeFragment==null){
+                    if (homeFragment == null) {
                         /** Create AndroidFragment and adding to fragmenttransaction */
                         ft.add(R.id.realtabcontent, new HomeFragment(), "home");
 
 
-
-                    }else{
+                    } else {
                         /** Bring to the front, if already exists in the fragmenttransaction */
                         ft.attach(homeFragment);
                     }
 
-                }else{    /** If current tab is apple */
-                    if(userFragment==null){
+                } else {    /** If current tab is apple */
+                    if (userFragment == null) {
                         /** Create AppleFragment and adding to fragmenttransaction */
-                        ft.add(R.id.realtabcontent,new UserFragment(), "user");
-                    }else{
+                        ft.add(R.id.realtabcontent, new UserFragment(), "user");
+                    } else {
                         /** Bring to the front, if already exists in the fragmenttransaction */
                         ft.attach(userFragment);
                     }

@@ -13,4 +13,7 @@
     <string name="account.field.confirmPassword">Confirm Password</string>
     <string name="header">YTicket</string>
     <string name="footer">Contact: abc@fpt.edu.vn</string>
+    <string name="fragment_home_button_join">Join</string>
+    <string name="fragment_home_button_edit">Edit</string>
+    <string name="fragment_home_button_delete">Delete</string>
 </resources>
