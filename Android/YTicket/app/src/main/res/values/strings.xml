@@ -8,6 +8,7 @@
     <string name="title_activity_signup">SignupActivity</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_event">EventActivity</string>
+    <string name="activity_main_search_hint">Search for event...</string>
     <string name="account.field.email">Email</string>
     <string name="account.field.confirmPassword">Confirm Password</string>
     <string name="header">YTicket</string>
