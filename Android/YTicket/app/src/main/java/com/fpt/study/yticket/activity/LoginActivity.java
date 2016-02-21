@@ -82,14 +82,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 if (response.isSuccess()) {
-                    Toast.makeText(LoginActivity.this, "Login successful!!!", Toast.LENGTH_LONG)
-                            .show();
+                    Intent intent = new Intent(getApplication(), HomeActivity.class);
+                    startActivity(intent);
                     // Store Token obj in Shared Preferences as json string using Gson
                     Token token = response.body();
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     Gson gson = new Gson();
                     String json = gson.toJson(token);
+
                     editor.putString(PREF_TOKEN, json);
+                    System.out.println(token.getAccessToken());
                     editor.apply();
 
                 } else {

@@ -18,4 +18,6 @@ public interface UserService {
 
     @GET("api/Users/GetUserDetail?")
     Call<User> getUserById(@Query("id") Integer id);
+
+
 }

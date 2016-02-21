@@ -66,7 +66,7 @@ public class HomeFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = getListView();
-        listView.addHeaderView(getActivity().getLayoutInflater().inflate(R.layout.header, null));
+        //listView.addHeaderView(getActivity().getLayoutInflater().inflate(R.layout.header, null));
         listView.addFooterView(getActivity().getLayoutInflater().inflate(R.layout.footer, null));
         listView.setOnScrollListener(new InfiniteScrollListener(0) {
             @Override
@@ -133,7 +133,7 @@ public class HomeFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Event e = ((EventAdapter) getListAdapter()).getItem(position - 1);
+        Event e = ((EventAdapter) getListAdapter()).getItem(position);
         Log.d(TAG, e.getName() + "was clicked");
         Intent intent = new Intent(getActivity(), EventActivity.class);
         intent.putExtra(EXTRA_EVENT_ID, e.getID());
