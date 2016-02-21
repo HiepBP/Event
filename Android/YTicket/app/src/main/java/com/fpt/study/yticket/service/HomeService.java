@@ -23,5 +23,8 @@ public interface HomeService {
     @GET("api/Events/GetEventDetail?")
     Call<List<Event>> getEventDetail(@Query("id") Integer id);
 
+    @GET("api/Events/GetByNamePaging?")
+    Call<List<Event>> getEventsByName(@Query("name") String name, @Query("page") Integer page, @Query("pageSize") Integer pageSize);
+
 
 }

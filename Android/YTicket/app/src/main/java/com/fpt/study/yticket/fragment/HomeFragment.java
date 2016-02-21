@@ -5,11 +5,15 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,6 +48,7 @@ public class HomeFragment extends ListFragment {
     TextView txtEventName;
     ImageView eventImage;
     ListView listView;
+    EditText mEditTextSearch;
     EventAdapter adapter;
 
 
@@ -59,6 +64,40 @@ public class HomeFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+
+        mEditTextSearch = (EditText) v.findViewById(R.id.fragment_home_search);
+
+        mEditTextSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                v.requestFocusFromTouch();
+                return false;
+            }
+        });
+
+        mEditTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d(TAG, "edit");
+                getEventsByName(s.toString(), 1, 10);
+                if (s.toString().trim().equals("")) {
+                    getAll(1, PAGE_SIZE);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         return v;
     }
 
@@ -79,6 +118,29 @@ public class HomeFragment extends ListFragment {
                         getAll(page, PAGE_SIZE);
                     }
                 }, 1000);
+
+            }
+        });
+
+
+    }
+
+    public void getEventsByName(String name, int page, int pageSize) {
+        Call<List<Event>> call = service.getEventsByName(name, page, pageSize);
+        call.enqueue(new Callback<List<Event>>() {
+            @Override
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                if (response.isSuccess()) {
+                    events.clear();
+                    events.addAll(response.body());
+                    adapter = new EventAdapter(events);
+                    setListAdapter(adapter);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Event>> call, Throwable t) {
 
             }
         });
