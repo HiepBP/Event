@@ -8,12 +8,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fpt.study.yticket.R;
+import com.fpt.study.yticket.fragment.EventFragment;
+import com.fpt.study.yticket.model.Event;
 import com.fpt.study.yticket.model.Token;
 import com.fpt.study.yticket.model.TokenError;
 import com.fpt.study.yticket.service.LoginService;
@@ -29,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String SHAREDPREFERENCES = "YTicketPrefs";
     public static final String PREF_TOKEN = "UserToken";
+    public static final String TAG = "LoginActivity";
+    public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
     EditText editUsername, editPassword;
     Button buttonSignup, buttonLogin;
     LoginService service;
@@ -82,7 +87,17 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 if (response.isSuccess()) {
-                    Intent intent = new Intent(getApplication(), HomeActivity.class);
+                    Intent intent = getIntent();
+                    int eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
+                    Log.d(TAG, "" + eventId);
+                    if (eventId == 0) {
+                        intent = new Intent(getApplication(), MainActivity.class);
+                    } else {
+                        intent = new Intent(getApplication(), EventActivity.class);
+                        intent.putExtra(EXTRA_EVENT_ID, eventId);
+                    }
+
+
                     startActivity(intent);
                     // Store Token obj in Shared Preferences as json string using Gson
                     Token token = response.body();
@@ -93,7 +108,11 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString(PREF_TOKEN, json);
                     System.out.println(token.getAccessToken());
                     editor.apply();
-                    
+                    Log.d(TAG, token.getAccessToken());
+                    Log.d(TAG, token.getTokenType());
+                    Log.d(TAG, token.getUserName());
+                    Log.d(TAG, PREF_TOKEN);
+
 
                 } else {
                     // Parse error from response
@@ -110,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                         .show();
             }
         });
+        finish();
     }
 
     private void onClickButtonSignup(View v) {

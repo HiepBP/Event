@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.fpt.study.yticket.R;
@@ -37,6 +38,7 @@ public class EventFragment extends Fragment {
     public static final String SHAREDPREFERENCES = "YTicketPrefs";
     public static final String PREF_TOKEN = "UserToken";
     public static final String TAG = "EventFragment";
+    public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
 
     EditText etxtEventName;
     EditText etxtEventTime;
@@ -79,14 +81,23 @@ public class EventFragment extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume called");
         Gson gson = new Gson();
-        SharedPreferences pref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences(SHAREDPREFERENCES, Context.MODE_PRIVATE);
         String json = pref.getString(PREF_TOKEN, "");
+        Log.d(TAG, json);
         if (json.equals("")) {
+            Log.d(TAG, "khong co token");
             eventService = ServiceGenerator.createService(EventService.class);
         } else {
+            Log.d(TAG, "co token");
             token = gson.fromJson(json, Token.class);
             eventService = ServiceGenerator.createService(EventService.class, token);
+            Intent intent = getActivity().getIntent();
+            int eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
+            if (eventId != 0) {
+                joinEvent(eventId);
+            }
         }
+
 
     }
 
@@ -94,9 +105,10 @@ public class EventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
+        System.out.println("Chay vao oncreate");
         View v = inflater.inflate(R.layout.fragment_event, container, false);
         Intent intent = getActivity().getIntent();
-        int eventId = intent.getIntExtra(HomeFragment.EXTRA_EVENT_ID, 0);
+        int eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
 
         etxtEventId = (EditText) v.findViewById(R.id.fragment_event_edittext_id);
         etxtEventName = (EditText) v.findViewById(R.id.fragment_event_edittext_name);
@@ -111,7 +123,9 @@ public class EventFragment extends Fragment {
                 if (token == null) {
                     Log.d(TAG, "token is null");
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                    intent.putExtra(EXTRA_EVENT_ID, e.getID());
+                    int eventId = Integer.parseInt(etxtEventId.getText().toString());
+                    intent.putExtra(EXTRA_EVENT_ID, eventId);
+                    Log.d(TAG, "" + eventId);
                     getActivity().startActivity(intent);
                 } else {
                     Log.d(TAG, "btnJoin clicked");
@@ -143,7 +157,8 @@ public class EventFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Event> call, Throwable t) {
-
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG)
+                        .show();
             }
         });
 
@@ -161,7 +176,8 @@ public class EventFragment extends Fragment {
 
             @Override
             public void onFailure(Call<EventUserStatus> call, Throwable t) {
-
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG)
+                        .show();
             }
         });
 
@@ -178,10 +194,29 @@ public class EventFragment extends Fragment {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG)
+                        .show();
             }
         });
 
         return user;
     }
+
+    public void joinEvent(int eventId) {
+        Call<Void> call = eventService.joinEvent(eventId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(getActivity(), "Join successfully", Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
+    }
+
 }
