@@ -54,6 +54,7 @@ public class NavDrawerActivity extends ActionBarActivity {
         navItemList.add(new NavItem("Home", "Home page", R.drawable.home_icon));
         navItemList.add(new NavItem("User for DEMO", "List of user", R.drawable.home_icon));
         navItemList.add(new NavItem("AboutUs", "Setting page", R.drawable.about_us));
+        navItemList.add(new NavItem("Logout", "", R.drawable.about_us));
 
         NavListAdapter navListAdapter =
                 new NavListAdapter(getApplicationContext(), R.layout.item_nav_list, navItemList);

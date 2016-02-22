@@ -46,20 +46,23 @@ public class EventFragment extends Fragment {
     EditText etxtEventId;
     ImageView eventImage;
     Button btnEventJoin;
+    Button btnEventEdit;
+    Button btnEventDelete;
     EventService eventService;
     UserService userService;
 
     EventUserStatus eventUserStatus;
     User user;
+    User creator;
     Token token;
     Boolean isLogin = false;
+    Boolean isEventOwner = false;
 
     SharedPreferences sharedPreferences;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called");
 
@@ -121,8 +124,20 @@ public class EventFragment extends Fragment {
         etxtEventTime = (EditText) v.findViewById(R.id.fragment_event_edittext_time);
         etxtEventPlace = (EditText) v.findViewById(R.id.fragment_event_edittext_place);
         eventImage = (ImageView) v.findViewById(R.id.fragment_event_image_image);
-        btnEventJoin = (Button) v.findViewById(R.id.fragment_event_button_join);
 
+        btnEventEdit = (Button) v.findViewById(R.id.fragment_home_button_edit);
+        btnEventDelete = (Button) v.findViewById(R.id.fragment_home_button_delete);
+
+        user = getCurrentUser();
+        creator = getUserByEvent(eventId);
+        if (user.getID() != creator.getID()) {
+            Log.d(TAG, "this event is not created by this user");
+            btnEventEdit.setVisibility(View.GONE);
+            btnEventDelete.setVisibility(View.GONE);
+        }
+
+
+        btnEventJoin = (Button) v.findViewById(R.id.fragment_event_button_join);
         getEventByID(eventId);
         btnEventJoin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +211,7 @@ public class EventFragment extends Fragment {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 user = response.body();
+                Log.d(TAG, user.getUsername());
             }
 
             @Override
@@ -224,5 +240,27 @@ public class EventFragment extends Fragment {
             }
         });
     }
+
+    public User getUserByEvent(int eventId) {
+        Call<User> call = eventService.getUserByEvent(eventId);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccess()) {
+                    creator = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
+
+
+        return creator;
+    }
+
 
 }

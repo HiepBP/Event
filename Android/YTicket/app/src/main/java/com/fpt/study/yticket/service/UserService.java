@@ -22,5 +22,8 @@ public interface UserService {
     @GET("api/Users/GetCurrentUser")
     Call<User> getCurrentUser();
 
+    @GET("api/Account/Logout")
+    Call<Void> logout();
+
 
 }

@@ -34,5 +34,8 @@ public interface EventService {
     @PUT("api/Events/JoinEvent?")
     Call<Void> joinEvent(@Query("id") Integer id);
 
+    @GET("api/Users/GetUserByEvent?")
+    Call<User> getUserByEvent(@Query("eventId") Integer eventId);
+
 
 }
