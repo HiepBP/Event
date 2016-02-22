@@ -59,10 +59,7 @@ public class MainActivity extends FragmentActivity {
                         ft.attach(hotEvent);
                     }
                 }
-
                 ft.commit();
-
-
             }
         };
 

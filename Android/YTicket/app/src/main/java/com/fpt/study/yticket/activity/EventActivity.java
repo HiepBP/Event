@@ -3,6 +3,7 @@ package com.fpt.study.yticket.activity;
 import android.app.Fragment;
 
 import com.fpt.study.yticket.fragment.EventFragment;
+import com.fpt.study.yticket.fragment.HomeFragment;
 import com.fpt.study.yticket.util.activityfragment.ActivityFragment;
 
 /**
