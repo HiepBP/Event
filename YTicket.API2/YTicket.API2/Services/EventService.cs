@@ -179,10 +179,14 @@ namespace YTicket.API2.Services
                 _validationDictionary.AddErrors("Place", "Place cannot exceed 50 characters.");
             // Validate MaxAttendance
             if (@event.MaxAttendance != null && @event.MaxAttendance < 0)
-                _validationDictionary.AddErrors("MaxAttendance", "Max Attendace cannot be negative");
+                _validationDictionary.AddErrors("MaxAttendance", "Max Attendance cannot be negative");
             // Validate RequireAttendance
             if (@event.RequireAttendance != null && @event.RequireAttendance < 0)
-                _validationDictionary.AddErrors("RequireAttendance", "Required Attendace cannot be negative");
+                _validationDictionary.AddErrors("RequireAttendance", "Required Attendance cannot be negative");
+            // Validate MaxAttendance and RequireAttendance
+            if (@event.RequireAttendance != null && @event.MaxAttendance != null
+                && @event.MaxAttendance < @event.RequireAttendance)
+                _validationDictionary.AddErrors("MaxAttendance", "Max Attendance cannot be less than Required Attendance");
             // Validate Vote
             if (@event.Vote != null && @event.Vote < 0)
                 _validationDictionary.AddErrors("Vote", "Vote cannot be negative");
@@ -353,7 +357,7 @@ namespace YTicket.API2.Services
                 {
                     ID = item.ID
                 };
-                await _notificationRespository.CreateNotificationAsync(u, "Hey guess what!!! [Event Name] has been updated, check it out now!");
+                await _notificationRespository.CreateNotificationAsync(u, "Hey guess what!!!" + e.Name + "has been updated, check it out now!");
             }
 
             return true;
@@ -377,6 +381,8 @@ namespace YTicket.API2.Services
                 return false;
             }
 
+            var list = _userRespository.GetJoinedUserPaging(@event, 1, (int)@event.MaxAttendance);
+
             // Database logic
             try
             {
@@ -386,6 +392,17 @@ namespace YTicket.API2.Services
             {
                 return false;
             }
+
+            //Create notification
+            foreach (var item in list)
+            {
+                User u = new User
+                {
+                    ID = item.ID
+                };
+                _notificationRespository.CreateNotification(u, "It's too bad!!!" + @event.Name + "has been cancelled.");
+            }
+
             return true;
         }
 
@@ -407,6 +424,8 @@ namespace YTicket.API2.Services
                 return false;
             }
 
+            var list = _userRespository.GetJoinedUserPaging(@event, 1, (int)@event.MaxAttendance);
+
             // Database logic
             try
             {
@@ -416,6 +435,17 @@ namespace YTicket.API2.Services
             {
                 return false;
             }
+
+            //Create notification
+            foreach (var item in list)
+            {
+                User u = new User
+                {
+                    ID = item.ID
+                };
+                _notificationRespository.CreateNotification(u, "It's too bad!!!" + @event.Name + "has been cancelled.");
+            }
+
             return true;
         }
 
