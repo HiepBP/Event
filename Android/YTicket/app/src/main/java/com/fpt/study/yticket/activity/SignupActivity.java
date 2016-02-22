@@ -125,7 +125,7 @@ public class SignupActivity extends AppCompatActivity {
                             editEmail.setHint(blankError);
                             editEmail.setHintTextColor(getResources().getColor(R.color.colorRed));
                         }
-                        if (blankError.contains("password"))
+                        if (blankError.contains("password") || blankError.contains("Password"))
                         {
                             editPassword.setText("");
                             editConfirmPassword.setText("");
