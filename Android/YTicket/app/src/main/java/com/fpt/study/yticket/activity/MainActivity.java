@@ -23,6 +23,7 @@ public class MainActivity extends FragmentActivity {
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
         tabHost.setup();
 
+
         TabHost.OnTabChangeListener tabChangeListener = new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
