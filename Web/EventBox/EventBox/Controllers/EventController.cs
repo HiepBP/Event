@@ -60,7 +60,7 @@ namespace EventBox.Controllers
         [Route("SearchPaging")]
         public ActionResult SearchEventPaging(string url)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("url");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(Server.UrlDecode(url));
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();

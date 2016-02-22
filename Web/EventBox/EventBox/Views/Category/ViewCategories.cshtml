@@ -1,0 +1,16 @@
+﻿@using EventBox.Models;
+
+@{
+    var Categories = (List<Category>)ViewData["Categories"];
+}
+
+@{
+    ViewBag.Title = "Thể loại";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@foreach (var Category in Categories)
+{
+    var url = "http://localhost/EventBox/Categories/Search?categoryID=" + Category.ID;
+    <a href="@url"><h3>@Category.Name</h3></a><br/>
+}
