@@ -119,9 +119,19 @@ public class SignupActivity extends AppCompatActivity {
                     }
 
                     if (!blankError.isEmpty()) {
-                        editEmail.setText("");
-                        editEmail.setHint(blankError);
-                        editEmail.setHintTextColor(getResources().getColor(R.color.colorRed));
+                        if (blankError.contains("Email"))
+                        {
+                            editEmail.setText("");
+                            editEmail.setHint(blankError);
+                            editEmail.setHintTextColor(getResources().getColor(R.color.colorRed));
+                        }
+                        if (blankError.contains("password"))
+                        {
+                            editPassword.setText("");
+                            editConfirmPassword.setText("");
+                            editPassword.setHint(blankError);
+                            editPassword.setHintTextColor(getResources().getColor(R.color.colorRed));
+                        }
                     }
 
                     if (!passwordError.isEmpty()) {
