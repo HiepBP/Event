@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final String SHAREDPREFERENCES = "YTicketPrefs";
     public static final String PREF_TOKEN = "UserToken";
     public static final String TAG = "LoginActivity";
-    public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
+    public static final String EXTRA_EVENT_ID = "LOGIN_EXTRA_EVENT_ID";
     EditText editUsername, editPassword;
     Button buttonSignup, buttonLogin;
     LoginService service;
@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<Token> call, Response<Token> response) {
                 if (response.isSuccess()) {
                     Intent intent = getIntent();
-                    int eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
+                    int eventId = intent.getIntExtra(EventFragment.EXTRA_EVENT_ID, 0);
                     Log.d(TAG, "" + eventId);
                     if (eventId == 0) {
                         intent = new Intent(getApplication(), MainActivity.class);

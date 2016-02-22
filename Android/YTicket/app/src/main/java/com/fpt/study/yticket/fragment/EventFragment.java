@@ -52,6 +52,7 @@ public class EventFragment extends Fragment {
     EventUserStatus eventUserStatus;
     User user;
     Token token;
+    Boolean isLogin = false;
 
     SharedPreferences sharedPreferences;
 
@@ -64,15 +65,17 @@ public class EventFragment extends Fragment {
 
         Gson gson = new Gson();
 
-        SharedPreferences pref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences(SHAREDPREFERENCES, Context.MODE_PRIVATE);
 
         String json = pref.getString(PREF_TOKEN, "");
 
         if (json.equals("")) {
             eventService = ServiceGenerator.createService(EventService.class);
+            isLogin = false;
         } else {
             token = gson.fromJson(json, Token.class);
             eventService = ServiceGenerator.createService(EventService.class, token);
+            isLogin = true;
         }
     }
 
@@ -87,13 +90,16 @@ public class EventFragment extends Fragment {
         if (json.equals("")) {
             Log.d(TAG, "khong co token");
             eventService = ServiceGenerator.createService(EventService.class);
+            isLogin = false;
         } else {
             Log.d(TAG, "co token");
             token = gson.fromJson(json, Token.class);
             eventService = ServiceGenerator.createService(EventService.class, token);
+            isLogin = true;
             Intent intent = getActivity().getIntent();
-            int eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
+            int eventId = intent.getIntExtra(LoginActivity.EXTRA_EVENT_ID, 0);
             if (eventId != 0) {
+                Log.d(TAG, eventId + "");
                 joinEvent(eventId);
             }
         }
@@ -108,7 +114,7 @@ public class EventFragment extends Fragment {
         System.out.println("Chay vao oncreate");
         View v = inflater.inflate(R.layout.fragment_event, container, false);
         Intent intent = getActivity().getIntent();
-        int eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
+        final int eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
 
         etxtEventId = (EditText) v.findViewById(R.id.fragment_event_edittext_id);
         etxtEventName = (EditText) v.findViewById(R.id.fragment_event_edittext_name);
@@ -117,24 +123,24 @@ public class EventFragment extends Fragment {
         eventImage = (ImageView) v.findViewById(R.id.fragment_event_image_image);
         btnEventJoin = (Button) v.findViewById(R.id.fragment_event_button_join);
 
+        getEventByID(eventId);
         btnEventJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (token == null) {
-                    Log.d(TAG, "token is null");
+                if (isLogin == false) {
+                    Log.d(TAG, "Not yet login");
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     int eventId = Integer.parseInt(etxtEventId.getText().toString());
                     intent.putExtra(EXTRA_EVENT_ID, eventId);
                     Log.d(TAG, "" + eventId);
                     getActivity().startActivity(intent);
                 } else {
-                    Log.d(TAG, "btnJoin clicked");
+                    joinEvent(eventId);
                 }
 
             }
         });
 
-        getEventByID(eventId);
 
 
         return v;
