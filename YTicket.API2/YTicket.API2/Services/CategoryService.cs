@@ -23,21 +23,21 @@ namespace YTicket.API2.Services
         public IEnumerable<CategoryDTO> GetAll()
         {
             var list = _respository.GetAll();
-            TotalResults = list.Count();
+            TotalResults = _respository.GetTotalResults();
             return list;
         }
 
         public IEnumerable<CategoryDTO> GetAllPaging(int pageNumber, int pageSize)
         {
             var list = _respository.GetAllPaging(pageNumber, pageSize);
-            TotalResults = list.Count();
+            TotalResults = _respository.GetTotalResults();
             return list;
         }
 
         public IEnumerable<CategoryDTO> GetByNamePaging(string name, int pageNumber, int pageSize)
         {
             var list = _respository.GetByNamePaging(name, pageNumber, pageSize);
-            TotalResults = list.Count();
+            TotalResults = _respository.GetTotalResults();
             return list;
         }
 
