@@ -3,26 +3,13 @@ package com.fpt.study.yticket.activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TabHost;
 
 import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.fragment.HomeFragment;
-import com.fpt.study.yticket.fragment.UserFragment;
 import com.fpt.study.yticket.util.TabContent;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
@@ -36,39 +23,40 @@ public class MainActivity extends FragmentActivity {
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
         tabHost.setup();
 
+
         TabHost.OnTabChangeListener tabChangeListener = new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
                 FragmentManager fm = getFragmentManager();
-                HomeFragment homeFragment = (HomeFragment) fm.findFragmentByTag("home");
-                UserFragment userFragment = (UserFragment) fm.findFragmentByTag("user");
+                HomeFragment allEvent = (HomeFragment) fm.findFragmentByTag("all");
+                HomeFragment hotEvent= (HomeFragment) fm.findFragmentByTag("hot");
                 FragmentTransaction ft = fm.beginTransaction();
 
                 /** Detaches the androidfragment if exists */
-                if(homeFragment!=null)
-                    ft.detach(homeFragment);
+                if(allEvent!=null)
+                    ft.detach(allEvent);
 
                 /** Detaches the applefragment if exists */
-                if(userFragment!=null)
-                    ft.detach(userFragment);
+                if(hotEvent!=null)
+                    ft.detach(hotEvent);
 
-                if(tabId.equalsIgnoreCase("home")){
+                if(tabId.equalsIgnoreCase("all")){
 
-                    if(homeFragment==null){
+                    if(allEvent==null){
                         /** Create AndroidFragment and adding to fragmenttransaction */
-                        ft.add(R.id.realtabcontent,new HomeFragment(), "home");
+                        ft.add(R.id.realtabcontent,new HomeFragment(), "all");
                     }else{
                         /** Bring to the front, if already exists in the fragmenttransaction */
-                        ft.attach(homeFragment);
+                        ft.attach(allEvent);
                     }
 
                 }else{    /** If current tab is apple */
-                    if(userFragment==null){
+                    if(hotEvent==null){
                         /** Create AppleFragment and adding to fragmenttransaction */
-                        ft.add(R.id.realtabcontent,new UserFragment(), "user");
+                        ft.add(R.id.realtabcontent,new HomeFragment(), "hot");
                     }else{
                         /** Bring to the front, if already exists in the fragmenttransaction */
-                        ft.attach(userFragment);
+                        ft.attach(hotEvent);
                     }
                 }
 
@@ -81,15 +69,15 @@ public class MainActivity extends FragmentActivity {
         tabHost.setOnTabChangedListener(tabChangeListener);
 
         /** Defining tab builder for Andriod tab */
-        TabHost.TabSpec tSpecAndroid = tabHost.newTabSpec("home");
-        tSpecAndroid.setContent(new TabContent(getBaseContext()));
-        tSpecAndroid.setIndicator("ALL SHITS", getResources().getDrawable(R.drawable.user_image));
-        tabHost.addTab(tSpecAndroid);
+        TabHost.TabSpec tSpecHotEvent = tabHost.newTabSpec("hot");
+        tSpecHotEvent.setContent(new TabContent(getBaseContext()));
+        tSpecHotEvent.setIndicator("HOT EVENTS");
+        tabHost.addTab(tSpecHotEvent);
 
         /** Defining tab builder for Apple tab */
-        TabHost.TabSpec tSpecApple = tabHost.newTabSpec("user");
+        TabHost.TabSpec tSpecApple = tabHost.newTabSpec("all");
         tSpecApple.setContent(new TabContent(getBaseContext()));
-        tSpecApple.setIndicator("HOT SHITS", getResources().getDrawable(R.drawable.user_image));
+        tSpecApple.setIndicator("ALL EVENTS");
         tabHost.addTab(tSpecApple);
 
     }

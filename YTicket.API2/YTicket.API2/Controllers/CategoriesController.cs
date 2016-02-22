@@ -70,7 +70,7 @@ namespace YTicket.API2.Controllers
 
                 var urlHelper = new UrlHelper(Request);
                 var prevLink = page > 1 ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = page - 1, pageSize = pageSize }) : "";
-                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = page + 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = page + 1, pageSize = pageSize }) : "";
                 var firstLink = page != 1 ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = 1, pageSize = pageSize }) : "";
                 var lastLink = page != totalPages ? urlHelper.Link("GetAllCategoryPagingRoute", new { page = totalPages, pageSize = pageSize }) : "";
 
@@ -111,7 +111,7 @@ namespace YTicket.API2.Controllers
 
                 var urlHelper = new UrlHelper(Request);
                 var prevLink = page > 1 ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = page - 1, pageSize = pageSize }) : "";
-                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = page + 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = page + 1, pageSize = pageSize }) : "";
                 var firstLink = page != 1 ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = 1, pageSize = pageSize }) : "";
                 var lastLink = page != totalPages ? urlHelper.Link("GetCategoryByNamePagingRoute", new { name = name, page = totalPages, pageSize = pageSize }) : "";
 

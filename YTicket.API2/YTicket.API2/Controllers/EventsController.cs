@@ -49,7 +49,7 @@ namespace YTicket.API2.Controllers
 
                 var urlHelper = new UrlHelper(Request);
                 var prevLink = page > 1 ? urlHelper.Link("GetAllPagingRoute", new { page = page - 1, pageSize = pageSize }) : "";
-                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetAllPagingRoute", new { page = page + 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages ? urlHelper.Link("GetAllPagingRoute", new { page = page + 1, pageSize = pageSize }) : "";
                 var firstLink = page != 1 ? urlHelper.Link("GetAllPagingRoute", new { page = 1, pageSize = pageSize }) : "";
                 var lastLink = page != totalPages ? urlHelper.Link("GetAllPagingRoute", new { page = totalPages, pageSize = pageSize }) : "";
 
@@ -90,7 +90,7 @@ namespace YTicket.API2.Controllers
 
                 var urlHelper = new UrlHelper(Request);
                 var prevLink = page > 1 ? urlHelper.Link("GetByNamePagingRoute", new { name = name, page = page - 1, pageSize = pageSize }) : "";
-                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetByNamePagingRoute", new { name = name, page = page + 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages ? urlHelper.Link("GetByNamePagingRoute", new { name = name, page = page + 1, pageSize = pageSize }) : "";
                 var firstLink = page != 1 ? urlHelper.Link("GetByNamePagingRoute", new { name = name, page = 1, pageSize = pageSize }) : "";
                 var lastLink = page != totalPages ? urlHelper.Link("GetByNamePagingRoute", new { name = name, page = totalPages, pageSize = pageSize }) : "";
 
@@ -116,7 +116,7 @@ namespace YTicket.API2.Controllers
         /// Event Collection contains basic DTO: ID, Name, Time, Place, Image.
         /// </summary>
         /// <param name="categoryID">id of category</param>
-        /// <param name="pageNumber">page number</param>
+        /// <param name="page">page number</param>
         /// <param name="pageSize">items per page</param>
         /// <returns></returns>
         [Route("GetByCategoryPaging", Name = "GetByCategoryPagingRoute")]
@@ -131,7 +131,7 @@ namespace YTicket.API2.Controllers
 
                 var urlHelper = new UrlHelper(Request);
                 var prevLink = page > 1 ? urlHelper.Link("GetByCategoryPagingRoute", new { categoryID = categoryID, page = page - 1, pageSize = pageSize }) : "";
-                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetByCategoryPagingRoute", new { categoryID = categoryID, page = page + 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages ? urlHelper.Link("GetByCategoryPagingRoute", new { categoryID = categoryID, page = page + 1, pageSize = pageSize }) : "";
                 var firstLink = page != 1 ? urlHelper.Link("GetByCategoryPagingRoute", new { categoryID = categoryID, page = 1, pageSize = pageSize }) : "";
                 var lastLink = page != totalPages ? urlHelper.Link("GetByCategoryPagingRoute", new { categoryID = categoryID, page = totalPages, pageSize = pageSize }) : "";
 
@@ -157,14 +157,40 @@ namespace YTicket.API2.Controllers
         /// Event Collection contains basic DTO: ID, Name, Time, Place, Image.
         /// </summary>
         /// <param name="userID">id of user</param>
-        /// <param name="pageNumber">page number</param>
+        /// <param name="page">page number</param>
         /// <param name="pageSize">items per page</param>
         /// <returns></returns>
         [Route("GetByUserPaging", Name = "GetByUserPagingRoute")]
-        public IQueryable<EventDTO> GetByUserPaging(int userID, int pageNumber, int pageSize)
+        public IQueryable<EventDTO> GetByUserPaging(int userID, int page, int pageSize)
         {
-            // TODO
-            return Queryable.AsQueryable(_service.GetByUserPaging(userID, pageNumber, pageSize));
+            var list = _service.GetByUserPaging(userID, page, pageSize);
+
+            if (list != null)
+            {
+                var totalCount = _service.GetTotalResults();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+                var urlHelper = new UrlHelper(Request);
+                var prevLink = page > 1 ? urlHelper.Link("GetByUserPagingRoute", new { userID = userID, page = page - 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages ? urlHelper.Link("GetByUserPagingRoute", new { userID = userID, page = page + 1, pageSize = pageSize }) : "";
+                var firstLink = page != 1 ? urlHelper.Link("GetByUserPagingRoute", new { userID = userID, page = 1, pageSize = pageSize }) : "";
+                var lastLink = page != totalPages ? urlHelper.Link("GetByUserPagingRoute", new { userID = userID, page = totalPages, pageSize = pageSize }) : "";
+
+                var paginationHeader = new
+                {
+                    TotalCount = totalCount,
+                    TotalPages = totalPages,
+                    PrevPageLink = prevLink,
+                    NextPageLink = nextLink,
+                    FirstPageLink = firstLink,
+                    LastPageLink = lastLink
+                };
+
+                System.Web.HttpContext.Current.Response.Headers.Add("X-Pagination",
+                    Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+            }
+
+            return Queryable.AsQueryable(list);
         }
 
         /// <summary>
@@ -174,7 +200,7 @@ namespace YTicket.API2.Controllers
         /// </summary>
         /// <param name="name">name keyword</param>
         /// <param name="categoryID">id of category</param>
-        /// <param name="pageNumber">page number</param>
+        /// <param name="page">page number</param>
         /// <param name="pageSize">items per page</param>
         /// <returns></returns>
         [Route("GetByNameCategoryPaging", Name = "GetByNameCategoryPagingRoute")]
@@ -189,7 +215,7 @@ namespace YTicket.API2.Controllers
 
                 var urlHelper = new UrlHelper(Request);
                 var prevLink = page > 1 ? urlHelper.Link("GetByNameCategoryPagingRoute", new { name = name, categoryID = categoryID, page = page - 1, pageSize = pageSize }) : "";
-                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetByNameCategoryPagingRoute", new { name = name, categoryID = categoryID, page = page + 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages ? urlHelper.Link("GetByNameCategoryPagingRoute", new { name = name, categoryID = categoryID, page = page + 1, pageSize = pageSize }) : "";
                 var firstLink = page != 1 ? urlHelper.Link("GetByNameCategoryPagingRoute", new { name = name, categoryID = categoryID, page = 1, pageSize = pageSize }) : "";
                 var lastLink = page != totalPages ? urlHelper.Link("GetByNameCategoryPagingRoute", new { name = name, categoryID = categoryID, page = totalPages, pageSize = pageSize }) : "";
 
@@ -230,7 +256,7 @@ namespace YTicket.API2.Controllers
 
                 var urlHelper = new UrlHelper(Request);
                 var prevLink = page > 1 ? urlHelper.Link("GetJoinedUserPagingRoute", new { id = id, page = page - 1, pageSize = pageSize }) : "";
-                var nextLink = page < totalPages - 1 ? urlHelper.Link("GetJoinedUserPagingRoute", new { id = id, page = page + 1, pageSize = pageSize }) : "";
+                var nextLink = page < totalPages ? urlHelper.Link("GetJoinedUserPagingRoute", new { id = id, page = page + 1, pageSize = pageSize }) : "";
                 var firstLink = page != 1 ? urlHelper.Link("GetJoinedUserPagingRoute", new { id = id, page = 1, pageSize = pageSize }) : "";
                 var lastLink = page != totalPages ? urlHelper.Link("GetJoinedUserPagingRoute", new { id = id, page = totalPages, pageSize = pageSize }) : "";
 

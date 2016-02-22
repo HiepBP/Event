@@ -21,4 +21,6 @@ public interface EventService {
      */
     @GET("api/Events/GetEventDetail?")
     Call<Event> getEventDetail(@Query("id") Integer id);
+
+
 }
