@@ -93,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString(PREF_TOKEN, json);
                     System.out.println(token.getAccessToken());
                     editor.apply();
+                    
 
                 } else {
                     // Parse error from response
