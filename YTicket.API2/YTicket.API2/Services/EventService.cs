@@ -170,7 +170,7 @@ namespace YTicket.API2.Services
             // Validate Time
             if (@event.Time == null)
                 _validationDictionary.AddErrors("Time", "Time cannot be blank.");
-            else if (@event.Time.CompareTo(DateTime.Now) < 0)
+            else if (@event.Time.CompareTo(DateTime.Today.AddDays(1)) < 0)
                 _validationDictionary.AddErrors("Time", "Time is not valid.");
             // Validate Place
             if (@event.Place.Trim().Length == 0)
