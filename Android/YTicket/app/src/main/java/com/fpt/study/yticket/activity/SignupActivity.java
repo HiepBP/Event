@@ -119,7 +119,7 @@ public class SignupActivity extends AppCompatActivity {
                     }
 
                     if (!blankError.isEmpty()) {
-                        if (blankError.contains("Email"))
+                        if (blankError.contains("Email") || blankError.contains("Name"))
                         {
                             editEmail.setText("");
                             editEmail.setHint(blankError);
