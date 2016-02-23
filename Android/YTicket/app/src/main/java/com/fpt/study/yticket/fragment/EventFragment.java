@@ -56,7 +56,7 @@ public class EventFragment extends Fragment {
     User creator;
     Token token;
     Boolean isLogin = false;
-    Boolean isEventOwner = false;
+    int eventId = 0;
 
     SharedPreferences sharedPreferences;
 
@@ -117,7 +117,7 @@ public class EventFragment extends Fragment {
         System.out.println("Chay vao oncreate");
         View v = inflater.inflate(R.layout.fragment_event, container, false);
         Intent intent = getActivity().getIntent();
-        final int eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
+        eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
 
         etxtEventId = (EditText) v.findViewById(R.id.fragment_event_edittext_id);
         etxtEventName = (EditText) v.findViewById(R.id.fragment_event_edittext_name);
@@ -128,13 +128,9 @@ public class EventFragment extends Fragment {
         btnEventEdit = (Button) v.findViewById(R.id.fragment_home_button_edit);
         btnEventDelete = (Button) v.findViewById(R.id.fragment_home_button_delete);
 
-        user = getCurrentUser();
-        creator = getUserByEvent(eventId);
-        if (user.getID() != creator.getID()) {
-            Log.d(TAG, "this event is not created by this user");
-            btnEventEdit.setVisibility(View.GONE);
-            btnEventDelete.setVisibility(View.GONE);
-        }
+        getCurrentUser();
+
+
 
 
         btnEventJoin = (Button) v.findViewById(R.id.fragment_event_button_join);
@@ -145,7 +141,7 @@ public class EventFragment extends Fragment {
                 if (isLogin == false) {
                     Log.d(TAG, "Not yet login");
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    int eventId = Integer.parseInt(etxtEventId.getText().toString());
+                    //int eventId = Integer.parseInt(etxtEventId.getText().toString());
                     intent.putExtra(EXTRA_EVENT_ID, eventId);
                     Log.d(TAG, "" + eventId);
                     getActivity().startActivity(intent);
@@ -155,7 +151,6 @@ public class EventFragment extends Fragment {
 
             }
         });
-
 
 
         return v;
@@ -205,23 +200,31 @@ public class EventFragment extends Fragment {
         return eventUserStatus;
     }
 
-    public User getCurrentUser() {
+    public void getCurrentUser() {
         Call<User> call = eventService.getCurrentUser();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                user = response.body();
-                Log.d(TAG, user.getUsername());
+                if (response.isSuccess()) {
+                    Log.d(TAG, "getCurrentUser called");
+                    user = response.body();
+                    getUserByEvent(eventId);
+                } else {
+                    Log.d(TAG, "getCurrentUser failed");
+                }
+
+
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Log.d(TAG, "getCurrentUser onfailure called");
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG)
                         .show();
             }
         });
 
-        return user;
+
     }
 
     public void joinEvent(int eventId) {
@@ -241,13 +244,25 @@ public class EventFragment extends Fragment {
         });
     }
 
-    public User getUserByEvent(int eventId) {
+    public void getUserByEvent(int eventId) {
         Call<User> call = eventService.getUserByEvent(eventId);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccess()) {
                     creator = response.body();
+                    Log.d(TAG, user.getUsername());
+                    Log.d(TAG, creator.getUsername());
+                    if (user.getID() != creator.getID()) {
+                        Log.d(TAG, "this event is not created by this user");
+                        btnEventEdit.setVisibility(View.GONE);
+                        btnEventDelete.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    Log.d(TAG, "not succ");
+                    btnEventEdit.setVisibility(View.GONE);
+                    btnEventDelete.setVisibility(View.GONE);
                 }
             }
 
@@ -258,8 +273,6 @@ public class EventFragment extends Fragment {
             }
         });
 
-
-        return creator;
     }
 
 
