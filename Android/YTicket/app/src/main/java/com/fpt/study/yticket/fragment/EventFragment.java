@@ -69,8 +69,6 @@ public class EventFragment extends Fragment {
         Log.d(TAG, "onCreate called");
 
 
-
-
         Gson gson = new Gson();
 
         SharedPreferences pref = getActivity().getSharedPreferences(SHAREDPREFERENCES, Context.MODE_PRIVATE);
@@ -132,11 +130,25 @@ public class EventFragment extends Fragment {
         eventImage = (ImageView) v.findViewById(R.id.fragment_event_image_image);
 
         btnEventEdit = (Button) v.findViewById(R.id.fragment_home_button_edit);
+        btnEventEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "edit button on click");
+                User user = new User();
+                user.setUsername(etxtEventName.getText().toString());
+                user.setUsername(etxtEventTime.getText().toString());
+                user.setUsername(etxtEventPlace.getText().toString());
+                updateEvent(eventId, user);
+            }
+        });
         btnEventDelete = (Button) v.findViewById(R.id.fragment_home_button_delete);
-
+        btnEventDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteEvent(eventId);
+            }
+        });
         getCurrentUser();
-
-
 
 
         btnEventJoin = (Button) v.findViewById(R.id.fragment_event_button_join);
@@ -279,6 +291,44 @@ public class EventFragment extends Fragment {
             }
         });
 
+    }
+
+    public void updateEvent(int id, User user) {
+        Call<Void> call = eventService.updateEvent(eventId, user);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccess()) {
+                    Intent intent = new Intent(getActivity(), EventActivity.class);
+                    intent.putExtra(EXTRA_EVENT_ID, eventId);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void deleteEvent(int id) {
+        Call<Void> call = eventService.deleteEvent(id);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccess()) {
+                    Log.d(TAG, "Delete successfully");
+                }else {
+                    Log.d(TAG, "Delete not successfully");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "Delete Failure");
+            }
+        });
     }
 
 

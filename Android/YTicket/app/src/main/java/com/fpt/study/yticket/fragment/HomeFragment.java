@@ -62,6 +62,14 @@ public class HomeFragment extends ListFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("HomeFragment", "onResume called");
+        service = ServiceGenerator.createService(HomeService.class);
+        getAll(1, PAGE_SIZE);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 

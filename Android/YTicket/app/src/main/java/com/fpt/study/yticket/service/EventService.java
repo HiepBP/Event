@@ -5,6 +5,8 @@ import com.fpt.study.yticket.model.EventUserStatus;
 import com.fpt.study.yticket.model.User;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -38,4 +40,9 @@ public interface EventService {
     Call<User> getUserByEvent(@Query("eventId") Integer eventId);
 
 
+    @PUT("api/Events/UpdateEvent?")
+    Call<Void> updateEvent(@Query("id") Integer id, @Body User user);
+
+    @DELETE("api/Events/DeleteEvent?")
+    Call<Void> deleteEvent(@Query("id") Integer id);
 }
