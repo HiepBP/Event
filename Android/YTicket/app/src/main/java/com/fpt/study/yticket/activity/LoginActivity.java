@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                     int eventId = intent.getIntExtra(EventFragment.EXTRA_EVENT_ID, 0);
                     Log.d(TAG, "" + eventId);
                     if (eventId == 0) {
-                        intent = new Intent(getApplication(), MainActivity.class);
+                        intent = new Intent(getApplication(), NavDrawerActivity.class);
                     } else {
                         intent = new Intent(getApplication(), EventActivity.class);
                         intent.putExtra(EXTRA_EVENT_ID, eventId);

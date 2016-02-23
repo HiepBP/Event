@@ -1,7 +1,12 @@
 package com.fpt.study.yticket.activity;
 
 import android.app.Fragment;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
+import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.fragment.EventFragment;
 import com.fpt.study.yticket.fragment.HomeFragment;
 import com.fpt.study.yticket.util.activityfragment.ActivityFragment;
@@ -14,4 +19,5 @@ public class EventActivity extends ActivityFragment {
     protected Fragment createFragment() {
         return new EventFragment();
     }
+
 }

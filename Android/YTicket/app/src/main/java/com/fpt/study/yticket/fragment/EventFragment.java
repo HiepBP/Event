@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.activity.EventActivity;
 import com.fpt.study.yticket.activity.LoginActivity;
+import com.fpt.study.yticket.activity.NavDrawerActivity;
 import com.fpt.study.yticket.model.Event;
 import com.fpt.study.yticket.model.EventUserStatus;
 import com.fpt.study.yticket.model.Token;
@@ -65,6 +67,9 @@ public class EventFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called");
+
+
+
 
         Gson gson = new Gson();
 
@@ -116,6 +121,7 @@ public class EventFragment extends Fragment {
         Log.d(TAG, "onCreateView");
         System.out.println("Chay vao oncreate");
         View v = inflater.inflate(R.layout.fragment_event, container, false);
+
         Intent intent = getActivity().getIntent();
         eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
 

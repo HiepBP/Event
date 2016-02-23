@@ -2,12 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fpt.study.yticket">
 
+    <uses-sdk android:minSdkVersion="11" />
+
     <!-- Internet Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Permission to write to external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-sdk android:minSdkVersion="11"/>
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -38,7 +42,7 @@
         <activity
             android:name=".activity.SignupActivity"
             android:label="@string/title_activity_signup"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.EventActivity"
             android:label="@string/title_activity_event"
@@ -46,8 +50,8 @@
         <activity
             android:name=".activity.HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activity.UserActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.UserActivity" />
         <activity android:name=".activity.UserDetailActivity" />
         <activity android:name=".activity.NavDrawerActivity">
             <intent-filter>
@@ -56,6 +60,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.MainActivity_2" />
+        <activity
+            android:name=".activity.AboutUsActivity"
+            android:label="@string/title_activity_about_us"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

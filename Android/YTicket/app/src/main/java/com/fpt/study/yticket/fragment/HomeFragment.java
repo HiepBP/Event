@@ -156,7 +156,7 @@ public class HomeFragment extends ListFragment {
                     adapter = new EventAdapter(events);
                     setListAdapter(adapter);
                     //set list view to a position
-                    listView.setSelection(adapter.getCount() - 33);
+                    listView.setSelection(adapter.getCount() - 21);
                 }
             }
 
