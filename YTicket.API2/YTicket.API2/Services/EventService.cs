@@ -381,7 +381,18 @@ namespace YTicket.API2.Services
                 return false;
             }
 
-            var list = _userRespository.GetJoinedUser(@event);
+            var l = _userRespository.GetJoinedUser(@event);
+
+            List<User> list = new List<User>();
+
+            foreach (var item in l)
+            {
+                User u = new User
+                {
+                    ID = item.ID
+                };
+                list.Add(u);
+            }
 
             // Database logic
             try
@@ -424,7 +435,18 @@ namespace YTicket.API2.Services
                 return false;
             }
 
-            var list = _userRespository.GetJoinedUser(@event);
+            var l = _userRespository.GetJoinedUser(@event);
+
+            List<User> list = new List<User>();
+
+            foreach (var item in l)
+            {
+                User u = new User
+                {
+                    ID = item.ID
+                };
+                list.Add(u);
+            }
 
             // Database logic
             try
