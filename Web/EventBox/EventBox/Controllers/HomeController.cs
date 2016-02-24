@@ -19,7 +19,7 @@ namespace EventBox.Controllers
         [Route("Index/Home")]
         public ViewResult Index()
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetAllPaging?page=1&pageSize=12");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetAllPaging?page=1&pageSize=" + ContentManager.pageSize);
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();

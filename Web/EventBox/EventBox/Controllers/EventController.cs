@@ -27,7 +27,7 @@ namespace EventBox.Controllers
         [Route("Search")]
         public ActionResult SearchEvent(string searchValue)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetByNamePaging?name=" + searchValue + "&page=1&pageSize=12");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetByNamePaging?name=" + searchValue + "&page=1&pageSize="+ContentManager.pageSize);
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -149,7 +149,7 @@ namespace EventBox.Controllers
 
 
             //Get joined user
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetJoinedUserPaging?id=" + id + "&page=1&pageSize=10");
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetJoinedUserPaging?id=" + id + "&page=1&pageSize=" + ContentManager.pageSize);
             httpWebRequest.Method = "GET";
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             stream = httpWebResponse.GetResponseStream();
