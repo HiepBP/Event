@@ -46,11 +46,17 @@
         <figure>
             <img src="@EventDetail.Image" />
         </figure>
-        <h3>Số người tham gia : @JoinedUsers.Count()</h3>
-        @if (ViewData["CreatedUser"] != null)
-        {
-            <h3>Người tạo sự kiện : @CreatedUsers.Username</h3>
-        }
+        <section>
+            <h3>Số người tham gia : @JoinedUsers.Count()</h3>
+            @if (ViewData["CreatedUser"] != null)
+            {
+                <h3>Người tạo sự kiện : @CreatedUsers.Username</h3>
+            }
+
+        </section>
+       
+        
+
         <section>
 
             <details>

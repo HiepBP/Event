@@ -27,9 +27,19 @@
                 <div class="search">
                     <form method="GET" action="/EventBox/Events/Search">
                         <input class="form-control input-sm" maxlength="64" placeholder="Tìm kiếm" name="searchValue" />
-                        <button type="submit" class="btn btn-primary btn-sm" id="btn_Search">Tìm kiếm</button>
+                        <button type="submit" class="btn btn-primary btn-sm glyphicon glyphicon-search" id="btn_Search"></button>
                     </form>
                 </div>
+               
+                    <li class="dropdown" style="margin-left:inherit">
+                        <a href="#" class="dropdown-toggle glyphicon glyphicon-filter" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><input name="categories" value="" type="checkbox" />aaaaa</li>
+                            <li><input name="categories" value="aaa" type="checkbox" />aaaaa</li>
+                            <li><input name="categories" value="aaa" type="checkbox" />aaaaa</li>
+                        </ul>
+                    </li>
+               
             </div>
             <ul class="nav navbar-nav navbar-right">
                 @if (Session["CurrentUserID"] != null || Convert.ToString(Session["CurrentUserID"]) != string.Empty)
