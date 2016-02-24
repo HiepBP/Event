@@ -20,15 +20,24 @@
             <ol class="carousel-indicators"></ol>
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
-                <div class="item active">
-                    <img src="@events[0].Image" alt="Chania" width="500" height="250" />
-                </div>
-                <div class="item">
-                    <img src="@events[1].Image" alt="Chania" width="500" height="250" />
-                </div>
-                <div class="item">
-                    <img src="@events[2].Image" alt="Chania" width="500" height="250" />
-                </div>
+                @if (events.Count >= 1)
+                {
+                    <div class="item active">
+                        <a href="/EventBox/Events/Detail?id=@events[0].ID"><h3><img src="@events[0].Image" alt="Chania" width="500" height="250" /></h3></a>
+                    </div>
+                }
+                @if (events.Count >= 2)
+                {
+                    <div class="item">
+                        <a href="/EventBox/Events/Detail?id=@events[1].ID"><h3><img src="@events[1].Image" alt="Chania" width="500" height="250" /></h3></a>
+                    </div>
+                }
+                @if (events.Count >= 3)
+                {
+                    <div class="item">
+                        <a href="/EventBox/Events/Detail?id=@events[2].ID"><h3><img src="@events[2].Image" alt="Chania" width="500" height="250" /></h3></a>
+                    </div>
+                }
             </div>
             <!-- Left and right controls -->
             <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
@@ -48,7 +57,9 @@
             {
                 string url = "/EventBox/Events/Detail?id=" + item.ID;
                 <li>
-                    <img src="@item.Image" alt="Demo" />
+                    <a href="@url">
+                        <h3><img src="@item.Image" alt="Demo" /></h3>
+                    </a>
                     <a href="@url"><h3>@item.Name</h3></a>
                     <p>@item.Time</p>
                 </li>

@@ -27,9 +27,37 @@
                 <div class="search">
                     <form method="GET" action="/EventBox/Events/Search">
                         <input class="form-control input-sm" maxlength="64" placeholder="Tìm kiếm" name="searchValue" />
-                        <button type="submit" class="btn btn-primary btn-sm" id="btn_Search">Tìm kiếm</button>
+                        <button type="submit" class="btn btn-primary btn-sm glyphicon glyphicon-search" id="btn_Search"></button>
                     </form>
                 </div>
+
+                <li class="dropdown" style="margin-left:inherit">
+                    <a href="#" id="ddlCategories" class="dropdown-toggle glyphicon glyphicon-filter" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+                    <ul id ="categoriesContainer" class="dropdown-menu">
+                    </ul>
+                    <script type="text/javascript">
+                        $.ajax({
+                            type: "GET",
+                            url: "@ContentManager.APIUrl" + "api/Categories/GetAll",
+                            success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    outputToHref(data, i);
+                                }
+                            },
+                            error: function (error) {
+                                jsonValue = JSON.parse(error.responseText);
+                            }
+                        });
+                        function outputToHref(data, i) {
+                            console.log(data);
+                            $("#categoriesContainer").append(
+                            "<li><a href=\"@ContentManager.WebServerUrl" + "Categories/Search?categoryID=" + data[i]["ID"] +
+                                "\">" + data[i]["Name"] + "</a></li>"
+                                );
+                        }
+                    </script>
+                </li>
+
             </div>
             <ul class="nav navbar-nav navbar-right">
                 @if (Session["CurrentUserID"] != null || Convert.ToString(Session["CurrentUserID"]) != string.Empty)
@@ -37,7 +65,7 @@
                     string url = ContentManager.WebServerUrl + "Users/Detail?id=" + Session["CurrentUserID"];
 
                     <li id="notification_li">
-                        <span id="notification_count">3</span>
+                        <span id="notification_count"></span>
                         <a href="#" id="notificationLink"><i class=" glyphicon glyphicon-envelope"></i></a>
                         <div id="notificationContainer">
                             <div id="notificationTitle">Notifications</div>

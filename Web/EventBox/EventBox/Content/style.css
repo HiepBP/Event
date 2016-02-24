@@ -357,7 +357,8 @@ border-bottom: 1px solid #dddddd;
 }
 #notificationsBody {
 padding: 33px 0px 0px 0px !important;
-min-height:300px;
+border-bottom: solid thin; 
+min-height:50px;
 }
 #notificationFooter {
 background-color: #e9eaed;

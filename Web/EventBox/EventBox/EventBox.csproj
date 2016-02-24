@@ -200,7 +200,6 @@
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -345,7 +344,6 @@
     <Content Include="Views\User\EditUser.cshtml" />
     <Content Include="Views\User\ChangePassword.cshtml" />
     <Content Include="Views\Event\SearchEvent.cshtml" />
-    <Content Include="Views\Category\ViewCategories.cshtml" />
     <Content Include="Views\Category\SearchEvent.cshtml" />
   </ItemGroup>
   <ItemGroup>

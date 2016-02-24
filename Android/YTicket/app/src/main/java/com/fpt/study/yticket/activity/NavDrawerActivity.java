@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.fpt.study.yticket.model.User;
 import com.fpt.study.yticket.service.UserService;
 import com.fpt.study.yticket.util.ServiceGenerator;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class NavDrawerActivity extends ActionBarActivity {
     Button btn_profile_login;
     Button btn_profile_signup;
 
-
+    User user;
     List<NavItem> navItemList;
     List<Fragment> fragmentList;
 
@@ -137,7 +139,6 @@ public class NavDrawerActivity extends ActionBarActivity {
         setTitle(navItemList.get(0).getTitle());
         listNav.setItemChecked(0, true);
         drawerLayout.closeDrawer(drawerPane);
-
 
         //set OnClickListener for each items in nav bar
         listNav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -232,11 +233,12 @@ public class NavDrawerActivity extends ActionBarActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccess()) {
                     Log.d(TAG, "getCurrentUser called");
-                    User user = response.body();
+                    user = response.body();
                     Intent intent = new Intent(getApplication(), UserDetailActivity.class);
                     intent.putExtra("userID", user.getID());
 
-                    getApplication().startActivity(intent);
+                    startActivity(intent);
+
                 } else {
                     Log.d(TAG, "getCurrentUser failed");
                 }
@@ -268,7 +270,13 @@ public class NavDrawerActivity extends ActionBarActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccess()) {
                     User user = response.body();
-                    profile_image.setImageResource(R.drawable.about_us);
+                    if (user.getImage() == null) {
+                        profile_image.setImageResource(R.drawable.default_user);
+                    } else {
+                        Picasso.with(getApplication())
+                                .load(user.getImage())
+                                .into(profile_image);
+                    }
                     profile_username.setText(user.getUsername());
                 } else {
                     Log.d(TAG, "Get Profile failed");

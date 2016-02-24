@@ -6,7 +6,10 @@ import com.fpt.study.yticket.model.User;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 /**
@@ -28,4 +31,8 @@ public interface UserService {
 
     @GET("api/Users/GetNotification")
     Call<List<Notification>> getNotification();
+
+    @PUT("api/Users/UpdateUser?")
+    Call<Void> updateUser(@Query("id") Integer id, @Body User user);
+
 }

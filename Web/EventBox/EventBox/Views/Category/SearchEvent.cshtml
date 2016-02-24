@@ -24,7 +24,9 @@
             {
                 string url = "/EventBox/Events/Detail?id=" + item.ID;
                 <li>
-                    <img src="@item.Image" alt="Demo" />
+                    <a href="@url">
+                        <h3><img src="@item.Image" alt="Demo" /></h3>
+                    </a>
                     <a href="@url"><h3>@item.Name</h3></a>
                     <p>@item.Time</p>
                 </li>
@@ -54,9 +56,6 @@
             var url = ContentManager.WebServerUrl + "Categories/SearchPaging?url=" + (string)ViewData["LastPage"];
             <li><a href="@url">Last Page</a></li>
         }
-
-
-
     </ul>
     <!--Paging-->
 </body>
