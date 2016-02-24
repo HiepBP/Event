@@ -20,6 +20,7 @@ import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.activity.EventActivity;
 import com.fpt.study.yticket.activity.LoginActivity;
 import com.fpt.study.yticket.activity.NavDrawerActivity;
+import com.fpt.study.yticket.model.Category;
 import com.fpt.study.yticket.model.Event;
 import com.fpt.study.yticket.model.EventUserStatus;
 import com.fpt.study.yticket.model.Token;
@@ -56,6 +57,7 @@ public class EventFragment extends Fragment {
     EventUserStatus eventUserStatus;
     User user;
     User creator;
+    Event event;
     Token token;
     Boolean isLogin = false;
     int eventId = 0;
@@ -67,6 +69,7 @@ public class EventFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called");
+
 
 
         Gson gson = new Gson();
@@ -134,11 +137,17 @@ public class EventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "edit button on click");
-                User user = new User();
-                user.setUsername(etxtEventName.getText().toString());
-                user.setUsername(etxtEventTime.getText().toString());
-                user.setUsername(etxtEventPlace.getText().toString());
-                updateEvent(eventId, user);
+                Category category = new Category();
+                event.setID(eventId);
+                event.setName(etxtEventName.getText().toString());
+                event.setTime(etxtEventTime.getText().toString());
+                event.setPlace(etxtEventPlace.getText().toString());
+                Log.d(TAG, event.getID() + "");
+                Log.d(TAG, event.getName());
+                Log.d(TAG, event.getTime());
+                Log.d(TAG, event.getPlace());
+                updateEvent(eventId, event);
+
             }
         });
         btnEventDelete = (Button) v.findViewById(R.id.fragment_home_button_delete);
@@ -180,12 +189,12 @@ public class EventFragment extends Fragment {
         call.enqueue(new Callback<Event>() {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
-                Event e = response.body();
-                etxtEventId.setText(e.getID() + "");
-                etxtEventName.setText(e.getName());
-                etxtEventTime.setText(e.getTime() + "");
-                etxtEventPlace.setText(e.getPlace());
-                Glide.with(getActivity()).load(e.getImage()).into(eventImage);
+                event = response.body();
+                etxtEventId.setText(event.getID() + "");
+                etxtEventName.setText(event.getName());
+                etxtEventTime.setText(event.getTime() + "");
+                etxtEventPlace.setText(event.getPlace());
+                Glide.with(getActivity()).load(event.getImage()).into(eventImage);
 
             }
 
@@ -293,8 +302,12 @@ public class EventFragment extends Fragment {
 
     }
 
-    public void updateEvent(int id, User user) {
-        Call<Void> call = eventService.updateEvent(eventId, user);
+    public void updateEvent(int id, Event event) {
+        Log.d(TAG, event.getID()+"");
+        Log.d(TAG, event.getName());
+        Log.d(TAG, event.getTime());
+        Log.d(TAG, event.getPlace());
+        Call<Void> call = eventService.updateEvent(eventId, event);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -302,6 +315,7 @@ public class EventFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), EventActivity.class);
                     intent.putExtra(EXTRA_EVENT_ID, eventId);
                     startActivity(intent);
+                    Toast.makeText(getActivity(),"Update successfully", Toast.LENGTH_SHORT);
                 }
             }
 

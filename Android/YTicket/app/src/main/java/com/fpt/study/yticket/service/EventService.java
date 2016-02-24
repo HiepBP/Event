@@ -41,7 +41,7 @@ public interface EventService {
 
 
     @PUT("api/Events/UpdateEvent?")
-    Call<Void> updateEvent(@Query("id") Integer id, @Body User user);
+    Call<Void> updateEvent(@Query("id") Integer id, @Body Event event);
 
     @DELETE("api/Events/DeleteEvent?")
     Call<Void> deleteEvent(@Query("id") Integer id);
