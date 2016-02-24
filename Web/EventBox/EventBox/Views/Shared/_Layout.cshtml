@@ -132,20 +132,20 @@
                     $('#register').click(function (e) {
                         e.preventDefault();
                         var source = {
-                            'Email': $('#rEmail').val(),
-                            'Password': $('#rPassword').val(),
-                            'ConfirmPassword': $('#rConfirmPassword').val()
+                            'email': $('#rEmail').val(),
+                            'password': $('#rPassword').val(),
+                            'confirmpassword': $('#rConfirmPassword').val()
                         }
                         $.ajax({
                             type: "POST",
-                            url: "@ContentManager.APIUrl" + "api/Account/Register",
+                            url: "@ContentManager.WebServerUrl" + "Users/Register",
                             data: source,
                             success: function (data) {
                                 var url = window.location.href;
                                 window.location = url;
                             },
                             error: function (error) {
-                                jsonValue = JSON.parse(error.responseText);
+                                jsonValue = JSON.parse(error.responseJSON);
                                 modelState = jsonValue["ModelState"];
                                 errorMsg = modelState[Object.keys(modelState)[0]];
                                 document.getElementById("ErrorSignup").innerHTML = errorMsg[Object.keys(errorMsg)[0]];
@@ -169,41 +169,27 @@
                 <!--<form method="post" action="/EventBox/Users/Login">-->
                 <input type="text" id="loginEmail" name="email" placeholder="Email">
                 <input type="password" id="loginPassword" name="password" placeholder="Mật khẩu">
-                <input type="submit" id="login" class="login login-submit" value="Đăng Nhập">
                 <h5 id="ErrorLogin"></h5>
+                <input type="submit" id="login" class="login login-submit" value="Đăng Nhập">
                 <script>
                     $('#login').click(function (e) {
                         e.preventDefault();
                         var loginData = {
-                            grant_type: "password",
-                            username: $("#loginEmail").val(),
+                            email: $("#loginEmail").val(),
                             password: $("#loginPassword").val()
                         };
 
                         $.ajax({
                             contentType: "application/x-www-form-urlencoded",
                             type: "POST",
-                            url: "@ContentManager.APIUrl" + "Token",
+                            url: "@ContentManager.WebServerUrl" + "Users/Login",
                             data: loginData,
-                            success: function (data) {
-                                var TokenData = {
-                                    token: data["access_token"],
-                                    username: loginData.username
-                                };
-                                $.ajax({
-                                    contentType: "application/x-www-form-urlencoded",
-                                    type: "POST",
-                                    url: "@ContentManager.WebServerUrl" + "Users/Token",
-                                    data: TokenData,
-                                    success: function () {
-                                        console.log("Success");
-                                        var url = window.location.href;
-                                        window.location = url;
-                                    }
-                                });
+                            success: function () {
+                                var url = window.location.href;
+                                window.location = url;
                             },
                             error: function (error) {
-                                jsonValue = JSON.parse(error.responseText);
+                                jsonValue = JSON.parse(error.responseJSON);
                                 document.getElementById("ErrorLogin").innerHTML = jsonValue["error_description"];
                             }
                         });
