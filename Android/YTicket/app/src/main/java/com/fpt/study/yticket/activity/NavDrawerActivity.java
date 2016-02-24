@@ -138,39 +138,55 @@ public class NavDrawerActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if (navItemList.get(position).getTitle().equalsIgnoreCase("logout")) {
-                    Call<Void> call = userService.logout();
-                    call.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            btn_profile_login.setVisibility(View.VISIBLE);
-                            btn_profile_signup.setVisibility(View.VISIBLE);
-                            profile_image.setVisibility(View.GONE);
-                            profile_username.setVisibility(View.GONE);
-                            Intent intent = new Intent(getApplication(), LoginActivity.class);
-                            startActivity(intent);
-                        }
+                String itemName = navItemList.get(position).getTitle().toLowerCase();
+                switch(itemName){
+                    case "logout":{
+                        Call<Void> call = userService.logout();
+                        call.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                btn_profile_login.setVisibility(View.VISIBLE);
+                                btn_profile_signup.setVisibility(View.VISIBLE);
+                                profile_image.setVisibility(View.GONE);
+                                profile_username.setVisibility(View.GONE);
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                startActivity(intent);
+                            }
 
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
 
-                        }
-                    });
-                }
-                else if (navItemList.get(position).getTitle().equalsIgnoreCase("about us")){
-                    Intent intent = new Intent(getApplication(), AboutUsActivity.class);
-                    startActivity(intent);
-                }
-                else {
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.main_contain, fragmentList.get(position))
-                            .commit();
+                            }
+                        });
+                        break;
+                    }
+                    case "about us":{
+                        Intent intent = new Intent(getApplication(), AboutUsActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    default:{
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.main_contain, fragmentList.get(position))
+                                .commit();
 
-                    setTitle(navItemList.get(position).getTitle());
-                    listNav.setItemChecked(position, true);
-                    drawerLayout.closeDrawer(drawerPane);
+                        setTitle(navItemList.get(position).getTitle());
+                        listNav.setItemChecked(position, true);
+                        drawerLayout.closeDrawer(drawerPane);
+                        break;
+                    }
                 }
+
+//                if (navItemList.get(position).getTitle().equalsIgnoreCase("logout")) {
+//
+//                }
+//                else if (navItemList.get(position).getTitle().equalsIgnoreCase("about us")){
+//
+//                }
+//                else {
+//
+//                }
             }
         });
 
