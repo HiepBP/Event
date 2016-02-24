@@ -146,7 +146,7 @@ details.open > summary:before {
 }
 
 #name, #info, #time, #place,#maxAttendance,#requireAttendance, #price {
-   margin-left:150px;
+   
    width: 250px;
 }
 

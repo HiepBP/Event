@@ -38,42 +38,43 @@
 
                                 <tr>
                                     <td>Tên sự kiện: </td>
-                                    <td><input type="text" id="name" name="name" placeholder="Tên sự kiện" required><br /></td>
+                                    <td align="center"><input type="text" id="name" name="name" placeholder="Tên sự kiện" required><br /></td>
                                 </tr>
                                 <tr>
                                     <td>Thông tin: </td>
-                                    <td><input type="text" id="info" name="info" placeholder="Thông tin" required><br /></td>
+                                    <td align="center"><input type="text" id="info" name="info" placeholder="Thông tin" required><br /></td>
                                 </tr>
 
                                 <tr>
                                     <td>Thời gian: </td>
+
+                                    <td align="center"><input type="datetime-local" id="time" name="time" placeholder="Thời gian" required><br /></td>
                                     <td>@TimeError</td>
-                                    <td><input type="datetime-local" id="time" name="time" placeholder="Thời gian" required><br /></td>
                                 </tr>
                                 <tr>
                                     <td>Địa điểm:</td>
-                                    <td><input type="text" id="place" name="place" placeholder="Địa điểm" required><br /></td>
+                                    <td align="center"><input type="text" id="place" name="place" placeholder="Địa điểm" required><br /></td>
                                 </tr>
                                 <tr>
                                     <td>Số người tối đa</td>
-                                    <td>@MaxError</td>
-                                    <td><input type="number" id="maxAttendance" name="maxAttendance" placeholder="Số người tối đa" min="0"><br /></td>
 
+                                    <td align="center"><input type="number" id="maxAttendance" name="maxAttendance" placeholder="Số người tối đa" min="0"><br /></td>
+                                    <td>@MaxError</td>
                                 </tr>
                                 <tr>
                                     <td>Số người yêu cầu</td>
-                                    <td><input type="number" id="requireAttendance" name="requireAttendance" placeholder="Số người yêu cầu" min="0"><br /></td>
+                                    <td align="center"><input type="number" id="requireAttendance" name="requireAttendance" placeholder="Số người yêu cầu" min="0"><br /></td>
 
                                 </tr>
                                 <tr>
                                     <td>Giá</td>
-                                    <td><input type="number" id="price" name="price" placeholder="Giá"><br /></td>
+                                    <td align="center"><input type="number" id="price" name="price" placeholder="Giá"><br /></td>
 
                                 </tr>
 
                                 <tr>
                                     <td>Hình ảnh</td>
-                                    <td><input type="file" id="file" name="image" accept="image/*" required><br /></td>
+                                    <td align="right"><input type="file" id="file" name="image" accept="image/*" required><br /></td>
 
                                 </tr>
 
@@ -90,7 +91,7 @@
                                 <tr>
                                     <td></td>
 
-                                    <td><button type="submit" id="upload" onclick="submitform()">Thêm sự kiện</button><br /></td>
+                                    <td align="center"><button type="submit" id="upload" onclick="submitform()">Thêm sự kiện</button><br /></td>
 
                                 </tr>
 

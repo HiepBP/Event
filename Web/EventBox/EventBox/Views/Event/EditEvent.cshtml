@@ -26,38 +26,104 @@
 
 <html>
 <head>
-    <meta name="generator"
-          content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+
     <meta charset="UTF-8" />
     <script src=@Url.Content("~/Scripts/modernizr.js") type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/normalize.css") />
     <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/styles.css") />
+    <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/style.css") />
+
 </head>
 <body>
     @using (Html.BeginForm("Update", "Events", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <input type="text" name="name" placeholder="Tên sự kiện" value="@EventDetail.Name" required><br />
-        <input type="text" name="info" placeholder="Thông tin" value="@EventDetail.Info" required><br />
-        <input type="datetime-local" name="time" placeholder="Thời gian" value="@EventDetail.Time.ToString("yyyy-MM-ddThh:mm:ss")" step="1" required><br />
-        <h3>@TimeError</h3>
-        <input type="text" name="place" placeholder="Địa điểm" value="@EventDetail.Place" required><br />
-        <input type="number" name="maxAttendance" placeholder="Số người tối đa" value="@EventDetail.MaxAttendance" min="0"><br />
-        <h3>@MaxError</h3>
-        <input type="number" name="requireAttendance" placeholder="Số người yêu cầu" value="@EventDetail.RequireAttendance" min="0"><br />
-        <input type="number" name="price" placeholder="Giá" value="@EventDetail.Price"><br />
-        foreach (var Category in Categories)
-        {
-            <h3>
-                <input name="categories" value="@Category.ID" type="checkbox"
-                       @checkExist(EventDetail.Categories, Category) />
-                @Category.Name
-            </h3>
-        }
-        <br />
-                <input type="file" id="file" name="image" accept="image/*"><br />
-                <input type="hidden" name="id" value="@EventDetail.ID" /><br />
-                <input type="hidden" name="oldValueImage" value="@EventDetail.Image" /><br />
-                <button type="submit" id="upload">Cập nhật sự kiện</button><br />
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad">
+                    <div class="panel panel-info">
+
+                        <div class="panel-body">
+
+
+                            <table class="table table-user-information">
+
+                                <tr>
+                                    <td>Tên sự kiện: </td>
+                                    <td align="center"><input type="text" name="name" id="name" placeholder="Tên sự kiện" value="@EventDetail.Name" required><br /></td>
+                                </tr>
+                                <tr>
+                                    <td>Thông tin: </td>
+                                    <td align="center"><input type="text" name="info" id="info" placeholder="Thông tin" value="@EventDetail.Info" required><br /></td>
+                                </tr>
+
+                                <tr>
+                                    <td>Thời gian: </td>
+
+                                    <td align="center"><input type="datetime-local" name="time" id="time"  placeholder="Thời gian" value="@EventDetail.Time.ToString("yyyy-MM-ddThh:mm:ss")" step="1" required><br /></td>
+                                    <td>@TimeError</td>
+                                </tr>
+                                <tr>
+                                    <td>Địa điểm:</td>
+                                    <td align="center"><input type="text" name="place" id="place" placeholder="Địa điểm" value="@EventDetail.Place" required><br /></td>
+                                </tr>
+                                <tr>
+                                    <td>Số người tối đa</td>
+
+                                    <td align="center"><input type="number" name="maxAttendance" id="maxAttendance" placeholder="Số người tối đa" value="@EventDetail.MaxAttendance" min="0"><br /></td>
+                                    <td>@MaxError</td>
+                                </tr>
+                                <tr>
+                                    <td>Số người yêu cầu</td>
+                                    <td align="center"><input type="number" name="requireAttendance" id="requireAttendance" placeholder="Số người yêu cầu" value="@EventDetail.RequireAttendance" min="0"><br /></td>
+
+                                </tr>
+                                <tr>
+                                    <td>Giá</td>
+                                    <td align="center"><input type="number" name="price" id="price" placeholder="Giá" value="@EventDetail.Price"><br /></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        @foreach (var Category in Categories)
+                                        {
+                                            <h3>
+                                                <input name="categories" value="@Category.ID" type="checkbox"
+                                                       @checkExist(EventDetail.Categories, Category) />
+                                                @Category.Name
+                                            </h3>
+                                        }
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>Hình ảnh</td>
+                                    <td align="right"><input type="file" id="file" name="image" accept="image/*"><br /></td>
+
+                                </tr>
+
+
+                                <tr>
+                                    <td></td>
+
+                                    <td align="center"><button type="submit" id="upload">Cập nhật sự kiện</button><br /></td>
+
+                                </tr>
+                                <input type="hidden" name="id" value="@EventDetail.ID" />
+
+                                <input type="hidden" name="oldValueImage" value="@EventDetail.Image" />
+
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 </body>
 </html>
