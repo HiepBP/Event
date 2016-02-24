@@ -68,6 +68,7 @@ public class EventFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Event Detail");
         Log.d(TAG, "onCreate called");
 
 
