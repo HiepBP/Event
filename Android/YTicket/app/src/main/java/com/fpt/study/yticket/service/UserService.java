@@ -1,5 +1,6 @@
 package com.fpt.study.yticket.service;
 
+import com.fpt.study.yticket.model.Notification;
 import com.fpt.study.yticket.model.User;
 
 import java.util.List;
@@ -25,5 +26,6 @@ public interface UserService {
     @GET("api/Account/Logout")
     Call<Void> logout();
 
-
+    @GET("api/Users/GetNotification")
+    Call<List<Notification>> getNotification();
 }

@@ -88,6 +88,8 @@ public class EventFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -214,7 +216,6 @@ public class EventFragment extends Fragment {
             @Override
             public void onResponse(Call<EventUserStatus> call, Response<EventUserStatus> response) {
                 eventUserStatus = response.body();
-
             }
 
             @Override
@@ -239,8 +240,6 @@ public class EventFragment extends Fragment {
                 } else {
                     Log.d(TAG, "getCurrentUser failed");
                 }
-
-
             }
 
             @Override
@@ -250,8 +249,6 @@ public class EventFragment extends Fragment {
                         .show();
             }
         });
-
-
     }
 
     public void joinEvent(int eventId) {
@@ -299,7 +296,6 @@ public class EventFragment extends Fragment {
                         .show();
             }
         });
-
     }
 
     public void updateEvent(int id, Event event) {
@@ -344,6 +340,4 @@ public class EventFragment extends Fragment {
             }
         });
     }
-
-
 }
