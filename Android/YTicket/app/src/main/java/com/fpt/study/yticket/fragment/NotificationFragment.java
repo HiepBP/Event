@@ -4,6 +4,7 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -28,6 +29,7 @@ import retrofit2.Response;
  */
 public class NotificationFragment extends ListFragment {
 
+    public static final String TAG = "NotiFragment";
     public static final String SHAREDPREFERENCES = "YTicketPrefs";
     public static final String PREF_TOKEN = "UserToken";
     UserService service;
@@ -38,7 +40,8 @@ public class NotificationFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        noti_info = (TextView) getActivity().findViewById(R.id.noti_info);
+
+        Log.d(TAG, "onCreated");
 
         Gson gson = new Gson();
         SharedPreferences pref = getActivity().getSharedPreferences(SHAREDPREFERENCES, Context.MODE_PRIVATE);
@@ -56,6 +59,7 @@ public class NotificationFragment extends ListFragment {
     }
 
     private class NotificationAdapter extends ArrayAdapter<Notification> {
+
         public NotificationAdapter(List<Notification> notiList) {
             super(getActivity(), 0, new ArrayList<Notification>(notiList));
         }
@@ -66,7 +70,7 @@ public class NotificationFragment extends ListFragment {
             if(v == null){
                 v = getActivity().getLayoutInflater().inflate(R.layout.notification_layout, null);
             }
-
+            noti_info = (TextView) v.findViewById(R.id.noti_info);
             Notification noti = getItem(position);
             noti_info.setText(noti.getInformation());
 
@@ -75,6 +79,9 @@ public class NotificationFragment extends ListFragment {
     }
 
     public void getNoti(){
+
+        Log.d(TAG, "Called GetNoti()");
+
         Call<List<Notification>> call = service.getNotification();
         call.enqueue(new Callback<List<Notification>>() {
             @Override
@@ -95,6 +102,9 @@ public class NotificationFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        Log.d(TAG, "onResumed");
+
         Gson gson = new Gson();
         SharedPreferences pref = getActivity().getSharedPreferences(SHAREDPREFERENCES, Context.MODE_PRIVATE);
         String json = pref.getString(PREF_TOKEN, "");
