@@ -1,5 +1,6 @@
 ﻿using AttributeRouting;
 using AttributeRouting.Web.Mvc;
+using EventBox.Helper;
 using EventBox.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -24,7 +25,7 @@ namespace EventBox.Controllers
         [Route("Register")]
         public ActionResult Register(string email, string password, string confirmpassword)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Account/Register");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "/api/Account/Register");
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "POST";
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
@@ -76,7 +77,7 @@ namespace EventBox.Controllers
         [Route("Login")]
         public ActionResult Login(string email, string password)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/Token");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "Token");
             httpWebRequest.ContentType = "application/x-www-form-urlencoded";
             httpWebRequest.Method = "POST";
             var json = "grant_type=password" +
@@ -137,7 +138,7 @@ namespace EventBox.Controllers
         [Route("Token")]
         public void Token(string token, string username)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/GetCurrentUserDetail");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Users/GetCurrentUserDetail");
             httpWebRequest.Accept = "application/json";
             httpWebRequest.Method = "GET";
             httpWebRequest.Headers["Authorization"] = "Bearer " + token;
@@ -154,7 +155,7 @@ namespace EventBox.Controllers
         [Route("Detail")]
         public ActionResult Detail(int id)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/GetUserDetail?id=" + id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Users/GetUserDetail?id=" + id);
             httpWebRequest.Method = "GET";
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Accept = "application/json";
@@ -284,7 +285,7 @@ namespace EventBox.Controllers
                 }
             }
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/UpdateUser?id=" + id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Users/UpdateUser?id=" + id);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.MediaType = "application/json";
             httpWebRequest.Accept = "application/json";
@@ -352,7 +353,7 @@ namespace EventBox.Controllers
         [Route("Notification")]
         public ActionResult GetNotification()
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/GetNotification");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Users/GetNotification");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.MediaType = "application/json";
             httpWebRequest.Accept = "application/json";

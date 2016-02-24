@@ -8,6 +8,8 @@
 @{
     var EventDetail = (EventDetail)ViewData["EventDetail"];
     var Categories = (List<Category>)ViewData["Categories"];
+    var TimeError = (string)ViewData["TimeError"];
+    var MaxError = (string)ViewData["MaxError"];
 }
 
 <!DOCTYPE html>
@@ -45,6 +47,7 @@
 
                                 <tr>
                                     <td>Thời gian: </td>
+                                    <td>@TimeError</td>
                                     <td><input type="datetime-local" id="time" name="time" placeholder="Thời gian" required><br /></td>
                                 </tr>
                                 <tr>
@@ -53,12 +56,13 @@
                                 </tr>
                                 <tr>
                                     <td>Số người tối đa</td>
-                                    <td><input type="number" id="maxAttendance" name="maxAttendance" placeholder="Số người tối đa"><br /></td>
+                                    <td>@MaxError</td>
+                                    <td><input type="number" id="maxAttendance" name="maxAttendance" placeholder="Số người tối đa" min="0"><br /></td>
 
                                 </tr>
                                 <tr>
                                     <td>Số người yêu cầu</td>
-                                    <td><input type="number" id="requireAttendance" name="requireAttendance" placeholder="Số người yêu cầu"><br /></td>
+                                    <td><input type="number" id="requireAttendance" name="requireAttendance" placeholder="Số người yêu cầu" min="0"><br /></td>
 
                                 </tr>
                                 <tr>

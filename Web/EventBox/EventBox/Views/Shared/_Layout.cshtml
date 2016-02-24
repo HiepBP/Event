@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using EventBox.Helper;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -32,19 +34,41 @@
             <ul class="nav navbar-nav navbar-right">
                 @if (Session["CurrentUserID"] != null || Convert.ToString(Session["CurrentUserID"]) != string.Empty)
                 {
-                    string url = "http://localhost/EventBox/Users/Detail?id=" + Session["CurrentUserID"];
+                    string url = ContentManager.WebServerUrl + "Users/Detail?id=" + Session["CurrentUserID"];
 
                     <li id="notification_li">
                         <span id="notification_count">3</span>
                         <a href="#" id="notificationLink"><i class=" glyphicon glyphicon-envelope"></i></a>
                         <div id="notificationContainer">
                             <div id="notificationTitle">Notifications</div>
-                            <div id="notificationsBody" class="notifications"></div>
                         </div>
                     </li>
                     <script type="text/javascript">
+                        $.ajax({
+                            type: "GET",
+                            url: "@ContentManager.APIUrl" + "api/Users/GetNotification",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Bearer " + "@Session["Token"]");
+                            },
+                            success: function (data) {
+                                document.getElementById("notification_count").innerHTML = data.length;
+                                for (var i = 0; i < data.length; i++) {
+                                    outputToDiv(data, i);
+                                }
+                            },
+                            error: function (error) {
+                                jsonValue = JSON.parse(error.responseText);
+                            }
+                        });
+                        function outputToDiv(data, i) {
+                            $("#notificationContainer").append(
+                            "<div id=\"notificationsBody\" class=\"notifications\"> " + data[i]["Information"] +
+                                "</div>"
+                                );
+                        }
                         $(document).ready(function () {
                             $("#notificationLink").click(function () {
+
                                 $("#notificationContainer").fadeToggle(300);
                                 $("#notification_count").fadeOut("slow");
                                 return false;
@@ -114,7 +138,7 @@
                         }
                         $.ajax({
                             type: "POST",
-                            url: "http://localhost/YTicket.API2/api/Account/Register",
+                            url: "@ContentManager.APIUrl" + "api/Account/Register",
                             data: source,
                             success: function (data) {
                                 var url = window.location.href;
@@ -159,7 +183,7 @@
                         $.ajax({
                             contentType: "application/x-www-form-urlencoded",
                             type: "POST",
-                            url: "http://localhost/YTicket.API2/Token",
+                            url: "@ContentManager.APIUrl" + "Token",
                             data: loginData,
                             success: function (data) {
                                 var TokenData = {
@@ -169,7 +193,7 @@
                                 $.ajax({
                                     contentType: "application/x-www-form-urlencoded",
                                     type: "POST",
-                                    url: "http://localhost/EventBox/Users/Token",
+                                    url: "@ContentManager.WebServerUrl" + "Users/Token",
                                     data: TokenData,
                                     success: function () {
                                         console.log("Success");

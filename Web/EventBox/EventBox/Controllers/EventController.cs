@@ -1,5 +1,6 @@
 ﻿using AttributeRouting;
 using AttributeRouting.Web.Mvc;
+using EventBox.Helper;
 using EventBox.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,7 +27,7 @@ namespace EventBox.Controllers
         [Route("Search")]
         public ActionResult SearchEvent(string searchValue)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetByNamePaging?name=" + searchValue + "&page=1&pageSize=12");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetByNamePaging?name=" + searchValue + "&page=1&pageSize=12");
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -95,7 +96,7 @@ namespace EventBox.Controllers
         public ActionResult Detail(int id)
         {
             //Get event detail
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetEventDetail?id=" + id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetEventDetail?id=" + id);
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             Stream stream = httpWebResponse.GetResponseStream();
@@ -138,7 +139,7 @@ namespace EventBox.Controllers
 
 
             //Get joined user
-            httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetJoinedUserPaging?id=" + id + "&page=1&pageSize=10");
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetJoinedUserPaging?id=" + id + "&page=1&pageSize=10");
             httpWebRequest.Method = "GET";
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             stream = httpWebResponse.GetResponseStream();
@@ -157,7 +158,7 @@ namespace EventBox.Controllers
 
 
             //Get created User
-            httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Users/GetUserByEvent?eventId=" + ed.ID);
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Users/GetUserByEvent?eventId=" + ed.ID);
             httpWebRequest.Accept = "application/json";
             httpWebRequest.Method = "GET";
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -171,7 +172,7 @@ namespace EventBox.Controllers
             ViewData["CreatedUser"] = CreatedUser;
 
             //Check current user status
-            httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetEventUserStatus?id="+id);
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/GetEventUserStatus?id=" +id);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.MediaType = "application/json";
             httpWebRequest.Accept = "application/json";
@@ -239,7 +240,7 @@ namespace EventBox.Controllers
 
 
             //Get categories
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Categories/GetAll");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Categories/GetAll");
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -256,7 +257,8 @@ namespace EventBox.Controllers
                 Categories.Add(c);
             }
             ViewData["Categories"] = Categories;
-
+            ViewData["TimeError"] = TempData["TimeError"];
+            ViewData["MaxError"] = TempData["MaxError"];
 
             return View("~/Views/Event/EditEvent.cshtml");
         }
@@ -307,7 +309,7 @@ namespace EventBox.Controllers
                 }
             }
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/UpdateEvent?id=" + id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/UpdateEvent?id=" + id);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.MediaType = "application/json";
             httpWebRequest.Accept = "application/json";
@@ -379,20 +381,38 @@ namespace EventBox.Controllers
                         {
                             error = reader.ReadToEnd();
                             //TODO: use JSON.net to parse this string and look at the error message
+                            var JObject = JsonConvert.DeserializeObject<JObject>(error);
+                            var token = JObject["ModelState"]["Time"];
+                            if (token != null && token.Type != JTokenType.Null)
+                            {
+                                TempData["TimeError"] = (string)(JObject["ModelState"]["Time"][0]);
+                            }
+                            token = JObject["ModelState"]["MaxAttendance"];
+                            if (token != null && token.Type != JTokenType.Null)
+                            {
+                                TempData["MaxError"] = (string)(JObject["ModelState"]["MaxAttendance"][0]);
+                            }
                         }
                         TempData["StatusCode"] = (int)errorResponse.StatusCode;
                     }
                 }
             }
-
-            return RedirectToAction("Detail", new { id = id });
+            if (error == "")
+            {
+                var arr = JsonConvert.DeserializeObject<JObject>(result);
+                return RedirectToAction("Detail", new { id = id });
+            }
+            else
+            {
+                return RedirectToAction("Update", new { id = id, name = name, info = info, time = time, place = place, maxAttendance = maxAttendance, requireAttendance = requireAttendance, price = price, image = ImageUrl, categories = categories });
+            }
         }
 
         [HttpGet]
         [Route("Create")]
         public ActionResult Create()
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Categories/GetAll");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Categories/GetAll");
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -409,6 +429,8 @@ namespace EventBox.Controllers
                 Categories.Add(c);
             }
             ViewData["Categories"] = Categories;
+            ViewData["TimeError"] = TempData["TimeError"];
+            ViewData["MaxError"] = TempData["MaxError"];
             return View("~/Views/Event/AddEvent.cshtml");
         }
 
@@ -459,7 +481,7 @@ namespace EventBox.Controllers
 
 
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/CreateEvent");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/CreateEvent");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.MediaType = "application/json";
             httpWebRequest.Accept = "application/json";
@@ -523,6 +545,17 @@ namespace EventBox.Controllers
                         {
                             error = reader.ReadToEnd();
                             //TODO: use JSON.net to parse this string and look at the error message
+                            var JObject = JsonConvert.DeserializeObject<JObject>(error);
+                            var token = JObject["ModelState"]["Time"];
+                            if (token != null && token.Type != JTokenType.Null)
+                            {
+                                TempData["TimeError"] = (string)(JObject["ModelState"]["Time"][0]);
+                            }
+                            token = JObject["ModelState"]["MaxAttendance"];
+                            if (token != null && token.Type != JTokenType.Null)
+                            {
+                                TempData["MaxError"] = (string)(JObject["ModelState"]["MaxAttendance"][0]);
+                            }
                         }
                         TempData["StatusCode"] = (int)errorResponse.StatusCode;
                     }
@@ -535,7 +568,7 @@ namespace EventBox.Controllers
             }
             else
             {
-                return RedirectToAction("Home", "Index", new { area = "" });
+                return RedirectToAction("Create");
             }
         }
 
@@ -543,7 +576,7 @@ namespace EventBox.Controllers
         [Route("Delete")]
         public ActionResult Delete(int id)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/DeleteEvent?id=" + id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/DeleteEvent?id=" + id);
             httpWebRequest.Method = "DELETE";
             httpWebRequest.Accept = "application/json";
             httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
@@ -584,7 +617,7 @@ namespace EventBox.Controllers
         [Route("Join")]
         public ActionResult JoinEvent(string id)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/JoinEvent?id=" + id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/JoinEvent?id=" + id);
             httpWebRequest.Method = "PUT";
             httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             httpWebRequest.ContentType = "application/json";
@@ -629,7 +662,7 @@ namespace EventBox.Controllers
         [Route("Leave")]
         public ActionResult LeaveEvent(string id)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/LeaveEvent?id=" + id);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Events/LeaveEvent?id=" + id);
             httpWebRequest.Method = "PUT";
             httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
             httpWebRequest.ContentType = "application/json";

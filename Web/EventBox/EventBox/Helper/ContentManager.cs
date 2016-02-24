@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace EventBox.Helper
+﻿namespace EventBox.Helper
 {
     public static class ContentManager
     {
         public static string APIUrl = "http://localhost/YTicket.API2/";
+        public static string WebServerUrl = "http://localhost/EventBox/";
     }
 }

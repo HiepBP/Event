@@ -53,7 +53,8 @@ namespace EventBox.Controllers
         [Route("Search")]
         public ActionResult SearchEvent(int categoryID)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost/YTicket.API2/api/Events/GetByCategoryPaging?categoryID=" + categoryID + "&page=1&pageSize=12");
+            string api = ContentManager.APIUrl + "api/Events/GetByCategoryPaging?categoryID=" + categoryID + "&page=1&pageSize=12";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(api);
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "GET";
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();

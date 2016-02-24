@@ -1,4 +1,5 @@
 ﻿@using EventBox.Models;
+@using EventBox.Helper;
 
 @{
     var events = (List<Event>)ViewData["Events"];
@@ -34,22 +35,22 @@
     <ul class="pagination">
         @if ((string)ViewData["FirstPage"] != "")
         {
-            var url = "http://localhost/EventBox/Events/SearchPaging?url=" + (string)ViewData["FirstPage"];
+            var url = ContentManager.WebServerUrl + "Events/SearchPaging?url=" + (string)ViewData["FirstPage"];
             <li><a href="@url">First Page</a></li>
         }
         @if ((string)ViewData["PrevPage"] != "")
         {
-            var url = "http://localhost/EventBox/Events/SearchPaging?url=" + (string)ViewData["PrevPage"];
+            var url = ContentManager.WebServerUrl + "Events/SearchPaging?url=" + (string)ViewData["PrevPage"];
             <li><a href="@url"><<</a></li>
         }
         @if ((string)ViewData["NextPage"] != "")
         {
-            var url = "http://localhost/EventBox/Events/SearchPaging?url=" + (string)ViewData["NextPage"];
+            var url = ContentManager.WebServerUrl + "Events/SearchPaging?url=" + (string)ViewData["NextPage"];
             <li><a href="@url">>></a></li>
         }
         @if ((string)ViewData["LastPage"] != "")
         {
-            var url = "http://localhost/EventBox/Events/SearchPaging?url=" + (string)ViewData["LastPage"];
+            var url = ContentManager.WebServerUrl + "Events/SearchPaging?url=" + (string)ViewData["LastPage"];
             <li><a href="@url">Last Page</a></li>
         }
 
