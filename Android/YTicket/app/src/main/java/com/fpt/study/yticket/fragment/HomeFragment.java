@@ -66,7 +66,6 @@ public class HomeFragment extends ListFragment {
         super.onResume();
         Log.d("HomeFragment", "onResume called");
         service = ServiceGenerator.createService(HomeService.class);
-        getAll(1, PAGE_SIZE);
     }
 
     @Override
@@ -118,15 +117,14 @@ public class HomeFragment extends ListFragment {
         listView.setOnScrollListener(new InfiniteScrollListener(0) {
             @Override
             public void loadMore(final int page, int totalItemsCount) {
-                //delay 3s then load more
+                //delay 2s then load more
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         getAll(page, PAGE_SIZE);
                     }
-                }, 1000);
-
+                }, 2000);
             }
         });
 
@@ -143,10 +141,8 @@ public class HomeFragment extends ListFragment {
                     events.addAll(response.body());
                     adapter = new EventAdapter(events);
                     setListAdapter(adapter);
-
                 }
             }
-
             @Override
             public void onFailure(Call<List<Event>> call, Throwable t) {
 

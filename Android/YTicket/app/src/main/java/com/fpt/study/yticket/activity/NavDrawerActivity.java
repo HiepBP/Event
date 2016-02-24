@@ -19,13 +19,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fpt.study.yticket.Adapter.NavListAdapter;
 import com.fpt.study.yticket.R;
+import com.fpt.study.yticket.fragment.EventFragment;
 import com.fpt.study.yticket.model.NavItem;
 import com.fpt.study.yticket.model.Token;
 import com.fpt.study.yticket.model.User;
-import com.fpt.study.yticket.service.EventService;
 import com.fpt.study.yticket.service.UserService;
 import com.fpt.study.yticket.util.ServiceGenerator;
 import com.google.gson.Gson;
@@ -47,6 +48,7 @@ public class NavDrawerActivity extends ActionBarActivity {
     TextView profile_username;
     Button btn_profile_login;
     Button btn_profile_signup;
+
 
     List<NavItem> navItemList;
     List<Fragment> fragmentList;
@@ -91,6 +93,7 @@ public class NavDrawerActivity extends ActionBarActivity {
         btn_profile_login = (Button) findViewById(R.id.btn_profile_login);
         btn_profile_signup = (Button) findViewById(R.id.btn_profile_signup);
 
+
         btn_profile_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,20 +109,24 @@ public class NavDrawerActivity extends ActionBarActivity {
         });
 
         listNav = (ListView) findViewById(R.id.nav_list);
-
+        fragmentList = new ArrayList<Fragment>();
         navItemList = new ArrayList<NavItem>();
-        navItemList.add(new NavItem("Home", "Home page", R.drawable.home_icon));
-        navItemList.add(new NavItem("User for DEMO", "List of user", R.drawable.user_image));
-        navItemList.add(new NavItem("About Us", "", R.drawable.about_us));
-        navItemList.add(new NavItem("Logout", "", R.drawable.logout));
-
         final NavListAdapter navListAdapter =
                 new NavListAdapter(getApplicationContext(), R.layout.item_nav_list, navItemList);
-
         listNav.setAdapter(navListAdapter);
-        fragmentList = new ArrayList<Fragment>();
+
+        //add Home to nav bar
+        navItemList.add(new NavItem("Home", "Home page", R.drawable.home_icon));
         fragmentList.add(new HomeActivity().createFragment());
-        fragmentList.add(new UserActivity().createFragment());
+
+        //add noti to nav bar
+        navItemList.add(new NavItem("Notification", "", R.drawable.noti));
+        fragmentList.add(new NotificationActivity().createFragment());
+
+        //add about us to nav bar
+        navItemList.add(new NavItem("About Us", "", R.drawable.about_us));
+        //add logout to nav bar
+        navItemList.add(new NavItem("Logout", "", R.drawable.logout));
 
 
         //load HomeFragment as default
@@ -127,20 +134,19 @@ public class NavDrawerActivity extends ActionBarActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.main_contain, fragmentList.get(0))
                 .commit();
-
         setTitle(navItemList.get(0).getTitle());
         listNav.setItemChecked(0, true);
         drawerLayout.closeDrawer(drawerPane);
 
 
-        //set OnClickListener for each items
+        //set OnClickListener for each items in nav bar
         listNav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 String itemName = navItemList.get(position).getTitle().toLowerCase();
-                switch(itemName){
-                    case "logout":{
+                switch (itemName) {
+                    case "logout": {
                         Call<Void> call = userService.logout();
                         call.enqueue(new Callback<Void>() {
                             @Override
@@ -160,12 +166,12 @@ public class NavDrawerActivity extends ActionBarActivity {
                         });
                         break;
                     }
-                    case "about us":{
+                    case "about us": {
                         Intent intent = new Intent(getApplication(), AboutUsActivity.class);
                         startActivity(intent);
                         break;
                     }
-                    default:{
+                    default: {
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.main_contain, fragmentList.get(position))
@@ -177,16 +183,6 @@ public class NavDrawerActivity extends ActionBarActivity {
                         break;
                     }
                 }
-
-//                if (navItemList.get(position).getTitle().equalsIgnoreCase("logout")) {
-//
-//                }
-//                else if (navItemList.get(position).getTitle().equalsIgnoreCase("about us")){
-//
-//                }
-//                else {
-//
-//                }
             }
         });
 
@@ -215,11 +211,13 @@ public class NavDrawerActivity extends ActionBarActivity {
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getCurrentUser();
             }
         });
         profile_username.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getCurrentUser();
             }
         });
 
@@ -227,6 +225,30 @@ public class NavDrawerActivity extends ActionBarActivity {
 
     }
 
+    public void getCurrentUser() {
+        Call<User> call = userService.getCurrentUser();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccess()) {
+                    Log.d(TAG, "getCurrentUser called");
+                    User user = response.body();
+                    Intent intent = new Intent(getApplication(), UserDetailActivity.class);
+                    intent.putExtra("userID", user.getID());
+
+                    getApplication().startActivity(intent);
+                } else {
+                    Log.d(TAG, "getCurrentUser failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d(TAG, "getCurrentUser onfailure called");
+                Toast.makeText(getParent(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private void onClickProfileButtonLogin(View v) {
         Intent intent = new Intent(this, LoginActivity.class);

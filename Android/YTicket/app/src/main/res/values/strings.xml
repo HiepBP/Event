@@ -14,9 +14,11 @@
     <string name="header">YTicket</string>
     <string name="footer">Contact: abc@fpt.edu.vn</string>
     <string name="fragment_home_button_join">Join</string>
+    <string name="fragment_event_button_leave">Leave</string>
     <string name="fragment_home_button_edit">Edit</string>
     <string name="fragment_home_button_delete">Delete</string>
     <string name="drawer_opened">Drawer Opened</string>
     <string name="drawer_closed">Drawer Closed</string>
     <string name="title_activity_about_us">AboutUsActivity</string>
+    <string name="title_activity_notification">NotificationActivity</string>
 </resources>

@@ -9,17 +9,17 @@ import com.google.gson.annotations.SerializedName;
 public class EventUserStatus {
     @SerializedName("Status")
     @Expose
-    private String Status;
+    private Boolean Status;
 
     @SerializedName("Action")
     @Expose
     private String Action;
 
-    public String getStatus() {
+    public Boolean getStatus() {
         return Status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Boolean status) {
         Status = status;
     }
 

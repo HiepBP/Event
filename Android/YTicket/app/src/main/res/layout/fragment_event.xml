@@ -37,6 +37,7 @@
                 android:id="@+id/fragment_event_edittext_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:editable="false"
                 android:layout_below="@id/fragment_event_id" />
 
         </RelativeLayout>
@@ -109,6 +110,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_home_button_join" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/fragment_event_button_leave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_event_button_leave" />
 
         </RelativeLayout>
 
