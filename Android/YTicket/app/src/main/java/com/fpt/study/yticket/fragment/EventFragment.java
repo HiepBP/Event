@@ -4,7 +4,9 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +53,7 @@ public class EventFragment extends Fragment {
     Button btnEventJoin;
     Button btnEventEdit;
     Button btnEventDelete;
+    Button btnEventLeave;
     EventService eventService;
     UserService userService;
 
@@ -72,7 +75,6 @@ public class EventFragment extends Fragment {
         Log.d(TAG, "onCreate called");
 
 
-
         Gson gson = new Gson();
 
         SharedPreferences pref = getActivity().getSharedPreferences(SHAREDPREFERENCES, Context.MODE_PRIVATE);
@@ -88,7 +90,6 @@ public class EventFragment extends Fragment {
             isLogin = true;
         }
     }
-
 
 
     @Override
@@ -161,6 +162,7 @@ public class EventFragment extends Fragment {
             }
         });
         getCurrentUser();
+        getEventUserStatus(eventId);
 
 
         btnEventJoin = (Button) v.findViewById(R.id.fragment_event_button_join);
@@ -182,6 +184,13 @@ public class EventFragment extends Fragment {
             }
         });
 
+        btnEventLeave = (Button) v.findViewById(R.id.fragment_event_button_leave);
+        btnEventLeave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveEvent(eventId);
+            }
+        });
 
         return v;
     }
@@ -217,6 +226,14 @@ public class EventFragment extends Fragment {
             @Override
             public void onResponse(Call<EventUserStatus> call, Response<EventUserStatus> response) {
                 eventUserStatus = response.body();
+                if (eventUserStatus.getStatus()) {
+                    btnEventJoin.setVisibility(View.GONE);
+                    btnEventLeave.setVisibility(View.VISIBLE);
+                } else {
+                    btnEventJoin.setVisibility(View.VISIBLE);
+                    btnEventLeave.setVisibility(View.GONE);
+
+                }
             }
 
             @Override
@@ -252,12 +269,31 @@ public class EventFragment extends Fragment {
         });
     }
 
-    public void joinEvent(int eventId) {
+    public void joinEvent(final int eventId) {
         Call<Void> call = eventService.joinEvent(eventId);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                getEventUserStatus(eventId);
                 Toast.makeText(getActivity(), "Join successfully", Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
+    }
+
+    public void leaveEvent(final int eventId) {
+        Call<Void> call = eventService.leaveEvent(eventId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                getEventUserStatus(eventId);
+                Toast.makeText(getActivity(), "Leave successfully", Toast.LENGTH_SHORT)
                         .show();
             }
 
@@ -278,16 +314,19 @@ public class EventFragment extends Fragment {
                     creator = response.body();
                     Log.d(TAG, user.getUsername());
                     Log.d(TAG, creator.getUsername());
-                    if (user.getID() != creator.getID()) {
-                        Log.d(TAG, "this event is not created by this user");
-                        btnEventEdit.setVisibility(View.GONE);
-                        btnEventDelete.setVisibility(View.GONE);
+                    if (user.getID() == creator.getID()) {
+                        Log.d(TAG, "this event is created by this user");
+                        btnEventLeave.setVisibility(View.GONE);
+                        btnEventJoin.setVisibility(View.GONE);
                     }
 
                 } else {
                     Log.d(TAG, "not succ");
                     btnEventEdit.setVisibility(View.GONE);
                     btnEventDelete.setVisibility(View.GONE);
+                    disableEditText(etxtEventName);
+                    disableEditText(etxtEventTime);
+                    disableEditText(etxtEventPlace);
                 }
             }
 
@@ -300,7 +339,7 @@ public class EventFragment extends Fragment {
     }
 
     public void updateEvent(int id, Event event) {
-        Log.d(TAG, event.getID()+"");
+        Log.d(TAG, event.getID() + "");
         Log.d(TAG, event.getName());
         Log.d(TAG, event.getTime());
         Log.d(TAG, event.getPlace());
@@ -312,7 +351,7 @@ public class EventFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), EventActivity.class);
                     intent.putExtra(EXTRA_EVENT_ID, eventId);
                     startActivity(intent);
-                    Toast.makeText(getActivity(),"Update successfully", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), "Update successfully", Toast.LENGTH_SHORT);
                 }
             }
 
@@ -330,7 +369,7 @@ public class EventFragment extends Fragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccess()) {
                     Log.d(TAG, "Delete successfully");
-                }else {
+                } else {
                     Log.d(TAG, "Delete not successfully");
                 }
             }
@@ -340,5 +379,11 @@ public class EventFragment extends Fragment {
                 Log.d(TAG, "Delete Failure");
             }
         });
+    }
+
+    private void disableEditText(EditText editText) {
+        editText.setFocusable(false);
+        editText.setCursorVisible(false);
+        editText.setKeyListener(null);
     }
 }
