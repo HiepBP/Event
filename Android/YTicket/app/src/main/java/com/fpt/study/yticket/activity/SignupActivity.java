@@ -51,6 +51,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+
         editEmail = (EditText) findViewById(R.id.edit_email);
         editPassword = (EditText) findViewById(R.id.edit_password);
         editConfirmPassword = (EditText) findViewById(R.id.edit_confirm_password);
@@ -82,7 +83,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccess()) {
-                    Log.v("signup" , "success");
+                    Log.v("signup", "success");
 
                     Toast.makeText(SignupActivity.this, "Sign up successful!!!", Toast.LENGTH_LONG)
                             .show();
@@ -123,14 +124,12 @@ public class SignupActivity extends AppCompatActivity {
                     }
 
                     if (!blankError.isEmpty()) {
-                        if (blankError.contains("Email") || blankError.contains("Name"))
-                        {
+                        if (blankError.contains("Email") || blankError.contains("Name")) {
                             editEmail.setText("");
                             editEmail.setHint(blankError);
                             editEmail.setHintTextColor(getResources().getColor(R.color.colorRed));
                         }
-                        if (blankError.contains("password") || blankError.contains("Password"))
-                        {
+                        if (blankError.contains("password") || blankError.contains("Password")) {
                             editPassword.setText("");
                             editConfirmPassword.setText("");
                             editPassword.setHint(blankError);
@@ -155,7 +154,7 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.v("signup" , "failure");
+                Log.v("signup", "failure");
                 Toast.makeText(SignupActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
