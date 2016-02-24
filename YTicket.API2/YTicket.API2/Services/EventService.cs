@@ -304,14 +304,14 @@ namespace YTicket.API2.Services
             }
 
             //Create notification
-            var list = _userRespository.GetJoinedUserPaging(e, 1, (int)e.MaxAttendance);
+            var list = _userRespository.GetJoinedUser(e);
             foreach (var item in list)
             {
                 User u = new User
                 {
                     ID = item.ID
                 };
-                _notificationRespository.CreateNotification(u, "Hey guess what!!! [Event Name] has been updated, check it out now!");
+                _notificationRespository.CreateNotification(u, "Hey guess what!!! " + e.Name + " has been updated, check it out now!");
             }
 
             return true;
@@ -350,14 +350,14 @@ namespace YTicket.API2.Services
             }
 
             //Create notification
-            var list = _userRespository.GetJoinedUserPaging(e, 1, (int)e.MaxAttendance);
+            var list = _userRespository.GetJoinedUser(e);
             foreach (var item in list)
             {
                 User u = new User
                 {
                     ID = item.ID
                 };
-                await _notificationRespository.CreateNotificationAsync(u, "Hey guess what!!!" + e.Name + "has been updated, check it out now!");
+                await _notificationRespository.CreateNotificationAsync(u, "Hey guess what!!! " + e.Name + " has been updated, check it out now!");
             }
 
             return true;
@@ -381,7 +381,7 @@ namespace YTicket.API2.Services
                 return false;
             }
 
-            var list = _userRespository.GetJoinedUserPaging(@event, 1, (int)@event.MaxAttendance);
+            var list = _userRespository.GetJoinedUser(@event);
 
             // Database logic
             try
@@ -400,7 +400,7 @@ namespace YTicket.API2.Services
                 {
                     ID = item.ID
                 };
-                _notificationRespository.CreateNotification(u, "It's too bad!!!" + @event.Name + "has been cancelled.");
+                _notificationRespository.CreateNotification(u, "It's too bad!!! " + @event.Name + " has been cancelled.");
             }
 
             return true;
@@ -424,7 +424,7 @@ namespace YTicket.API2.Services
                 return false;
             }
 
-            var list = _userRespository.GetJoinedUserPaging(@event, 1, (int)@event.MaxAttendance);
+            var list = _userRespository.GetJoinedUser(@event);
 
             // Database logic
             try
@@ -443,7 +443,7 @@ namespace YTicket.API2.Services
                 {
                     ID = item.ID
                 };
-                _notificationRespository.CreateNotification(u, "It's too bad!!!" + @event.Name + "has been cancelled.");
+                _notificationRespository.CreateNotification(u, "It's too bad!!! " + @event.Name + " has been cancelled.");
             }
 
             return true;

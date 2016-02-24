@@ -68,11 +68,12 @@
                                                 }
                                             </td>
                                         </tr>
+                                        @if (UserDetail.ID == Convert.ToInt32(Session["CurrentUserID"]))
+                                        {
+                                            <tr>
+                                                <td>
 
-                                        <tr>
-                                            <td>
-                                                @if (UserDetail.ID == Convert.ToInt32(Session["CurrentUserID"]))
-                                                {
+
                                                     <form method="get" action="/EventBox/Users/Update">
                                                         <input type="hidden" name="id" value="@UserDetail.ID" />
                                                         <input type="hidden" name="username" value="@UserDetail.Username" />
@@ -82,14 +83,15 @@
                                                         <input type="hidden" name="image" value="@UserDetail.Image" />
                                                         <button>Cập nhật thông tin</button>
                                                     </form>
-                                                }
-                                            </td>
-                                            <td>
-                                                <form method="get" action="/EventBox/Users/ChangePassword">
-                                                    <button>Đổi mật khẩu</button>
-                                                </form>
-                                            </td>
-                                        </tr>
+
+                                                </td>
+                                                <td>
+                                                    <form method="get" action="/EventBox/Users/ChangePassword">
+                                                        <button>Đổi mật khẩu</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

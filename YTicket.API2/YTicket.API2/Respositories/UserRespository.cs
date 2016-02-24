@@ -74,6 +74,23 @@ namespace YTicket.API2.Respositories
             return user;
         }
 
+        public IEnumerable<UserDTO> GetJoinedUser(Event @event)
+        {
+            var users = Context.Users
+                .Where(p => p.EventUsers.Any(i => i.EventID == @event.ID && i.RoleID == 3))
+                .Select(p => new UserDTO
+                {
+                    ID = p.ID,
+                    Username = p.Username,
+                    Image = p.Image
+                })
+                .OrderBy(o => o.ID);
+
+            TotalResults = users.Count();
+
+            return users;
+        }
+
         public IEnumerable<UserDTO> GetJoinedUserPaging(Event @event, int pageNumber, int pageSize)
         {
             var users = Context.Users
@@ -177,6 +194,7 @@ namespace YTicket.API2.Respositories
     {
         IEnumerable<UserDTO> GetAllPaging(int pageNumber, int pageSize);
         IEnumerable<UserDTO> GetByNamePaging(string name, int pageNumber, int pageSize);
+        IEnumerable<UserDTO> GetJoinedUser(Event curEvent);
         IEnumerable<UserDTO> GetJoinedUserPaging(Event curEvent, int pageNumber, int pageSize);
         User GetByUsername(string username);
         Task<User> GetByUsernameAsync(string username);
