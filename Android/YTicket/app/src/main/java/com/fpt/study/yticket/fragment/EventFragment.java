@@ -348,9 +348,6 @@ public class EventFragment extends Fragment {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccess()) {
-                    Intent intent = new Intent(getActivity(), EventActivity.class);
-                    intent.putExtra(EXTRA_EVENT_ID, eventId);
-                    startActivity(intent);
                     Toast.makeText(getActivity(), "Update successfully", Toast.LENGTH_SHORT);
                 }
             }
