@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.activity.EventActivity;
 import com.fpt.study.yticket.activity.LoginActivity;
+import com.fpt.study.yticket.activity.UserDetailActivity;
 import com.fpt.study.yticket.model.Token;
 import com.fpt.study.yticket.model.User;
 import com.fpt.study.yticket.service.EventService;
@@ -136,8 +137,8 @@ public class UserDetailFragment extends Fragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccess()) {
                     Log.d(TAG, "update success");
-                    Intent intent = new Intent(getActivity(), UserDetailFragment.class);
-                    intent.putExtra("userid", userid);
+                    Intent intent = new Intent(getActivity(), UserDetailActivity.class);
+                    intent.putExtra("userID", userid);
                     startActivity(intent);
                 }
             }

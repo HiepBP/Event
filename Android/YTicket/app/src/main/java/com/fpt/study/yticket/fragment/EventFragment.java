@@ -137,6 +137,7 @@ public class EventFragment extends Fragment {
         eventImage = (ImageView) v.findViewById(R.id.fragment_event_image_image);
 
         btnEventEdit = (Button) v.findViewById(R.id.fragment_home_button_edit);
+        btnEventEdit.setVisibility(View.GONE);
         btnEventEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +156,7 @@ public class EventFragment extends Fragment {
             }
         });
         btnEventDelete = (Button) v.findViewById(R.id.fragment_home_button_delete);
+        btnEventDelete.setVisibility(View.GONE);
         btnEventDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +165,6 @@ public class EventFragment extends Fragment {
         });
         getCurrentUser();
         getEventUserStatus(eventId);
-
 
         btnEventJoin = (Button) v.findViewById(R.id.fragment_event_button_join);
         getEventByID(eventId);
