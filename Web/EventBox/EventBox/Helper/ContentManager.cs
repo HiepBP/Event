@@ -7,6 +7,6 @@ namespace EventBox.Helper
 {
     public static class ContentManager
     {
-        public static string APIUrl = "";
+        public static string APIUrl = "http://localhost/YTicket.API2/";
     }
 }

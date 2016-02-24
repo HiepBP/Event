@@ -25,16 +25,6 @@
  	background-color: #eee;
 }
 
-html {
-	height: 100%;
-	background: #f3f3f3;
-	background: -moz-linear-gradient(top, #f3f3f3 0%, #ffffff 50%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3f3f3), color-stop(50%,#ffffff));
-	background: -webkit-linear-gradient(top, #f3f3f3 0%,#ffffff 50%);
-	background: -o-linear-gradient(top, #f3f3f3 0%,#ffffff 50%);
-	background: -ms-linear-gradient(top, #f3f3f3 0%,#ffffff 50%);
-	background: linear-gradient(top, #f3f3f3 0%,#ffffff 50%);
-	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#ffffff',GradientType=0 ); }
 
 header {
 	margin-bottom: 20px;
@@ -155,23 +145,18 @@ details.open > summary:before {
 	float: right;
 }
 
-.table-add-event td{
-    text-align:center;
-}
-
-input[type=text],[type=number],[type=datetime-local] {
-   
+#name, #info, #time, #place,#maxAttendance,#requireAttendance, #price {
+   margin-left:150px;
    width: 250px;
 }
-input[type=file]{
 
-margin-left:520px;
+input[type=checkbox] {
+     margin-left:150px;
 }
 
 
 
-
-/*paging*/
+/*#region paging*/
 
 ul.pagination {
     display: inline-block;
@@ -197,4 +182,5 @@ ul.pagination li a.active {
 }
 
 ul.pagination li a:hover:not(.active) {background-color: #84E5DE;}
-/*paging*/
+/*#endregion paging*/
+

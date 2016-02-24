@@ -13,8 +13,7 @@
 
 <html>
 <head>
-    <meta name="generator"
-          content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+
     <meta charset="UTF-8" />
     <script src=@Url.Content("~/Scripts/modernizr.js") type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href=@Url.Content("~/Content/normalize.css") />
@@ -23,14 +22,66 @@
 <body>
     @using (Html.BeginForm("Update", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <input type="text" name="username" placeholder="Tên người dùng" value="@UserDetail.Username" required><br />
-        <input type="text" name="email" placeholder="Email" value="@UserDetail.Email" readonly><br />
-        <input type="text" name="address" placeholder="Địa chỉ" value="@UserDetail.Address"><br />
-        <input type="text" name="phone" placeholder="Số điện thoại" value="@UserDetail.Phone"><br />
-        <input type="file" id="file" name="image" accept="image/*"><br />
-        <input type="hidden" name="id" value="@UserDetail.ID" /><br />
-        <input type="hidden" name="oldValueImage" value="@UserDetail.Image" /><br />
-        <button type="submit" id="upload">Cập nhật sự kiện</button><br />
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@UserDetail.Username</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="@UserDetail.Image" class="img-circle img-responsive"> </div>
+
+
+                                <div class=" col-md-9 col-lg-9 ">
+                                    <table class="table table-user-information">
+                                        <tbody>
+
+                                            <tr>
+                                                <td>Tên người dùng: </td>
+                                                <td><input type="text" name="username" placeholder="Tên người dùng" value="@UserDetail.Username" required></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Email: </td>
+                                                <td><input type="text" name="email" placeholder="Email" value="@UserDetail.Email" readonly></td>
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>Địa chỉ: </td>
+                                                <td><input type="text" name="address" placeholder="Địa chỉ" value="@UserDetail.Address"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Số điện thoại</td>
+                                                <td><input type="text" name="phone" placeholder="Số điện thoại" value="@UserDetail.Phone"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ảnh đại diện</td>
+                                                <td><input type="file" id="file" name="image" accept="image/*"></td>
+
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td><button type="submit" id="upload">Cập nhật thông tin</button></td>
+
+                                            </tr>
+                                            <input type="hidden" name="id" value="@UserDetail.ID" />
+
+                                            <input type="hidden" name="oldValueImage" value="@UserDetail.Image" />
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     }
 </body>
 </html>

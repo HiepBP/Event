@@ -10,7 +10,8 @@
     var JoinedUsers = (List<User>)ViewData["Users"];
     var CreatedUsers = (User)ViewData["CreatedUser"];
     var UserStatus = false;
-    if(ViewData["UserStatus"]!= null) {
+    if (ViewData["UserStatus"] != null)
+    {
         UserStatus = (bool)ViewData["UserStatus"];
     }
     string disabled = "disabled";
@@ -46,7 +47,10 @@
             <img src="@EventDetail.Image" />
         </figure>
         <h3>Số người tham gia : @JoinedUsers.Count()</h3>
-        <h3>Người tạo sự kiện : @CreatedUsers.Username</h3>
+        @if (ViewData["CreatedUser"] != null)
+        {
+            <h3>Người tạo sự kiện : @CreatedUsers.Username</h3>
+        }
         <section>
 
             <details>
@@ -93,8 +97,9 @@
                     <button @disabled>Tham gia ngay</button>
                 </form>
             }
-            else
+            else if(CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]))
             {
+
                 <h3>Bạn đã tham gia sự kiện</h3>
             }
             @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && UserStatus)

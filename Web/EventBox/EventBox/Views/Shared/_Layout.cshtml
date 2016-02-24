@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css'>
+
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
     <title>@ViewBag.Title</title>
     <link href="~/Content/style.css" rel="stylesheet" />
     <link href="~/Content/styles.css" rel="stylesheet" />
 
 </head>
 <body>
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-custom">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="http://localhost/EventBox/">EVENT BOX</a>
@@ -21,8 +24,8 @@
             <div style="margin-left: 2em" class="nav navbar-nav">
                 <div class="search">
                     <form method="GET" action="/EventBox/Events/Search">
-                        <input class="form-control input-sm" maxlength="64" placeholder="Search" name="searchValue" />
-                        <button type="submit" class="btn btn-primary btn-sm" id="btn_Search">Search</button>
+                        <input class="form-control input-sm" maxlength="64" placeholder="Tìm kiếm" name="searchValue" />
+                        <button type="submit" class="btn btn-primary btn-sm" id="btn_Search">Tìm kiếm</button>
                     </form>
                 </div>
             </div>
@@ -30,33 +33,62 @@
                 @if (Session["CurrentUserID"] != null || Convert.ToString(Session["CurrentUserID"]) != string.Empty)
                 {
                     string url = "http://localhost/EventBox/Users/Detail?id=" + Session["CurrentUserID"];
-                    <li>
-                        <a href="@url"><h5>@Session["Username"]</h5></a>
+
+                    <li id="notification_li">
+                        <span id="notification_count">3</span>
+                        <a href="#" id="notificationLink"><i class=" glyphicon glyphicon-envelope"></i></a>
+                        <div id="notificationContainer">
+                            <div id="notificationTitle">Notifications</div>
+                            <div id="notificationsBody" class="notifications"></div>
+                        </div>
                     </li>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#notificationLink").click(function () {
+                                $("#notificationContainer").fadeToggle(300);
+                                $("#notification_count").fadeOut("slow");
+                                return false;
+                            });
+
+                            //Document Click
+                            $(document).click(function () {
+                                $("#notificationContainer").hide();
+                            });
+                            //Popup Click
+                            $("#notificationContainer").click(function () {
+                                return false
+                            });
+
+                        });
+                    </script>
+
+                    <li>
+                        <a href="@url">@Session["Username"]</a>
+                    </li>
+
                     <li>
                         <form action="/EventBox/Users/Logout">
-                            <button type="submit" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Logout" name="btn_Logout"> Thoat</button>
+                            <button type="submit" class="btn btn-primary btn-sm glyphicon glyphicon-log-out" id="btn_Logout" name="btn_Logout"> Thoát</button>
                         </form>
                     </li>
                     <li>
                         <form method="GET" action="/EventBox/Events/Create">
-                            <button type="submit" class="btn btn-info btn-sm glyphicon glyphicon-log-in">Thêm sự kiện</button>
+                            <button type="submit" class="btn btn-primary btn-sm glyphicon glyphicon-plus" id="btn_Add" name="btn_Add">Thêm sự kiện</button>
                         </form>
                     </li>
                 }
                 else
                 {
                     <li>
-                        <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-user" id="btn_Reg" name="btn_Reg" data-toggle="modal" data-target="#myModal"> Đăng ký</button>
+                        <button type="button" class="btn btn-primary btn-sm glyphicon glyphicon-user" id="btn_Reg" name="btn_Reg" data-toggle="modal" data-target="#myModal"> Đăng ký</button>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-info btn-sm glyphicon glyphicon-log-in" id="btn_Login" name="btn_Login" data-toggle="modal" data-target="#ModalDangNhap"> Đăng nhập</button>
+                        <button type="button" class="btn btn-primary btn-sm glyphicon glyphicon-log-in" id="btn_Login" name="btn_Login" data-toggle="modal" data-target="#ModalDangNhap"> Đăng nhập</button>
                     </li>
                 }
             </ul>
         </div>
     </nav>
-
 
     <!-- Modal DangKy -->
     <div id="myModal" class="modal fade" role="dialog">
@@ -111,7 +143,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h1>Đăng nhập</h1><br>
                 <!--<form method="post" action="/EventBox/Users/Login">-->
-                <input type="text" id="loginEmail" name="email" placeholder="Email" ">
+                <input type="text" id="loginEmail" name="email" placeholder="Email">
                 <input type="password" id="loginPassword" name="password" placeholder="Mật khẩu">
                 <input type="submit" id="login" class="login login-submit" value="Đăng Nhập">
                 <h5 id="ErrorLogin"></h5>
@@ -158,9 +190,8 @@
         </div>
     </div>
     <!-- Modal DangNhap-->
-    <!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
     @RenderBody()
+
+
 </body>
 </html>

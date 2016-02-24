@@ -26,39 +26,32 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', end
     float: left;
     line-height: 22px;
 }
-#btn_Search, #btn_Login{
-	position: absolute;
-    right: 0;
+#btn_Search, #btn_Login,#btn_Add,#btn_Reg,#btn_Logout {
     top: 5px;
+    
 }
-#btn_Reg {
-	position: absolute;
-	right: 110px;
-    top: 5px;
-}
+ 
 
-.form-horizontal {
-	background-color: #DBEEF0;
-	width: 75%;
-}
 #passwordinput, #textinput {
 	margin-left: 85px;
 }
 .pages {
 	
-	background: #b3dced; /* Old browsers */
+background: #b3dced; /* Old browsers */
 background: -moz-linear-gradient(left, #b3dced 0%, #29b8e5 50%, #bce0ee 100%); /* FF3.6-15 */
 background: -webkit-linear-gradient(left, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(to right, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 
 }
 
+
 .carousel-inner {
-	width: 100%;
-	height: 400px;
-	margin-left: 400px;
+	width: 50%;
+    margin: auto;
 	
 }
+/*#region Login*/
+
 .login-card {
   padding: 40px;
   width: 300px;
@@ -70,9 +63,6 @@ background: linear-gradient(to right, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* W
   overflow: hidden;
   
 }
-
-}
-
 .login-card h1 {
   font-weight: 100;
   text-align: center;
@@ -158,8 +148,9 @@ background: linear-gradient(to right, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* W
   text-align: center;
   font-size: 12px;
 }
+/*#endregion Login*/
 
-/* Image*/
+/*#region Image*/
 ul.rig {
 	list-style: none;
 	font-size: 0px;
@@ -197,3 +188,194 @@ ul.rig li p {
 ul.rig.columns-3 li {
 	width: 30.83%; /* this value + 2.5 should = 33% */
 }
+/*#endregion Image*/
+
+/*#region Navbar*/
+
+.navbar-custom {
+  background-color: #3594ff;
+  border-color: #0072ab;
+  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#00aaff), to(#0088cc));
+  background-image: -webkit-linear-gradient(top, #00aaff, 0%, #0088cc, 100%);
+  background-image: -moz-linear-gradient(top, #00aaff 0%, #0088cc 100%);
+  background-image: linear-gradient(to bottom, #00aaff 0%, #0088cc 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00aaff', endColorstr='#ff0088cc', GradientType=0);
+  font-family: Arial;
+}
+.navbar-custom .navbar-brand {
+  color: #ffffff;
+}
+.navbar-custom .navbar-brand:hover,
+.navbar-custom .navbar-brand:focus {
+  color: #e6e6e6;
+  background-color: transparent;
+}
+.navbar-custom .navbar-text {
+  color: #ffffff;
+}
+.navbar-custom .navbar-nav > li:last-child > a {
+  border-right: 1px solid #0072ab;
+}
+.navbar-custom .navbar-nav > li > a {
+  color: #ffffff;
+  border-left: 1px solid #0072ab;
+}
+.navbar-custom .navbar-nav > li > a:hover,
+.navbar-custom .navbar-nav > li > a:focus {
+  color: #423a3a;
+  background-color: transparent;
+}
+.navbar-custom .navbar-nav > .active > a,
+.navbar-custom .navbar-nav > .active > a:hover,
+.navbar-custom .navbar-nav > .active > a:focus {
+  color: #423a3a;
+  background-color: #0072ab;
+  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#0072ab), to(#0094de));
+  background-image: -webkit-linear-gradient(top, #0072ab, 0%, #0094de, 100%);
+  background-image: -moz-linear-gradient(top, #0072ab 0%, #0094de 100%);
+  background-image: linear-gradient(to bottom, #0072ab 0%, #0094de 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0072ab', endColorstr='#ff0094de', GradientType=0);
+}
+.navbar-custom .navbar-nav > .disabled > a,
+.navbar-custom .navbar-nav > .disabled > a:hover,
+.navbar-custom .navbar-nav > .disabled > a:focus {
+  color: #cccccc;
+  background-color: transparent;
+}
+.navbar-custom .navbar-toggle {
+  border-color: #dddddd;
+}
+.navbar-custom .navbar-toggle:hover,
+.navbar-custom .navbar-toggle:focus {
+  background-color: #dddddd;
+}
+.navbar-custom .navbar-toggle .icon-bar {
+  background-color: #cccccc;
+}
+.navbar-custom .navbar-collapse,
+.navbar-custom .navbar-form {
+  border-color: #0070a8;
+}
+.navbar-custom .navbar-nav > .dropdown > a:hover .caret,
+.navbar-custom .navbar-nav > .dropdown > a:focus .caret {
+  border-top-color: #423a3a;
+  border-bottom-color: #423a3a;
+}
+.navbar-custom .navbar-nav > .open > a,
+.navbar-custom .navbar-nav > .open > a:hover,
+.navbar-custom .navbar-nav > .open > a:focus {
+  background-color: #0072ab;
+  color: #423a3a;
+}
+.navbar-custom .navbar-nav > .open > a .caret,
+.navbar-custom .navbar-nav > .open > a:hover .caret,
+.navbar-custom .navbar-nav > .open > a:focus .caret {
+  border-top-color: #423a3a;
+  border-bottom-color: #423a3a;
+}
+.navbar-custom .navbar-nav > .dropdown > a .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+@media (max-width: 767) {
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a {
+    color: #ffffff;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #423a3a;
+    background-color: transparent;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #423a3a;
+    background-color: #0072ab;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+    color: #cccccc;
+    background-color: transparent;
+  }
+}
+.navbar-custom .navbar-link {
+  color: #ffffff;
+}
+.navbar-custom .navbar-link:hover {
+  color: #423a3a;
+}
+
+/*#endregion Navbar*/
+
+/*#region Notification*/
+#nav{list-style:none;margin: 0px;
+padding: 0px;}
+#nav li {
+float: left;
+margin-right: 20px;
+font-size: 14px;
+font-weight:bold;
+}
+#nav li a{color:#333333;text-decoration:none}
+#nav li a:hover{color:#006699;text-decoration:none}
+#notification_li{position:relative}
+#notificationContainer {
+background-color: #fff;
+border: 1px solid rgba(100, 100, 100, .4);
+-webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+overflow: visible;
+position: absolute;
+top: 30px;
+margin-left: -170px;
+width: 400px;
+z-index: 1;
+display: none;
+}
+#notificationContainer:before {
+content: '';
+display: block;
+position: absolute;
+width: 0;
+height: 0;
+color: transparent;
+border: 10px solid black;
+border-color: transparent transparent white;
+margin-top: -20px;
+margin-left: 188px;
+}
+#notificationTitle {
+z-index: 1000;
+font-weight: bold;
+padding: 8px;
+font-size: 13px;
+background-color: #ffffff;
+width: 384px;
+border-bottom: 1px solid #dddddd;
+}
+#notificationsBody {
+padding: 33px 0px 0px 0px !important;
+min-height:300px;
+}
+#notificationFooter {
+background-color: #e9eaed;
+text-align: center;
+font-weight: bold;
+padding: 8px;
+font-size: 12px;
+border-top: 1px solid #dddddd;
+}
+#notification_count {
+padding: 3px 7px 3px 7px;
+background: #cc0000;
+color: #ffffff;
+font-weight: bold;
+margin-left: 30px;
+border-radius: 9px;
+position: absolute;
+font-size: 11px;
+}
+/*#endregion Notification*/
+
