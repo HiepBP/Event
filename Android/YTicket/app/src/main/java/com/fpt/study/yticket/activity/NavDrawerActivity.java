@@ -1,16 +1,15 @@
 package com.fpt.study.yticket.activity;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 
 import com.fpt.study.yticket.Adapter.NavListAdapter;
 import com.fpt.study.yticket.R;
-import com.fpt.study.yticket.fragment.EventFragment;
 import com.fpt.study.yticket.model.NavItem;
 import com.fpt.study.yticket.model.Token;
 import com.fpt.study.yticket.model.User;
@@ -32,7 +30,6 @@ import com.fpt.study.yticket.service.UserService;
 import com.fpt.study.yticket.util.ServiceGenerator;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +40,9 @@ import retrofit2.Response;
 
 public class NavDrawerActivity extends ActionBarActivity {
 
+    public static final String SHAREDPREFERENCES = "YTicketPrefs";
+    public static final String PREF_TOKEN = "UserToken";
+    public static final String TAG = "NavFragment";
     DrawerLayout drawerLayout;
     RelativeLayout drawerPane;
     ListView listNav;
@@ -50,19 +50,12 @@ public class NavDrawerActivity extends ActionBarActivity {
     TextView profile_username;
     Button btn_profile_login;
     Button btn_profile_signup;
-
     User user;
     List<NavItem> navItemList;
     List<Fragment> fragmentList;
-
     UserService userService;
     boolean isLogin;
     Token token;
-
-    public static final String SHAREDPREFERENCES = "YTicketPrefs";
-    public static final String PREF_TOKEN = "UserToken";
-    public static final String TAG = "NavFragment";
-
     ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
@@ -156,6 +149,12 @@ public class NavDrawerActivity extends ActionBarActivity {
                                 btn_profile_signup.setVisibility(View.VISIBLE);
                                 profile_image.setVisibility(View.GONE);
                                 profile_username.setVisibility(View.GONE);
+                                SharedPreferences pref = getSharedPreferences(LoginActivity
+                                                .SHAREDPREFERENCES,
+                                        MODE_PRIVATE);
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.remove(LoginActivity.PREF_TOKEN);
+                                editor.apply();
                                 Intent intent = new Intent(getApplication(), LoginActivity.class);
                                 startActivity(intent);
                             }
