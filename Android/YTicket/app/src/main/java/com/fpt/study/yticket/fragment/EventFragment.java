@@ -192,6 +192,8 @@ public class EventFragment extends Fragment {
             }
         });
 
+
+
         return v;
     }
 
@@ -255,6 +257,7 @@ public class EventFragment extends Fragment {
                     Log.d(TAG, "getCurrentUser called");
                     user = response.body();
                     getUserByEvent(eventId);
+                    Log.d(TAG, "User dang dang nhap id: "+user.getID());
                 } else {
                     Log.d(TAG, "getCurrentUser failed");
                 }
@@ -312,13 +315,25 @@ public class EventFragment extends Fragment {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccess()) {
                     creator = response.body();
+                    Log.d(TAG, "Creator dang dang nhap id: "+creator.getID());
+                    Log.d(TAG, "User dang dang nhap id: "+user.getID());
                     Log.d(TAG, user.getUsername());
                     Log.d(TAG, creator.getUsername());
                     if (user.getID() == creator.getID()) {
                         Log.d(TAG, "this event is created by this user");
                         btnEventLeave.setVisibility(View.GONE);
                         btnEventJoin.setVisibility(View.GONE);
+                        disableEditText(etxtEventName);
+                        disableEditText(etxtEventTime);
+                        disableEditText(etxtEventPlace);
+                    }else {
+                        btnEventEdit.setVisibility(View.GONE);
+                        btnEventDelete.setVisibility(View.GONE);
+                        disableEditText(etxtEventName);
+                        disableEditText(etxtEventTime);
+                        disableEditText(etxtEventPlace);
                     }
+
 
                 } else {
                     Log.d(TAG, "not succ");
