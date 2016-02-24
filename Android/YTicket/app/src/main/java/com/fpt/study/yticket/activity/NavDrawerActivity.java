@@ -270,9 +270,13 @@ public class NavDrawerActivity extends ActionBarActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccess()) {
                     User user = response.body();
-                    Picasso.with(getApplication())
-                            .load(user.getImage())
-                            .into(profile_image);
+                    if (user.getImage() == null) {
+                        profile_image.setImageResource(R.drawable.default_user);
+                    } else {
+                        Picasso.with(getApplication())
+                                .load(user.getImage())
+                                .into(profile_image);
+                    }
                     profile_username.setText(user.getUsername());
                 } else {
                     Log.d(TAG, "Get Profile failed");
