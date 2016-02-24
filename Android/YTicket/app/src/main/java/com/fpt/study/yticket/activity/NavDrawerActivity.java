@@ -65,6 +65,13 @@ public class NavDrawerActivity extends ActionBarActivity {
         setContentView(R.layout.slide_menu_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
+        profile_image = (ImageView) findViewById(R.id.profile_image);
+        profile_username = (TextView) findViewById(R.id.textview_profile_username);
+        btn_profile_login = (Button) findViewById(R.id.btn_profile_login);
+        btn_profile_signup = (Button) findViewById(R.id.btn_profile_signup);
+
 
         Gson gson = new Gson();
 
@@ -75,19 +82,15 @@ public class NavDrawerActivity extends ActionBarActivity {
         if (json.equals("")) {
             userService = ServiceGenerator.createService(UserService.class);
             isLogin = false;
+            btn_profile_login.setVisibility(View.VISIBLE);
+            btn_profile_signup.setVisibility(View.VISIBLE);
+            profile_image.setVisibility(View.GONE);
+            profile_username.setVisibility(View.GONE);
         } else {
             token = gson.fromJson(json, Token.class);
             userService = ServiceGenerator.createService(UserService.class, token);
             isLogin = true;
         }
-
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
-        profile_image = (ImageView) findViewById(R.id.profile_image);
-        profile_username = (TextView) findViewById(R.id.textview_profile_username);
-        btn_profile_login = (Button) findViewById(R.id.btn_profile_login);
-        btn_profile_signup = (Button) findViewById(R.id.btn_profile_signup);
-
 
         btn_profile_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,6 +320,10 @@ public class NavDrawerActivity extends ActionBarActivity {
         if (json.equals("")) {
             userService = ServiceGenerator.createService(UserService.class);
             isLogin = false;
+            btn_profile_login.setVisibility(View.VISIBLE);
+            btn_profile_signup.setVisibility(View.VISIBLE);
+            profile_image.setVisibility(View.GONE);
+            profile_username.setVisibility(View.GONE);
         } else {
             token = gson.fromJson(json, Token.class);
             userService = ServiceGenerator.createService(UserService.class, token);
