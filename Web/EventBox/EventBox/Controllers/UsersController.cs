@@ -18,9 +18,13 @@ namespace EventBox.Controllers
     [RoutePrefix("Users")]
     public class UsersController : Controller
     {
-        //
-        // GET: /Users/
-
+        /// <summary>
+        /// Create new user
+        /// </summary>
+        /// <param name="email">email of user</param>
+        /// <param name="password">register password</param>
+        /// <param name="confirmpassword">confirm password</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Register")]
         public ActionResult Register(string email, string password, string confirmpassword)
@@ -49,8 +53,8 @@ namespace EventBox.Controllers
                         using (var reader = new StreamReader(httpResponse.GetResponseStream()))
                         {
                             result = reader.ReadToEnd();
+                            Response.StatusCode = (int)HttpStatusCode.OK;
                         }
-                        TempData["StatusCode"] = (int)httpResponse.StatusCode;
                     }
                 }
             }
@@ -63,16 +67,23 @@ namespace EventBox.Controllers
                         using (var reader = new StreamReader(errorResponse.GetResponseStream()))
                         {
                             error = reader.ReadToEnd();
+                            Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            return Json(error);
                             //TODO: use JSON.net to parse this string and look at the error message
                         }
-                        TempData["StatusCode"] = (int)errorResponse.StatusCode;
                     }
                 }
             }
-            return RedirectToAction("Home", "Index", new { area = "" });
+            return Content("");
         }
 
 
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="email">email of user</param>
+        /// <param name="password">login password</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Login")]
         public ActionResult Login(string email, string password)
@@ -103,8 +114,19 @@ namespace EventBox.Controllers
                         {
                             result = reader.ReadToEnd();
                             JObject token = JsonConvert.DeserializeObject<JObject>(result);
+                            httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Users/GetCurrentUserDetail");
+                            httpWebRequest.Accept = "application/json";
+                            httpWebRequest.Method = "GET";
+                            httpWebRequest.Headers["Authorization"] = "Bearer " + (string)token["access_token"];
+                            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                            Stream stream = httpWebResponse.GetResponseStream();
+                            StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+                            string info = streamReader.ReadToEnd();
+                            var UserDetail = JsonConvert.DeserializeObject<JObject>(info);
                             Session["Token"] = (string)token["access_token"];
                             Session["Username"] = email;
+                            Session["CurrentUserID"] = (int)UserDetail["ID"];
+                            Response.StatusCode = (int)HttpStatusCode.OK;
                         }
                         TempData["StatusCode"] = (int)httpResponse.StatusCode;
                     }
@@ -119,15 +141,21 @@ namespace EventBox.Controllers
                         using (var reader = new StreamReader(errorResponse.GetResponseStream()))
                         {
                             error = reader.ReadToEnd();
+                            Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            return Json(error);
                             //TODO: use JSON.net to parse this string and look at the error message
                         }
                         TempData["StatusCode"] = (int)errorResponse.StatusCode;
                     }
                 }
             }
-            return RedirectToAction("Home", "Index", new { area = "" });
+            return Content("");
         }
 
+        /// <summary>
+        /// Logout / Clear session
+        /// </summary>
+        /// <returns></returns>
         [Route("Logout")]
         public ActionResult Logout()
         {
@@ -135,6 +163,9 @@ namespace EventBox.Controllers
             return RedirectToAction("Home", "Index", new { area = "" });
         }
 
+        /// <summary>
+        /// Not use now
+        /// </summary>
         [Route("Token")]
         public void Token(string token, string username)
         {
@@ -152,6 +183,11 @@ namespace EventBox.Controllers
             Session["Username"] = username;
         }
 
+        /// <summary>
+        /// Get detail of user base on user's id
+        /// </summary>
+        /// <param name="id">User's id</param>
+        /// <returns></returns>
         [Route("Detail")]
         public ActionResult Detail(int id)
         {
@@ -224,6 +260,16 @@ namespace EventBox.Controllers
             return View("~/Views/User/UserDetail.cshtml");
         }
 
+        /// <summary>
+        /// Redirect to the update user page
+        /// </summary>
+        /// <param name="id">User's ID</param>
+        /// <param name="username">User's username</param>
+        /// <param name="email">User's email</param>
+        /// <param name="address">User's address</param>
+        /// <param name="phone">User's phone</param>
+        /// <param name="image">User's image</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("Update")]
         public ActionResult Update(int id, string username, string email, string address, string phone, string image)
@@ -239,6 +285,18 @@ namespace EventBox.Controllers
             return View("~/Views/User/EditUser.cshtml");
         }
 
+        /// <summary>
+        /// Update current user
+        /// Need authozation in header
+        /// </summary>
+        /// <param name="id">User's ID</param>
+        /// <param name="username">User's update username</param>
+        /// <param name="email">User's email</param>
+        /// <param name="address">User's update address</param>
+        /// <param name="phone">User's update phone</param>
+        /// <param name="image">User's update image</param>
+        /// <param name="oldValueImage">User's current image</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Update")]
         public ActionResult Update(int id, string username, string email, string address, string phone, HttpPostedFileBase image, string oldValueImage)
@@ -343,6 +401,10 @@ namespace EventBox.Controllers
             return RedirectToAction("Detail", new { id = id });
         }
 
+        /// <summary>
+        /// Redirect to change current user's password page
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("ChangePassword")]
         public ActionResult ChangePassword()
@@ -350,6 +412,80 @@ namespace EventBox.Controllers
             return View("~/Views/User/ChangePassword.cshtml");
         }
 
+        /// <summary>
+        /// Change password of current user
+        /// Need authozation in header
+        /// </summary>
+        /// <param name="oldPassword">Current password</param>
+        /// <param name="newPassword">New password</param>
+        /// <param name="confirmPassword">Confirm new password</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("ChangePassword")]
+        public ActionResult ChangePassword(string oldPassword, string newPassword, string confirmPassword)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(ContentManager.APIUrl + "api/Account/ChangePassword");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.MediaType = "application/json";
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Headers["Authorization"] = "Bearer " + Session["Token"];
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "{\"OldPassword\":\"" + oldPassword + "\"," +
+                              "\"NewPassword\":\"" + newPassword + "\"," +
+                              "\"ConfirmPassword\":\"" + confirmPassword + "\"}";
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+            string result = "";
+            string error = "";
+            try
+            {
+                using (var httpResponse = httpWebRequest.GetResponse() as HttpWebResponse)
+                {
+                    if (httpWebRequest.HaveResponse && httpResponse != null)
+                    {
+                        using (var reader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            result = reader.ReadToEnd();
+                            Response.StatusCode = (int)HttpStatusCode.OK;
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response != null)
+                {
+                    using (var errorResponse = (HttpWebResponse)ex.Response)
+                    {
+                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                        {
+                            error = reader.ReadToEnd();
+                            Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            return Json(error);
+                            //TODO: use JSON.net to parse this string and look at the error message
+                        }
+                    }
+                }
+            }
+            return Content("");
+        }
+
+        /// <summary>
+        /// Update current user
+        /// Need authozation in header
+        /// </summary>
+        /// <param name="id">User's ID</param>
+        /// <param name="username">User's update username</param>
+        /// <param name="email">User's email</param>
+        /// <param name="address">User's update address</param>
+        /// <param name="phone">User's update phone</param>
+        /// <param name="image">User's update image</param>
+        /// <param name="oldValueImage">User's current image</param>
+        /// <returns></returns>
         [Route("Notification")]
         public ActionResult GetNotification()
         {

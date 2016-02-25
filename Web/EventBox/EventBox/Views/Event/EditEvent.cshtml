@@ -11,6 +11,10 @@
     var TimeError = (string)ViewData["TimeError"];
     var MaxError = (string)ViewData["MaxError"];
 }
+@if (Session["Token"] == null)
+{
+    Response.Redirect("http://localhost/EventBox/");
+}
 
 @functions{
 
