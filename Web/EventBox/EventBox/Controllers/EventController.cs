@@ -20,9 +20,9 @@ namespace EventBox.Controllers
     {
 
         /// <summary>
-        /// 
+        /// Return all the event that match searchValue
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="searchValue">Name of the event</param>
         /// <returns></returns>
         [Route("Search")]
         public ActionResult SearchEvent(string searchValue)
@@ -58,6 +58,11 @@ namespace EventBox.Controllers
             return View("~/Views/Event/SearchEvent.cshtml");
         }
 
+        /// <summary>
+        /// Redirect to next page
+        /// </summary>
+        /// <param name="url">URL of next page</param>
+        /// <returns></returns>
         [Route("SearchPaging")]
         public ActionResult SearchEventPaging(string url)
         {
@@ -92,6 +97,11 @@ namespace EventBox.Controllers
             return View("~/Views/Event/SearchEvent.cshtml");
         }
 
+        /// <summary>
+        /// Get event detail
+        /// </summary>
+        /// <param name="id">ID of event</param>
+        /// <returns></returns>
         [Route("Detail")]
         public ActionResult Detail(int id)
         {
@@ -208,6 +218,20 @@ namespace EventBox.Controllers
         }
 
 
+        /// <summary>
+        /// Redirect to the update event page
+        /// </summary>
+        /// <param name="id">ID of event</param>
+        /// <param name="name">Name of event</param>
+        /// <param name="info">Info of event</param>
+        /// <param name="time">Time of event</param>
+        /// <param name="place">Place of event</param>
+        /// <param name="maxAttendance">Max attendance</param>
+        /// <param name="requireAttendance">Require attendance</param>
+        /// <param name="price">Price of event</param>
+        /// <param name="image">Image of event</param>
+        /// <param name="categories">Categories of event</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("Update")]
         public ActionResult Update(int id, string name, string info, System.DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, string image, int[] categories)
@@ -263,6 +287,21 @@ namespace EventBox.Controllers
             return View("~/Views/Event/EditEvent.cshtml");
         }
 
+        /// <summary>
+        /// Update event
+        /// </summary>
+        /// <param name="id">ID of event</param>
+        /// <param name="name">Name of event</param>
+        /// <param name="info">Info of event</param>
+        /// <param name="time">Time of event</param>
+        /// <param name="place">Place of event</param>
+        /// <param name="maxAttendance">Max attendance</param>
+        /// <param name="requireAttendance">Require attendance</param>
+        /// <param name="price">Price of event</param>
+        /// <param name="image">Image of event</param>
+        /// <param name="oldValueImage">Current image of event</param>
+        /// <param name="categories">Categories of event</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Update")]
         public ActionResult Update(int id, string name, string info, System.DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, HttpPostedFileBase image, string oldValueImage, int[] categories)
@@ -408,6 +447,10 @@ namespace EventBox.Controllers
             }
         }
 
+        /// <summary>
+        /// Redirect to create new event
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("Create")]
         public ActionResult Create()
@@ -434,6 +477,20 @@ namespace EventBox.Controllers
             return View("~/Views/Event/AddEvent.cshtml");
         }
 
+        /// <summary>
+        /// Create new event
+        /// </summary>
+        /// <param name="id">ID of event</param>
+        /// <param name="name">Name of event</param>
+        /// <param name="info">Info of event</param>
+        /// <param name="time">Time of event</param>
+        /// <param name="place">Place of event</param>
+        /// <param name="maxAttendance">Max attendance</param>
+        /// <param name="requireAttendance">Require attendance</param>
+        /// <param name="price">Price of event</param>
+        /// <param name="image">Image of event</param>
+        /// <param name="categories">Categories of event</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Create")]
         public ActionResult Create(string name, string info, DateTime time, string place, Nullable<int> maxAttendance, Nullable<int> requireAttendance, Nullable<decimal> price, HttpPostedFileBase image, int[] categories)
@@ -572,6 +629,12 @@ namespace EventBox.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete event base on ID
+        /// Need authorization in header
+        /// </summary>
+        /// <param name="id">ID of event</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("Delete")]
         public ActionResult Delete(int id)
@@ -614,6 +677,12 @@ namespace EventBox.Controllers
             return RedirectToAction("Home", "Index", new { area = "" });
         }
 
+        /// <summary>
+        /// Join event base on event id
+        /// Need authorization in header
+        /// </summary>
+        /// <param name="id">ID of event</param>
+        /// <returns></returns>
         [Route("Join")]
         public ActionResult JoinEvent(string id)
         {
@@ -658,7 +727,12 @@ namespace EventBox.Controllers
         }
 
 
-
+        /// <summary>
+        /// Leave event base on ID
+        /// Need authorization in header
+        /// </summary>
+        /// <param name="id">ID of event</param>
+        /// <returns></returns>
         [Route("Leave")]
         public ActionResult LeaveEvent(string id)
         {

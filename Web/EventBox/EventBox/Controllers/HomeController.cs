@@ -53,6 +53,11 @@ namespace EventBox.Controllers
         }
 
 
+        /// <summary>
+        /// Redirect to other page base on url
+        /// </summary>
+        /// <param name="url">Next page url</param>
+        /// <returns></returns>
         [Route("Index/Paging")]
         public ViewResult Paging(string url)
         {

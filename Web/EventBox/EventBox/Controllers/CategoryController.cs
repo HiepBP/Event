@@ -19,6 +19,10 @@ namespace EventBox.Controllers
     [RoutePrefix("Categories")]
     public class CategoryController : Controller
     {
+        /// <summary>
+        /// Return all categories
+        /// </summary>
+        /// <returns></returns>
         [Route("GetAll")]
         public ActionResult GetAll()
         {
@@ -49,7 +53,11 @@ namespace EventBox.Controllers
             return View("ViewCategories");
         }
 
-
+        /// <summary>
+        /// Returns all categories that match categoryID
+        /// </summary>
+        /// <param name="categoryID">ID of category</param>
+        /// <returns></returns>
         [Route("Search")]
         public ActionResult SearchEvent(int categoryID)
         {
@@ -85,7 +93,11 @@ namespace EventBox.Controllers
             return View("~/Views/Category/SearchEvent.cshtml");
         }
 
-
+        /// <summary>
+        /// Return search event paging
+        /// </summary>
+        /// <param name="url">URL of the next page</param>
+        /// <returns></returns>
         [Route("SearchPaging")]
         public ActionResult SearchEventPaging(string url)
         {
