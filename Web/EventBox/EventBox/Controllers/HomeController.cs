@@ -45,9 +45,6 @@ namespace EventBox.Controllers
                 e = new Event(ID, Name, Time, Place, Image);
                 events.Add(e);
             }
-            //var tmp = DependencyResolver.Current.GetService<EventBox.Controllers.UsersController>();
-            //var result = tmp.GetNotification();
-            
             ViewData["Events"] = events;
             return View();
         }

@@ -54,8 +54,8 @@
             }
 
         </section>
-       
-        
+
+
 
         <section>
 
@@ -96,14 +96,21 @@
                 </p>
 
             </details>
-            @if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && !UserStatus)
+            @if ((CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && !UserStatus))
             {
-                <form action="/EventBox/Events/Join">
-                    <input type="hidden" name="id" value="@EventDetail.ID" />
-                    <button @disabled>Tham gia ngay</button>
-                </form>
+                if (EventDetail.MaxAttendance > JoinedUsers.Count || EventDetail.MaxAttendance==null)
+                {
+                    <form action="/EventBox/Events/Join">
+                        <input type="hidden" name="id" value="@EventDetail.ID" />
+                        <button @disabled>Tham gia ngay</button>
+                    </form>
+                }
+                else
+                {
+                    <button disabled>Đã đủ người</button>
+                }
             }
-            else if(CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]))
+            else if (CreatedUsers.ID != Convert.ToInt32(Session["CurrentUserID"]) && UserStatus)
             {
 
                 <h3>Bạn đã tham gia sự kiện</h3>
