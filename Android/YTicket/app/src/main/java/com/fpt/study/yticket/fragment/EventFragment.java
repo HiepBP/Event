@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.bumptech.glide.Glide;
 import com.fpt.study.yticket.R;
 import com.fpt.study.yticket.activity.EventActivity;
 import com.fpt.study.yticket.activity.LoginActivity;
+import com.fpt.study.yticket.activity.NavDrawerActivity;
+import com.fpt.study.yticket.model.Category;
 import com.fpt.study.yticket.model.Event;
 import com.fpt.study.yticket.model.EventUserStatus;
 import com.fpt.study.yticket.model.Token;
@@ -54,6 +57,7 @@ public class EventFragment extends Fragment {
     EventUserStatus eventUserStatus;
     User user;
     User creator;
+    Event event;
     Token token;
     Boolean isLogin = false;
     int eventId = 0;
@@ -64,7 +68,10 @@ public class EventFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Event Detail");
         Log.d(TAG, "onCreate called");
+
+
 
         Gson gson = new Gson();
 
@@ -116,6 +123,7 @@ public class EventFragment extends Fragment {
         Log.d(TAG, "onCreateView");
         System.out.println("Chay vao oncreate");
         View v = inflater.inflate(R.layout.fragment_event, container, false);
+
         Intent intent = getActivity().getIntent();
         eventId = intent.getIntExtra(EXTRA_EVENT_ID, 0);
 
@@ -126,11 +134,31 @@ public class EventFragment extends Fragment {
         eventImage = (ImageView) v.findViewById(R.id.fragment_event_image_image);
 
         btnEventEdit = (Button) v.findViewById(R.id.fragment_home_button_edit);
+        btnEventEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "edit button on click");
+                Category category = new Category();
+                event.setID(eventId);
+                event.setName(etxtEventName.getText().toString());
+                event.setTime(etxtEventTime.getText().toString());
+                event.setPlace(etxtEventPlace.getText().toString());
+                Log.d(TAG, event.getID() + "");
+                Log.d(TAG, event.getName());
+                Log.d(TAG, event.getTime());
+                Log.d(TAG, event.getPlace());
+                updateEvent(eventId, event);
+
+            }
+        });
         btnEventDelete = (Button) v.findViewById(R.id.fragment_home_button_delete);
-
+        btnEventDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteEvent(eventId);
+            }
+        });
         getCurrentUser();
-
-
 
 
         btnEventJoin = (Button) v.findViewById(R.id.fragment_event_button_join);
@@ -162,12 +190,12 @@ public class EventFragment extends Fragment {
         call.enqueue(new Callback<Event>() {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
-                Event e = response.body();
-                etxtEventId.setText(e.getID() + "");
-                etxtEventName.setText(e.getName());
-                etxtEventTime.setText(e.getTime() + "");
-                etxtEventPlace.setText(e.getPlace());
-                Glide.with(getActivity()).load(e.getImage()).into(eventImage);
+                event = response.body();
+                etxtEventId.setText(event.getID() + "");
+                etxtEventName.setText(event.getName());
+                etxtEventTime.setText(event.getTime() + "");
+                etxtEventPlace.setText(event.getPlace());
+                Glide.with(getActivity()).load(event.getImage()).into(eventImage);
 
             }
 
@@ -273,6 +301,49 @@ public class EventFragment extends Fragment {
             }
         });
 
+    }
+
+    public void updateEvent(int id, Event event) {
+        Log.d(TAG, event.getID()+"");
+        Log.d(TAG, event.getName());
+        Log.d(TAG, event.getTime());
+        Log.d(TAG, event.getPlace());
+        Call<Void> call = eventService.updateEvent(eventId, event);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccess()) {
+                    Intent intent = new Intent(getActivity(), EventActivity.class);
+                    intent.putExtra(EXTRA_EVENT_ID, eventId);
+                    startActivity(intent);
+                    Toast.makeText(getActivity(),"Update successfully", Toast.LENGTH_SHORT);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void deleteEvent(int id) {
+        Call<Void> call = eventService.deleteEvent(id);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccess()) {
+                    Log.d(TAG, "Delete successfully");
+                }else {
+                    Log.d(TAG, "Delete not successfully");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "Delete Failure");
+            }
+        });
     }
 
 

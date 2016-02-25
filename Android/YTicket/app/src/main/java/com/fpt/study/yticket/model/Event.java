@@ -16,6 +16,10 @@ public class Event {
     @Expose
     private String Name;
 
+    @SerializedName("Info")
+    @Expose
+    private String Info;
+
     @SerializedName("Time")
     @Expose
     private String Time;
@@ -44,6 +48,19 @@ public class Event {
     @Expose
     private Double Price;
 
+    @SerializedName("Category")
+    @Expose
+    private Category Category;
+
+    public com.fpt.study.yticket.model.Category getCategory() {
+        return Category;
+    }
+
+    public void setCategory(com.fpt.study.yticket.model.Category category) {
+        Category = category;
+    }
+
+
     /**
      * @return ID
      */
@@ -61,6 +78,14 @@ public class Event {
 
     public void setName(String name) {
         Name = name;
+    }
+
+    public String getInfo() {
+        return Info;
+    }
+
+    public void setInfo(String info) {
+        Info = info;
     }
 
     public String getTime() {
